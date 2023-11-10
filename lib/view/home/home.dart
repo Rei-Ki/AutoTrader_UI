@@ -45,7 +45,9 @@ class _LotosHomeState extends State<LotosHome> {
         surfaceTintColor: Colors.black12,
         backgroundColor: Colors.black12,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            debugPrint("leading clicked!");
+          },
           icon: SvgPicture.asset('assets/svg/Lotos.svg', height: 30),
         ),
         title: const Text('Lotos'),
