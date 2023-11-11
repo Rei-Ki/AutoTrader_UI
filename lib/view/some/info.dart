@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LotosSome extends StatefulWidget {
-  const LotosSome({super.key});
+class LotosInfo extends StatefulWidget {
+  const LotosInfo({super.key});
 
   @override
-  State<LotosSome> createState() => _LotosSomeState();
+  State<LotosInfo> createState() => _LotosInfoState();
 }
 
-class _LotosSomeState extends State<LotosSome> {
+class _LotosInfoState extends State<LotosInfo> {
   String? title;
 
   @override
@@ -19,11 +19,19 @@ class _LotosSomeState extends State<LotosSome> {
     setState(() {});
     super.didChangeDependencies();
   }
+  /*
+  Сделать чтобы на странице данных можно было добавить в активные и 
+  удалять из них
+
+  
+
+  */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(title ?? '...'),
       ),
     );
