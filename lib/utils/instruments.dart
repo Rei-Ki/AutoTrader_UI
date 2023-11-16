@@ -43,14 +43,16 @@ class InstrumentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 5),
+      padding: const EdgeInsets.only(left: 25, right: 25, top: 5),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black26,
+          color: Colors.pink[50]!,
           borderRadius: BorderRadius.circular(10),
+          // border: Border.all(color: Colors.pink[200]!),
         ),
         child: ListTile(
-          leading: const Icon(Icons.data_usage_rounded, size: 30),
+          leading: const Icon(Icons.data_usage_rounded, size: 29),
+          trailing: const Icon(Icons.more_vert_rounded, size: 27),
           title: Text(
             instrumentName,
             style: Theme.of(context).textTheme.bodyMedium,

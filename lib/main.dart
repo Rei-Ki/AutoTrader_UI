@@ -8,12 +8,14 @@ void main() {
 
 class LotosApp extends StatelessWidget {
   const LotosApp({super.key});
-
+  // Добавить темную тему и светлую
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      showPerformanceOverlay: false,
+      title: 'Lotos',
+      themeMode: ThemeMode.system,
       theme: lightTheme,
       initialRoute: '/home',
       routes: routes,

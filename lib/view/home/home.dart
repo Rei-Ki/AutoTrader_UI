@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lotosui/bloc/some_bloc.dart';
@@ -42,6 +45,11 @@ class _LotosHomeState extends State<LotosHome> {
     super.initState();
   }
 
+//  Сделать градацию черного, темно черного и pink
+// сделать еще и отображение общего количества денег и тд
+/*
+Сделать график обычным а не свечным
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,7 +115,7 @@ class _LotosHomeState extends State<LotosHome> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        backgroundColor: Colors.black12,
+        backgroundColor: Colors.transparent,
         title: const Text('Lotos'),
       ),
       // ----------------------------------------------------
@@ -116,12 +124,12 @@ class _LotosHomeState extends State<LotosHome> {
       ),
       // ----------------------------------------------------
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
+              color: Colors.transparent,
             )
           ],
         ),
@@ -130,18 +138,16 @@ class _LotosHomeState extends State<LotosHome> {
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               GNav(
-                rippleColor: Colors.grey[300]!,
-                hoverColor: Colors.grey[100]!,
-                activeColor: Colors.black,
+                haptic: false,
+                mainAxisAlignment: MainAxisAlignment.center,
                 gap: 2,
                 iconSize: 24,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                duration: const Duration(milliseconds: 400),
-                tabBackgroundColor: Colors.grey[100]!,
                 color: Colors.black,
+                activeColor: Colors.black,
+                tabBackgroundColor: Colors.pink[50]!,
                 textStyle: const TextStyle(
-                  fontSize: 15,
+                  color: Colors.black,
+                  fontSize: 18,
                 ),
                 tabs: const [
                   GButton(icon: Icons.search, text: 'Активы'),
@@ -149,6 +155,8 @@ class _LotosHomeState extends State<LotosHome> {
                   GButton(icon: Icons.scatter_plot_outlined, text: 'Пульс'),
                   GButton(icon: Icons.data_usage_rounded, text: 'Аналитика'),
                 ],
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 selectedIndex: _selectedIndex,
                 onTabChange: (index) {
                   setState(() {

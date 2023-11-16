@@ -1,4 +1,7 @@
+import 'package:lotosui/view/some/plot.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class LotosInfo extends StatefulWidget {
   const LotosInfo({super.key});
@@ -19,21 +22,23 @@ class _LotosInfoState extends State<LotosInfo> {
     setState(() {});
     super.didChangeDependencies();
   }
-  /*
-  Сделать чтобы на странице данных можно было добавить в активные и 
-  удалять из них
-
-  
-
-  */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
         title: Text(title ?? '...'),
       ),
+      body: title == null
+          ? const Center(child: Text('Ой! Нет данных'))
+          : const Column(
+              children: [
+                Plot(),
+              ],
+            ),
     );
   }
 }
