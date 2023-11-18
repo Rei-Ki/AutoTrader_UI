@@ -1,5 +1,4 @@
 import 'package:lotosui/view/some/plot.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 

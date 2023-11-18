@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Instruments extends StatefulWidget {
-  const Instruments({super.key});
+class Active extends StatefulWidget {
+  const Active({super.key});
 
   @override
-  State<Instruments> createState() => _InstrumentsState();
+  State<Active> createState() => _ActiveState();
 }
 
-class _InstrumentsState extends State<Instruments> {
+class _ActiveState extends State<Active> {
   // todo Можно сделать еще и JSON файлом
   List instruments = [
     ["CRU3", "Фьючерс"],
@@ -21,7 +21,7 @@ class _InstrumentsState extends State<Instruments> {
     return ListView.builder(
       itemCount: instruments.length,
       itemBuilder: (context, i) {
-        return InstrumentTile(
+        return ActiveTile(
           instrumentName: instruments[i][0],
           instrumentType: instruments[i][1],
         );
@@ -30,8 +30,8 @@ class _InstrumentsState extends State<Instruments> {
   }
 }
 
-class InstrumentTile extends StatelessWidget {
-  const InstrumentTile({
+class ActiveTile extends StatelessWidget {
+  const ActiveTile({
     super.key,
     required this.instrumentName,
     required this.instrumentType,

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:lotosui/routes.dart';
+import 'package:lotosui/view/home/hidden_drawer.dart';
+import 'package:flutter/material.dart';
 import 'package:lotosui/themes.dart';
 
 void main() {
@@ -17,8 +18,9 @@ class LotosApp extends StatelessWidget {
       title: 'Lotos',
       themeMode: ThemeMode.system,
       theme: lightTheme,
-      initialRoute: '/home',
+      // initialRoute: '/home',
       routes: routes,
+      home: const HiddenDrawer(),
     );
   }
 }
