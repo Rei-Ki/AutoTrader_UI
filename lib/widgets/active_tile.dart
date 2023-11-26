@@ -1,35 +1,5 @@
 import 'package:flutter/material.dart';
 
-class Active extends StatefulWidget {
-  const Active({super.key});
-
-  @override
-  State<Active> createState() => _ActiveState();
-}
-
-class _ActiveState extends State<Active> {
-  // todo Можно сделать еще и JSON файлом
-  List instruments = [
-    ["CRU3", "Фьючерс"],
-    ["CRZ3", "Фьючерс"],
-    ["SiU3", "Фьючерс"],
-    ["SiZ3", "Фьючерс"],
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: instruments.length,
-      itemBuilder: (context, i) {
-        return ActiveTile(
-          instrumentName: instruments[i][0],
-          instrumentType: instruments[i][1],
-        );
-      },
-    );
-  }
-}
-
 class ActiveTile extends StatelessWidget {
   const ActiveTile({
     super.key,

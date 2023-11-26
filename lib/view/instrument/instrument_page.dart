@@ -1,15 +1,15 @@
-import 'package:lotosui/view/some/plot.dart';
+import 'package:lotosui/view/instrument/plot.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-class LotosInfo extends StatefulWidget {
-  const LotosInfo({super.key});
+class InstrumentPage extends StatefulWidget {
+  const InstrumentPage({super.key});
 
   @override
-  State<LotosInfo> createState() => _LotosInfoState();
+  State<InstrumentPage> createState() => _InstrumentPageState();
 }
 
-class _LotosInfoState extends State<LotosInfo> {
+class _InstrumentPageState extends State<InstrumentPage> {
   String? title;
 
   @override

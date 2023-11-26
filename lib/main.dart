@@ -1,7 +1,7 @@
 import 'package:lotosui/routes.dart';
-import 'package:lotosui/view/home/hidden_drawer.dart';
+import 'package:lotosui/view/hidden_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:lotosui/themes.dart';
+import 'package:lotosui/style.dart';
 
 void main() {
   runApp(const LotosApp());

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+const mainTextStyle = TextStyle(
+  fontSize: 16,
+);
+
 final lightTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
     useMaterial3: true,
@@ -8,7 +12,7 @@ final lightTheme = ThemeData(
         backgroundColor: Colors.black12,
         titleTextStyle: TextStyle(
           color: Colors.black,
-          fontSize: 23,
+          fontSize: 22,
           fontWeight: FontWeight.w500,
         )),
     listTileTheme: const ListTileThemeData(
@@ -17,11 +21,11 @@ final lightTheme = ThemeData(
     textTheme: const TextTheme(
         bodyMedium: TextStyle(
           color: Colors.black,
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: FontWeight.w500,
         ),
         labelSmall: TextStyle(
           color: Colors.black,
-          fontSize: 15,
+          fontSize: 14,
           fontWeight: FontWeight.w200,
         )));

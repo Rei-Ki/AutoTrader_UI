@@ -1,7 +1,7 @@
-import 'package:lotosui/view/home/home.dart';
-import 'package:lotosui/view/some/info.dart';
+import 'package:lotosui/pages/navigate_page.dart';
+import 'package:lotosui/view/instrument/instrument_page.dart';
 
 final routes = {
-  '/home': (context) => const Home(),
-  '/instrumentInfo': (context) => const LotosInfo(),
+  '/home': (context) => const NavigatePage(),
+  '/instrumentInfo': (context) => const InstrumentPage(),
 };

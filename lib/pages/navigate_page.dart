@@ -1,31 +1,23 @@
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:lotosui/utils/instruments.dart';
-import 'package:lotosui/bloc/some_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:lotosui/pages/active_page.dart';
+import 'package:lotosui/pages/pulse_page.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class NavigatePage extends StatefulWidget {
+  const NavigatePage({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<NavigatePage> createState() => _NavigatePageState();
 }
 
-class _HomeState extends State<Home> {
-  final someInstanceBloc = SomeBloc();
-  int selectedIndex = 0;
+class _NavigatePageState extends State<NavigatePage> {
+  int selectedIndex = 1;
 
   static const List<Widget> widgetOptions = <Widget>[
-    Active(),
-    Text('Активное'),
-    Text('Пульс'),
+    ActivePage(),
+    PulsePage(),
     Text('Аналитика'),
   ];
-
-  @override
-  void initState() {
-    someInstanceBloc.add(LoadSomething());
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +56,6 @@ class _HomeState extends State<Home> {
                 ),
                 tabs: const [
                   GButton(icon: Icons.search, text: 'Активы'),
-                  GButton(icon: Icons.add_chart_outlined, text: 'Активное'),
                   GButton(icon: Icons.scatter_plot_outlined, text: 'Пульс'),
                   GButton(icon: Icons.data_usage_rounded, text: 'Аналитика'),
                 ],
