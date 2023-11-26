@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:lotosui/widgets/active_tile.dart';
+import 'package:lotosui/widgets/tiles/active_tile.dart';
 
-class Active extends StatefulWidget {
-  const Active({super.key, required this.filter});
+class ActiveList extends StatefulWidget {
+  const ActiveList({super.key, required this.filter});
 
   final String filter;
 
   @override
-  State<Active> createState() => _ActiveState();
+  State<ActiveList> createState() => _ActiveListState();
 }
 
-class _ActiveState extends State<Active> {
+class _ActiveListState extends State<ActiveList> {
   // todo Можно сделать еще и JSON файлом
   // todo Сделать чтобы оно обновлялось при изменении фильтра а не при пересохранении
   List instruments = [

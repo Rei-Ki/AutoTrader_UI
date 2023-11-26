@@ -13,7 +13,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30, bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
       child: SearchBar(
         controller: widget.textController,
         elevation: MaterialStateProperty.all(0),
@@ -35,7 +35,7 @@ class _SearchState extends State<Search> {
           width: 1.5,
         )),
         onTap: () {
-          print("search tapped");
+          debugPrint("search tapped");
         },
       ),
     );

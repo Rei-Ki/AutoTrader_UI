@@ -41,34 +41,37 @@ class _NavigatePageState extends State<NavigatePage> {
         child: SafeArea(
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              GNav(
-                haptic: false,
-                mainAxisAlignment: MainAxisAlignment.center,
-                gap: 2,
-                iconSize: 24,
-                color: Colors.black,
-                activeColor: Colors.black,
-                tabBackgroundColor: Colors.pink[50]!,
-                textStyle: const TextStyle(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GNav(
+                  haptic: false,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  gap: 2,
+                  iconSize: 24,
                   color: Colors.black,
-                  fontSize: 14,
+                  activeColor: Colors.black,
+                  tabBackgroundColor: Colors.pink[50]!,
+                  textStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
+                  tabs: const [
+                    GButton(icon: Icons.search, text: 'Активы'),
+                    GButton(icon: Icons.scatter_plot_outlined, text: 'Пульс'),
+                    GButton(icon: Icons.data_usage_rounded, text: 'Аналитика'),
+                  ],
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  selectedIndex: selectedIndex,
+                  onTabChange: (index) {
+                    setState(() {
+                      selectedIndex = index;
+                    });
+                  },
                 ),
-                tabs: const [
-                  GButton(icon: Icons.search, text: 'Активы'),
-                  GButton(icon: Icons.scatter_plot_outlined, text: 'Пульс'),
-                  GButton(icon: Icons.data_usage_rounded, text: 'Аналитика'),
-                ],
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                selectedIndex: selectedIndex,
-                onTabChange: (index) {
-                  setState(() {
-                    selectedIndex = index;
-                  });
-                },
-              ),
-            ]),
+              ],
+            ),
           ),
         ),
       ),

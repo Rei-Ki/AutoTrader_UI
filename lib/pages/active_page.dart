@@ -19,7 +19,7 @@ class _ActivePageState extends State<ActivePage> {
       children: [
         Search(textController: searchedInstrumentsText),
         Expanded(
-            child: Active(
+            child: ActiveList(
           filter: searchedInstrumentsText.text,
         )),
       ],
