@@ -1,6 +1,7 @@
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:lotosui/pages/active_page.dart';
+import 'package:lotosui/pages/analytics_page.dart';
 import 'package:lotosui/pages/pulse_page.dart';
 
 class NavigatePage extends StatefulWidget {
@@ -11,12 +12,12 @@ class NavigatePage extends StatefulWidget {
 }
 
 class _NavigatePageState extends State<NavigatePage> {
-  int selectedIndex = 1;
+  int selectedIndex = 2;
 
   static const List<Widget> widgetOptions = <Widget>[
     ActivePage(),
     PulsePage(),
-    Text('Аналитика'),
+    AnalyticsPage(),
   ];
 
   @override

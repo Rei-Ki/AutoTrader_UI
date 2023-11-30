@@ -22,4 +22,20 @@ class PulseData {
   }
 }
 
-class InstrumentData {}
+class InstrumentData {
+  late String title;
+  late String type;
+  late bool isActive;
+
+  InstrumentData({
+    required this.title,
+    required this.type,
+    required this.isActive,
+  });
+
+  InstrumentData.fromJson(Map<String, dynamic> json) {
+    title = json['title'] ?? '';
+    type = json['type'] ?? '';
+    isActive = json['isActive'] ?? '';
+  }
+}

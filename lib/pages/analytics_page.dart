@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lotosui/widgets/analytics_plot.dart';
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
@@ -10,6 +11,14 @@ class AnalyticsPage extends StatefulWidget {
 class _AnalyticsPageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Column(
+      children: [
+        // например: Сделать табы общее, расходы, доходы
+        Text("Распределение активов"),
+
+        // График расходов
+        AnalyticsPlot(),
+      ],
+    );
   }
 }

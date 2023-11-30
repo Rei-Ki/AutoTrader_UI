@@ -2,7 +2,7 @@ import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:lotosui/style.dart';
 import 'package:lotosui/pages/navigate_page.dart';
-import 'package:lotosui/view/settings/settings_page.dart';
+import 'package:lotosui/pages/settings_page.dart';
 
 class HiddenDrawer extends StatefulWidget {
   const HiddenDrawer({super.key});
@@ -13,6 +13,7 @@ class HiddenDrawer extends StatefulWidget {
 
 class _HiddenDrawerState extends State<HiddenDrawer> {
   List<ScreenHiddenDrawer> pages = [];
+  // todo сделать чтобы имя Главная заменялось на другие (зависит от окна на котором находишься)
 
   @override
   void initState() {

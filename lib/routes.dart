@@ -1,5 +1,5 @@
 import 'package:lotosui/pages/navigate_page.dart';
-import 'package:lotosui/view/instrument/instrument_page.dart';
+import 'package:lotosui/pages/instrument_page.dart';
 
 final routes = {
   '/home': (context) => const NavigatePage(),
