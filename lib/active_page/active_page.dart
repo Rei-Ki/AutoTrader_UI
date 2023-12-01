@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lotosui/widgets/active_list.dart';
+import 'package:lotosui/active_page/active_list.dart';
 import 'package:lotosui/widgets/search.dart';
 
 class ActivePage extends StatefulWidget {

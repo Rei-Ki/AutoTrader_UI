@@ -1,8 +1,8 @@
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:lotosui/navigate_page.dart';
+import 'package:lotosui/profile_page/settings_page.dart';
 import 'package:lotosui/style.dart';
-import 'package:lotosui/pages/navigate_page.dart';
-import 'package:lotosui/pages/settings_page.dart';
 
 class HiddenDrawer extends StatefulWidget {
   const HiddenDrawer({super.key});

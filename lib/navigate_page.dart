@@ -1,8 +1,8 @@
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:lotosui/pages/active_page.dart';
-import 'package:lotosui/pages/analytics_page.dart';
-import 'package:lotosui/pages/pulse_page.dart';
+import 'package:lotosui/active_page/active_page.dart';
+import 'package:lotosui/analytics_page/analytics_page.dart';
+import 'package:lotosui/pulse_page/pulse_page.dart';
 
 class NavigatePage extends StatefulWidget {
   const NavigatePage({super.key});
@@ -18,6 +18,7 @@ class _NavigatePageState extends State<NavigatePage> {
     ActivePage(),
     PulsePage(),
     AnalyticsPage(),
+    Text("Profile"),
   ];
 
   @override
@@ -27,6 +28,13 @@ class _NavigatePageState extends State<NavigatePage> {
       // ----------------------------------------------------
       body: Center(
         child: widgetOptions.elementAt(selectedIndex),
+      ),
+      // ----------------------------------------------------
+      appBar: AppBar(
+        title: const Text("Главная"),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
       ),
       // ----------------------------------------------------
       bottomNavigationBar: Container(
@@ -61,6 +69,8 @@ class _NavigatePageState extends State<NavigatePage> {
                     GButton(icon: Icons.search, text: 'Активы'),
                     GButton(icon: Icons.scatter_plot_outlined, text: 'Пульс'),
                     GButton(icon: Icons.data_usage_rounded, text: 'Аналитика'),
+                    GButton(
+                        icon: Icons.account_circle_outlined, text: 'Профиль'),
                   ],
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

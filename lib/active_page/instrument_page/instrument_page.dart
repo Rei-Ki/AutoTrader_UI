@@ -1,4 +1,4 @@
-import 'package:lotosui/widgets/instrument_plot.dart';
+import 'package:lotosui/active_page/instrument_page/instrument_plot.dart';
 import 'package:flutter/material.dart';
 // import 'dart:async';
 

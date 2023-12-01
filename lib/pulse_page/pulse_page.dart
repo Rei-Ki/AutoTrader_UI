@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lotosui/widgets/pulse_list.dart';
+import 'package:lotosui/pulse_page/pulse_list.dart';
 import 'package:lotosui/widgets/search.dart';
 
 class PulsePage extends StatefulWidget {

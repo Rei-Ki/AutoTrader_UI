@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lotosui/widgets/analytics_plot.dart';
+import 'package:lotosui/analytics_page/analytics_plot.dart';
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
