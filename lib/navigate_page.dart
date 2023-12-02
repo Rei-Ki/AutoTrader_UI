@@ -2,6 +2,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:lotosui/active_page/active_page.dart';
 import 'package:lotosui/analytics_page/analytics_page.dart';
+import 'package:lotosui/profile_page/profile_page.dart';
 import 'package:lotosui/pulse_page/pulse_page.dart';
 
 class NavigatePage extends StatefulWidget {
@@ -12,13 +13,13 @@ class NavigatePage extends StatefulWidget {
 }
 
 class _NavigatePageState extends State<NavigatePage> {
-  int selectedIndex = 2;
+  int selectedIndex = 0;
 
   static const List<Widget> widgetOptions = <Widget>[
     ActivePage(),
     PulsePage(),
     AnalyticsPage(),
-    Text("Profile"),
+    ProfilePage(),
   ];
 
   @override
@@ -60,7 +61,8 @@ class _NavigatePageState extends State<NavigatePage> {
                   iconSize: 24,
                   color: Colors.black,
                   activeColor: Colors.black,
-                  tabBackgroundColor: Colors.pink[50]!,
+                  tabBackgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(0.1),
                   textStyle: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,

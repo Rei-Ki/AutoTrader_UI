@@ -5,7 +5,7 @@ const mainTextStyle = TextStyle(
 );
 
 final lightTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
     useMaterial3: true,
     dividerColor: Colors.transparent,
     appBarTheme: const AppBarTheme(

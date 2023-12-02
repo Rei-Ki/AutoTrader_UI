@@ -18,10 +18,7 @@ class _ActivePageState extends State<ActivePage> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Search(textController: searchedInstrumentsText),
-        Expanded(
-            child: ActiveList(
-          filter: searchedInstrumentsText.text,
-        )),
+        ActiveList(filter: searchedInstrumentsText.text),
       ],
     );
   }

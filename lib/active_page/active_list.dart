@@ -22,13 +22,15 @@ class _ActiveListState extends State<ActiveList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: getFiltredList(filter: widget.filter).length,
-      itemBuilder: (context, i) {
-        return ActiveTile(
-          data: instruments[i],
-        );
-      },
+    return Expanded(
+      child: ListView.builder(
+        itemCount: getFiltredList(filter: widget.filter).length,
+        itemBuilder: (context, i) {
+          return ActiveTile(
+            data: instruments[i],
+          );
+        },
+      ),
     );
   }
 
@@ -57,9 +59,8 @@ class ActiveTile extends StatelessWidget {
       padding: const EdgeInsets.only(left: 25, right: 25, top: 5),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.pink[50]!,
+          color: Theme.of(context).primaryColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
-          // border: Border.all(color: Colors.pink[200]!),
         ),
         child: ListTile(
           leading: const Icon(Icons.data_usage_rounded, size: 29),

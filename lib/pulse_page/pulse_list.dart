@@ -82,7 +82,7 @@ class PulseTile extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Theme.of(context).primaryColor.withOpacity(0.2),
+          color: Theme.of(context).primaryColor.withOpacity(0.1),
         ),
         child: ListTile(
           leading: const Icon(Icons.notifications_active_outlined),

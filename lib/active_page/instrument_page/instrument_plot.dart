@@ -14,7 +14,18 @@ class _PlotState extends State<Plot> {
   late ChartSeriesController chartSeriesController;
   late ZoomPanBehavior zoomPanBehavior;
 
-  Color plotColor = Colors.pink;
+  List<String> timeFrames = [
+    '1m',
+    '5m',
+    '15m',
+    '30m',
+    '60m',
+    '2h',
+    '4h',
+    'D',
+    'W',
+    'MN'
+  ];
 
   @override
   void initState() {
@@ -34,54 +45,80 @@ class _PlotState extends State<Plot> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SfCartesianChart(
-        zoomPanBehavior: zoomPanBehavior,
-        title: ChartTitle(
-          text: chartData.last.speed.toStringAsFixed(2),
-          textStyle: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        margin: const EdgeInsets.all(10),
-        series: <ChartSeries<LiveData, int>>[
-          AreaSeries<LiveData, int>(
-            onRendererCreated: (ChartSeriesController controller) {
-              chartSeriesController = controller;
-            },
-            borderWidth: 3,
-            borderColor: plotColor,
-            gradient: LinearGradient(
-              transform: const GradientRotation(math.pi / 2),
-              colors: [
-                plotColor.withOpacity(0.5),
-                plotColor.withOpacity(0.25),
-                Colors.transparent,
-              ],
+      child: Column(
+        children: [
+          SfCartesianChart(
+            zoomPanBehavior: zoomPanBehavior,
+            title: ChartTitle(
+              text: chartData.last.speed.toStringAsFixed(2),
+              textStyle: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            dataSource: chartData,
-            xValueMapper: (LiveData sales, _) => sales.time,
-            yValueMapper: (LiveData sales, _) => sales.speed,
-            animationDuration: 800,
-            animationDelay: 400,
-            markerSettings: MarkerSettings(
-              isVisible: true,
-              borderColor: plotColor,
+            margin: const EdgeInsets.only(left: 8, right: 4),
+            series: <ChartSeries<LiveData, int>>[
+              AreaSeries<LiveData, int>(
+                onRendererCreated: (ChartSeriesController controller) {
+                  chartSeriesController = controller;
+                },
+                borderWidth: 3,
+                borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
+                gradient: LinearGradient(
+                  transform: const GradientRotation(math.pi / 2),
+                  colors: [
+                    Theme.of(context).primaryColor.withOpacity(0.5),
+                    Theme.of(context).primaryColor.withOpacity(0.2),
+                    Colors.transparent,
+                  ],
+                ),
+                dataSource: chartData,
+                xValueMapper: (LiveData sales, _) => sales.time,
+                yValueMapper: (LiveData sales, _) => sales.speed,
+                animationDuration: 800,
+                animationDelay: 400,
+                markerSettings: MarkerSettings(
+                  isVisible: true,
+                  borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
+                ),
+              )
+            ],
+            primaryXAxis: NumericAxis(
+              majorGridLines: const MajorGridLines(width: 1),
+              edgeLabelPlacement: EdgeLabelPlacement.shift,
+              interval: 2,
+              title: AxisTitle(text: ''),
+              decimalPlaces: 0,
+              labelPosition: ChartDataLabelPosition.outside,
+            ),
+            primaryYAxis: NumericAxis(
+              opposedPosition: true,
+              axisLine: const AxisLine(width: 0),
+              enableAutoIntervalOnZooming: true,
+              title: AxisTitle(text: ''),
+              decimalPlaces: 3,
+              labelPosition: ChartDataLabelPosition.outside,
+            ),
+          ),
+          // ---------------------------------------------------------------
+          Container(
+            margin: const EdgeInsets.all(5),
+            height: 25,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: timeFrames.length,
+              itemBuilder: (context, index) {
+                return TextButton(
+                  onPressed: () {
+                    // todo сделать тут запрос
+                  },
+                  child: Text(timeFrames[index]),
+                );
+              },
             ),
           )
         ],
-        primaryXAxis: NumericAxis(
-          majorGridLines: const MajorGridLines(width: 1),
-          edgeLabelPlacement: EdgeLabelPlacement.shift,
-          interval: 2,
-          title: AxisTitle(text: ''),
-        ),
-        primaryYAxis: NumericAxis(
-          opposedPosition: true,
-          axisLine: const AxisLine(width: 0),
-          // enableAutoIntervalOnZooming: true,
-          title: AxisTitle(text: ''),
-        ),
       ),
     );
   }

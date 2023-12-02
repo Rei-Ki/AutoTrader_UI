@@ -31,7 +31,7 @@ class _SearchState extends State<Search> {
           ),
         ],
         side: MaterialStateProperty.all(BorderSide(
-          color: Colors.pink[100]!,
+          color: Theme.of(context).primaryColor.withOpacity(0.4),
           width: 1.5,
         )),
         onTap: () {
