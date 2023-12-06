@@ -45,7 +45,8 @@ class _InstrumentPageState extends State<InstrumentPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Text("Что то тут еще"),
+                        // Сделать тут ввод D, r, interval
+                        Text("Что то тут еще, количество или еще что"),
                       ],
                     ),
                   ),
@@ -54,45 +55,50 @@ class _InstrumentPageState extends State<InstrumentPage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FlutterToggleTab(
-                      width: 70, // width in percent
-                      borderRadius: 50,
-                      height: 40,
-                      selectedIndex: _tabTextIndexSelected,
-                      unSelectedBackgroundColors: [
-                        Colors.white,
-                      ],
-                      selectedBackgroundColors: [
-                        Theme.of(context).primaryColor.withOpacity(0.7)
-                      ],
-                      selectedTextStyle:
-                          const TextStyle(color: Colors.white, fontSize: 16),
-                      unSelectedTextStyle:
-                          const TextStyle(color: Colors.black, fontSize: 14),
-                      labels: const ["Фрактальная", "Корридорная"],
-                      selectedLabelIndex: (index) {
-                        setState(() {
-                          _tabTextIndexSelected = index;
-                          // todo сделать чтобы после старта пропадал этот свитчер
-                          print(index);
-                        });
-                      },
-                    ),
+                    strategyTabs(context),
                     // ----------------------------------------------------
-                    IconButton(
-                      onPressed: () {
-                        // todo сделать анимацию переключения состояния кнопки
-                      },
-                      icon: Icon(
-                        Icons.play_arrow_outlined,
-                        size: 60,
-                        color: Theme.of(context).primaryColor.withOpacity(0.8),
-                      ),
-                    ),
+                    startButton(context),
                   ],
                 )
               ],
             ),
+    );
+  }
+
+  IconButton startButton(BuildContext context) {
+    return IconButton(
+      padding: const EdgeInsets.all(0),
+      onPressed: () {
+        // todo сделать анимацию переключения состояния кнопки
+      },
+      icon: Icon(
+        Icons.play_arrow_outlined,
+        size: 70,
+        color: Theme.of(context).primaryColor.withOpacity(0.8),
+      ),
+    );
+  }
+
+  FlutterToggleTab strategyTabs(BuildContext context) {
+    return FlutterToggleTab(
+      width: 70, // width in percent
+      borderRadius: 50,
+      height: 40,
+      selectedIndex: _tabTextIndexSelected,
+      unSelectedBackgroundColors: const [Colors.white],
+      selectedBackgroundColors: [
+        Theme.of(context).primaryColor.withOpacity(0.7)
+      ],
+      selectedTextStyle: const TextStyle(color: Colors.white, fontSize: 16),
+      unSelectedTextStyle: const TextStyle(color: Colors.black, fontSize: 14),
+      labels: const ["Фрактальная", "Корридорная"],
+      selectedLabelIndex: (index) {
+        setState(() {
+          _tabTextIndexSelected = index;
+          // todo сделать чтобы после старта пропадал этот свитчер
+          print(index);
+        });
+      },
     );
   }
 }
