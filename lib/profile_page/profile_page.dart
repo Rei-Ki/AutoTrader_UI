@@ -32,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: const Icon(Icons.account_circle_outlined, size: 100),
             ),
             // ----------------------------------------------------------------
-            ThemeSelector(),
+            const ThemeSelector(),
             // ----------------------------------------------------------------
             TextFormField(
               onFieldSubmitted: (value) {

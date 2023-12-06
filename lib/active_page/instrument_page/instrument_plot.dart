@@ -112,6 +112,7 @@ class _PlotState extends State<Plot> {
                 return TextButton(
                   onPressed: () {
                     // todo сделать тут запрос
+                    getTime(timeFrames[index]);
                   },
                   child: Text(timeFrames[index]),
                 );
@@ -131,6 +132,13 @@ class _PlotState extends State<Plot> {
   //   _chartSeriesController.updateDataSource(
   //       addedDataIndex: chartData.length - 1, removedDataIndex: 0);
   // }
+
+  int getTime(String timeFrame) {
+    if (timeFrames.contains("m")) {
+      print(timeFrame);
+    }
+    return 0;
+  }
 
   List<LiveData> getChartData() {
     List<LiveData> data = [];
