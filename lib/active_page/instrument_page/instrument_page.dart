@@ -12,7 +12,23 @@ class InstrumentPage extends StatefulWidget {
 
 class _InstrumentPageState extends State<InstrumentPage> {
   String? title;
-  int _tabTextIndexSelected = 0;
+  int selectedStrategy = 0;
+  int selectedTimeframe = 4;
+  List<String> strategies = ["fractal", "corridor"];
+  TextEditingController risk = TextEditingController();
+  TextEditingController planLimit = TextEditingController();
+  List<String> timeFrames = [
+    '1m',
+    '5m',
+    '15m',
+    '30m',
+    '60m',
+    '2h',
+    '4h',
+    '1D',
+    '1W',
+    '1MN'
+  ];
 
   @override
   void didChangeDependencies() {
@@ -33,35 +49,44 @@ class _InstrumentPageState extends State<InstrumentPage> {
         centerTitle: true,
         title: Text(title ?? '...'),
       ),
-      body: title == null
-          ? const Center(child: Text('Ой! Нет данных'))
-          : Column(
-              children: [
-                const Plot(),
-                // ------------------------------------------------------------
-                const Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Сделать тут ввод D, r, interval
-                        Text("Что то тут еще, количество или еще что"),
-                      ],
-                    ),
-                  ),
-                ),
-                // ------------------------------------------------------------
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    strategyTabs(context),
-                    // ----------------------------------------------------
-                    startButton(context),
-                  ],
-                )
-              ],
+      body: Column(
+        children: [
+          Plot(
+            selectedTimeframe: selectedTimeframe,
+            timeFrames: timeFrames,
+          ),
+          inputFields(),
+          strategyTabs(context),
+          startButton(context)
+        ],
+      ),
+    );
+  }
+
+  Widget inputFields() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: risk,
+              decoration: const InputDecoration(
+                hintText: "% допустимого риска (Базовое 20%)",
+                hintStyle: TextStyle(fontSize: 14),
+              ),
             ),
+            TextField(
+              controller: planLimit,
+              decoration: const InputDecoration(
+                hintText: "Лимит план. чистых позиций (Базовое: 10000)",
+                hintStyle: TextStyle(fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -70,6 +95,20 @@ class _InstrumentPageState extends State<InstrumentPage> {
       padding: const EdgeInsets.all(0),
       onPressed: () {
         // todo сделать анимацию переключения состояния кнопки
+        // todo сделать сокрытие стратегий
+        // todo сделать отправку на сервер
+
+        Map<String, dynamic> data = {
+          "cmd": "start_instrument",
+          "data": {
+            "sec_code": title,
+            "interval": selectedTimeframe,
+            "strategy": strategies[selectedStrategy],
+            "risk": risk.text,
+            "plan_limit": planLimit.text,
+          },
+        };
+        print(data);
       },
       icon: Icon(
         Icons.play_arrow_outlined,
@@ -79,24 +118,24 @@ class _InstrumentPageState extends State<InstrumentPage> {
     );
   }
 
-  FlutterToggleTab strategyTabs(BuildContext context) {
+  Widget strategyTabs(BuildContext context) {
     return FlutterToggleTab(
-      width: 70, // width in percent
+      width: 60, // width in percent
       borderRadius: 50,
-      height: 40,
-      selectedIndex: _tabTextIndexSelected,
+      height: 35,
+      selectedIndex: selectedStrategy,
       unSelectedBackgroundColors: const [Colors.white],
       selectedBackgroundColors: [
         Theme.of(context).primaryColor.withOpacity(0.7)
       ],
-      selectedTextStyle: const TextStyle(color: Colors.white, fontSize: 16),
+      selectedTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
       unSelectedTextStyle: const TextStyle(color: Colors.black, fontSize: 14),
-      labels: const ["Фрактальная", "Корридорная"],
+      labels: strategies,
       selectedLabelIndex: (index) {
         setState(() {
-          _tabTextIndexSelected = index;
+          selectedStrategy = index;
           // todo сделать чтобы после старта пропадал этот свитчер
-          print(index);
+          print(strategies[index]);
         });
       },
     );

@@ -3,8 +3,14 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math' as math;
 
 class Plot extends StatefulWidget {
-  const Plot({super.key});
+  Plot({
+    super.key,
+    required this.selectedTimeframe,
+    required this.timeFrames,
+  });
 
+  int selectedTimeframe;
+  List<String> timeFrames;
   @override
   State<Plot> createState() => _PlotState();
 }
@@ -13,19 +19,7 @@ class _PlotState extends State<Plot> {
   late List<LiveData> chartData;
   late ChartSeriesController chartSeriesController;
   late ZoomPanBehavior zoomPanBehavior;
-
-  List<String> timeFrames = [
-    '1m',
-    '5m',
-    '15m',
-    '30m',
-    '60m',
-    '2h',
-    '4h',
-    'D',
-    'W',
-    'MN'
-  ];
+  // int selectedTimeframe = 4;
 
   @override
   void initState() {
@@ -37,8 +31,6 @@ class _PlotState extends State<Plot> {
       enableSelectionZooming: true,
       enablePanning: true,
     );
-    // Запрос периодичный
-    // Timer.periodic(const Duration(seconds: 1), updateDataSource);
     super.initState();
   }
 
@@ -47,15 +39,20 @@ class _PlotState extends State<Plot> {
     return SafeArea(
       child: Column(
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const SizedBox(width: 35),
+              Text(
+                chartData.last.speed.toStringAsFixed(2),
+                style: const TextStyle(fontSize: 30),
+              ),
+              Text(widget.timeFrames[widget.selectedTimeframe]),
+            ],
+          ),
+          // График --------------------------------
           SfCartesianChart(
             zoomPanBehavior: zoomPanBehavior,
-            title: ChartTitle(
-              text: chartData.last.speed.toStringAsFixed(2),
-              textStyle: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
             margin: const EdgeInsets.only(left: 8, right: 4),
             series: <ChartSeries<LiveData, int>>[
               AreaSeries<LiveData, int>(
@@ -107,14 +104,17 @@ class _PlotState extends State<Plot> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemCount: timeFrames.length,
+              itemCount: widget.timeFrames.length,
               itemBuilder: (context, index) {
                 return TextButton(
                   onPressed: () {
+                    widget.selectedTimeframe = index;
+                    setState(() {});
+
                     // todo сделать тут запрос
-                    getTime(timeFrames[index]);
+                    getTime(widget.timeFrames[widget.selectedTimeframe]);
                   },
-                  child: Text(timeFrames[index]),
+                  child: Text(widget.timeFrames[index]),
                 );
               },
             ),
@@ -124,20 +124,27 @@ class _PlotState extends State<Plot> {
     );
   }
 
-  // Запрос периодичный
-  // int time = 19;
-  // void updateDataSource(Timer timer) {
-  //   chartData.add(LiveData(time++, (math.Random().nextInt(60) + 30)));
-  //   chartData.removeAt(0);
-  //   _chartSeriesController.updateDataSource(
-  //       addedDataIndex: chartData.length - 1, removedDataIndex: 0);
-  // }
+  int getTime(String timeFrameString) {
+    int timeFrame = getDigitsFromString(timeFrameString);
 
-  int getTime(String timeFrame) {
-    if (timeFrames.contains("m")) {
-      print(timeFrame);
+    if (timeFrameString.contains("m")) {
+      return timeFrame;
     }
-    return 0;
+    if (timeFrameString.contains("h")) {
+      return timeFrame * 60;
+    }
+    if (timeFrameString.contains("D")) {
+      return timeFrame * 60 * 24;
+    }
+    if (timeFrameString.contains("W")) {
+      // todo не совсем уверен в том что неделя там именно 7
+      return timeFrame * 60 * 24 * 7;
+    }
+    if (timeFrameString.contains("MN")) {
+      // todo не совсем уверен в том что месяц именно 30
+      return timeFrame * 60 * 24 * 30;
+    }
+    return 60; // возвращение по стандарту часового интервала
   }
 
   List<LiveData> getChartData() {
@@ -146,6 +153,12 @@ class _PlotState extends State<Plot> {
       data.add(LiveData(i, math.Random().nextDouble() * 20 + 10));
     }
     return data;
+  }
+
+  int getDigitsFromString(String input) {
+    RegExp regex = RegExp(r'\d+');
+    Iterable<RegExpMatch> matches = regex.allMatches(input);
+    return int.parse(matches.map((match) => match.group(0)!).join());
   }
 }
 
