@@ -27,7 +27,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
     '4h',
     '1D',
     '1W',
-    '1MN'
+    // '1MN'
   ];
 
   @override
