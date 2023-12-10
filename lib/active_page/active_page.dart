@@ -42,8 +42,7 @@ class _ActivePageState extends State<ActivePage> {
         return buildActiveList(searched);
       }
       if (state is ActiveErrorState) {
-        return Center(
-            child: Text("Oops, Something went wrong\n${state.message}"));
+        return const Center(child: Text("Oops, Something went wrong"));
       }
       return const Text("Maybe server is down");
     });

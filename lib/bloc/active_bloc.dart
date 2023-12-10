@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/bloc/data_classes.dart';
-import 'package:lotosui/functions/searching.dart';
 
 class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
   ActiveBloc() : super(ActiveInitialState()) {
@@ -14,7 +13,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
       List<Instrument> instuments = await getServerInstruments();
       emit(ActiveLoadedState(instuments));
     } catch (error) {
-      emit(ActiveErrorState(error as String));
+      emit(ActiveErrorState());
     }
   }
 
@@ -22,12 +21,19 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     try {
       String search = event.search;
       List<Instrument> allInstruments = event.instruments;
+      List<Instrument> searchedList = [];
 
-      List<Instrument> searched = getSearchingData(search, allInstruments);
+      // filtering of string
+      allInstruments.forEach((instrument) {
+        String title = instrument.title.toLowerCase();
+        if (title.contains(search.toLowerCase())) {
+          searchedList.add(instrument);
+        }
+      });
 
-      emit(ActiveSearchingState(searched));
+      emit(ActiveSearchingState(searchedList));
     } catch (error) {
-      emit(ActiveErrorState(error as String));
+      emit(ActiveErrorState());
     }
   }
 
@@ -53,10 +59,7 @@ class ActiveInitialState extends ActiveState {}
 
 class ActiveLoadingState extends ActiveState {}
 
-class ActiveErrorState extends ActiveState {
-  String message;
-  ActiveErrorState(this.message);
-}
+class ActiveErrorState extends ActiveState {}
 
 class ActiveLoadedState extends ActiveState {
   List<Instrument> instruments;

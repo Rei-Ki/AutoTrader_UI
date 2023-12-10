@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lotosui/bloc/data_classes.dart';
-import 'package:lotosui/functions/searching.dart';
 
 class PulseBloc extends Bloc<PulseEvent, PulseState> {
   PulseBloc() : super(PulseInitialState()) {
@@ -14,8 +13,8 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
       emit(PulseLoadingState());
       List<Pulse> pulse = await getServerPulse();
       emit(PulseLoadedState(pulse));
-    } catch (e) {
-      emit(PulseErrorState(e as String));
+    } catch (error) {
+      emit(PulseErrorState());
     }
   }
 
@@ -23,12 +22,19 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
     try {
       String search = event.search;
       List<Pulse> allPulses = event.pulses;
+      List<Pulse> searchedList = [];
 
-      List<Pulse> searched = getSearchingData(search, allPulses);
+      // filtering of string
+      allPulses.forEach((instrument) {
+        String title = instrument.title.toLowerCase();
+        if (title.contains(search.toLowerCase())) {
+          searchedList.add(instrument);
+        }
+      });
 
-      emit(PulseSearchingState(searched));
-    } catch (e) {
-      emit(PulseErrorState(e as String));
+      emit(PulseSearchingState(searchedList));
+    } catch (error) {
+      emit(PulseErrorState());
     }
   }
 
@@ -91,10 +97,7 @@ class PulseLoadedState extends PulseState {
   PulseLoadedState(this.pulses);
 }
 
-class PulseErrorState extends PulseState {
-  String error;
-  PulseErrorState(this.error);
-}
+class PulseErrorState extends PulseState {}
 
 class PulseSearchingState extends PulseState {
   List<Pulse> searched;
@@ -108,6 +111,6 @@ class GetPulseEvent extends PulseEvent {}
 
 class PulseSearchEvent extends PulseEvent {
   String search;
-  List<Pulse> instruments;
-  PulseSearchEvent(this.search, this.instruments);
+  List<Pulse> pulses;
+  PulseSearchEvent(this.search, this.pulses);
 }

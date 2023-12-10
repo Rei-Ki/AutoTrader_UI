@@ -43,7 +43,7 @@ class _SearchState extends State<Search> {
           widget.onChange(value);
         },
         onTap: () {
-          debugPrint("search tapped");
+          // debugPrint("search tapped");
         },
       ),
     );
