@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class Search extends StatefulWidget {
-  const Search({super.key, required this.textController});
+  const Search({
+    super.key,
+    required this.textController,
+    required this.onChange,
+  });
 
   final TextEditingController textController;
+  final void Function(String) onChange;
 
   @override
   State<Search> createState() => _SearchState();
@@ -34,6 +39,9 @@ class _SearchState extends State<Search> {
           color: Theme.of(context).primaryColor.withOpacity(0.4),
           width: 1.5,
         )),
+        onChanged: (value) {
+          widget.onChange(value);
+        },
         onTap: () {
           debugPrint("search tapped");
         },

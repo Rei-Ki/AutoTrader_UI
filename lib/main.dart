@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lotosui/bloc/active_bloc.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:lotosui/routes.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,10 @@ class LotosApp extends StatelessWidget {
       // initialRoute: '/home',
       routes: routes,
       // home: const HiddenDrawer(),
-      home: const NavigatePage(),
+      home: BlocProvider(
+        create: (context) => ActiveBloc(),
+        child: const NavigatePage(),
+      ),
     );
   }
 }

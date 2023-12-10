@@ -1,11 +1,11 @@
-class PulseData {
+class Pulse {
   late String title;
   late String operation;
   late int price;
   late int quantity;
   late String date;
 
-  PulseData({
+  Pulse({
     required this.title,
     required this.operation,
     required this.price,
@@ -13,7 +13,7 @@ class PulseData {
     required this.quantity,
   });
 
-  PulseData.fromJson(Map<String, dynamic> json) {
+  Pulse.fromJson(Map<String, dynamic> json) {
     title = json['title'] ?? '';
     operation = json['operation'] ?? '';
     price = json['price'] ?? '';
@@ -22,18 +22,18 @@ class PulseData {
   }
 }
 
-class InstrumentData {
+class Instrument {
   late String title;
   late String type;
   late bool isActive;
 
-  InstrumentData({
+  Instrument({
     required this.title,
     required this.type,
     required this.isActive,
   });
 
-  InstrumentData.fromJson(Map<String, dynamic> json) {
+  Instrument.fromJson(Map<String, dynamic> json) {
     title = json['title'] ?? '';
     type = json['type'] ?? '';
     isActive = json['isActive'] ?? '';

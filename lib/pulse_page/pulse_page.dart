@@ -18,7 +18,12 @@ class _PulsePageState extends State<PulsePage> {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Search(textController: searchedPulseText),
+        Search(
+          textController: searchedPulseText,
+          onChange: (value) {
+            print(value);
+          },
+        ),
         const Expanded(
           child: PulseList(),
         )

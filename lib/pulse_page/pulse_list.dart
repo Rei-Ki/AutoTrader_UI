@@ -11,36 +11,36 @@ class PulseList extends StatefulWidget {
 
 class _PulseListState extends State<PulseList> {
   // todo Добавить такой же для активных
-  List<PulseData> pulse = [
-    PulseData(
+  List<Pulse> pulse = [
+    Pulse(
       title: 'Инструмент 0',
       operation: "покупка",
       date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
       price: 100,
       quantity: 2,
     ),
-    PulseData(
+    Pulse(
       title: 'Инструмент 1',
       operation: "покупка",
       date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
       price: 200,
       quantity: 4,
     ),
-    PulseData(
+    Pulse(
       title: 'Инструмент 2',
       operation: "продажа",
       date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
       price: 130,
       quantity: 1,
     ),
-    PulseData(
+    Pulse(
       title: 'Инструмент 3',
       operation: "продажа",
       date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
       price: 150,
       quantity: 1,
     ),
-    PulseData(
+    Pulse(
       title: 'Инструмент 4',
       operation: "продажа",
       date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
@@ -61,7 +61,7 @@ class _PulseListState extends State<PulseList> {
     );
   }
 
-  List<PulseData> inversePulse() {
+  List<Pulse> inversePulse() {
     return pulse.reversed.toList();
   }
 }
@@ -73,7 +73,7 @@ class PulseTile extends StatelessWidget {
     required this.data,
   });
 
-  final PulseData data;
+  final Pulse data;
 
   @override
   Widget build(BuildContext context) {
