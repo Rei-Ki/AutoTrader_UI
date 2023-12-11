@@ -1,31 +1,37 @@
 import 'data_classes.dart';
 
-abstract class Event {}
+abstract class MainEvent {}
+
+class MainActiveSwitchState extends MainEvent {}
+
+class MainPulseSwitchState extends MainEvent {}
+
+class MainAnalyticsSwitchState extends MainEvent {}
 
 // Main Events
-class MainSetAppBarTitleEvent extends Event {
+class MainSetAppBarTitleEvent extends MainEvent {
   String title;
   MainSetAppBarTitleEvent(this.title);
 }
 
-class MainSetThemeEvent extends Event {}
+class MainSetThemeEvent extends MainEvent {}
 
 // Pulse Events
-class GetPulseEvent extends Event {}
+class GetPulseEvent extends MainEvent {}
 
-class PulseSearchEvent extends Event {
+class PulseSearchEvent extends MainEvent {
   String search;
   List<Pulse> pulses;
   PulseSearchEvent(this.search, this.pulses);
 }
 
 // Analytics Events
-class AnalyticsDataLoadEvent extends Event {}
+class AnalyticsDataLoadEvent extends MainEvent {}
 
 // Active Events
-class GetActiveEvent extends Event {}
+class GetActiveEvent extends MainEvent {}
 
-class ActiveSearchEvent extends Event {
+class ActiveSearchEvent extends MainEvent {
   String search;
   List<Instrument> instruments;
   ActiveSearchEvent(this.search, this.instruments);

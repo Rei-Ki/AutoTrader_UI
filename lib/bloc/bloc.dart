@@ -12,7 +12,7 @@ import 'events.dart';
   todo сделать смену темы, задника, смену названия AppBar navigate_page
 */
 
-class MainBloc extends Bloc<Event, State> {
+class MainBloc extends Bloc<MainEvent, MainState> {
   MainBloc() : super(InitialState()) {
     // Pulse Events
     on<GetPulseEvent>(getPulse); //

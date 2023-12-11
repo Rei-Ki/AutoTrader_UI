@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lotosui/bloc/active_bloc.dart';
+import 'package:lotosui/bloc/bloc.dart';
 import 'package:lotosui/bloc/data_classes.dart';
+import 'package:lotosui/bloc/states.dart';
 import 'package:lotosui/widgets/search.dart';
+import '../bloc/events.dart';
 import '../widgets/active_tile.dart';
 
 class ActivePage extends StatefulWidget {
@@ -19,16 +21,17 @@ class _ActivePageState extends State<ActivePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ActiveBloc(),
+      create: (context) => MainBloc(),
       child: buildActiveBloc(),
     );
   }
 
   buildActiveBloc() {
-    return BlocBuilder<ActiveBloc, ActiveState>(builder: (context, state) {
-      if (state is ActiveInitialState) {
+    return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
+      if (state is InitialState) {
+        //ActiveInitialState
         blocContext = context;
-        context.read<ActiveBloc>().add(GetActiveEvent());
+        context.read<MainBloc>().add(GetActiveEvent());
       }
 
       if (state is ActiveLoadingState) {
@@ -63,9 +66,7 @@ class _ActivePageState extends State<ActivePage> {
   }
 
   searchOnChange(value) {
-    blocContext
-        .read<ActiveBloc>()
-        .add(ActiveSearchEvent(value, allInstruments));
+    blocContext.read<MainBloc>().add(ActiveSearchEvent(value, allInstruments));
   }
 
   Expanded buildList(List<Instrument> instruments) {

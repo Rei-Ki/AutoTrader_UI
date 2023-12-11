@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/analytics_page/analytics_plot.dart';
 import 'package:lotosui/bloc/data_classes.dart';
 
-import '../bloc/analytics_bloc.dart';
+import '../bloc/bloc.dart';
+import '../bloc/events.dart';
+import '../bloc/states.dart';
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
@@ -18,17 +20,16 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AnalyticsBloc(),
+      create: (context) => MainBloc(),
       child: buildAnalyticsBloc(),
     );
   }
 
   buildAnalyticsBloc() {
-    return BlocBuilder<AnalyticsBloc, AnalyticsState>(
-        builder: (context, state) {
-      if (state is AnalyticsInitialState) {
+    return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
+      if (state is InitialState) {
         blocContext = context;
-        context.read<AnalyticsBloc>().add(AnalyticsDataLoadEvent());
+        context.read<MainBloc>().add(AnalyticsDataLoadEvent());
       }
 
       if (state is AnalyticsLoadingState) {
