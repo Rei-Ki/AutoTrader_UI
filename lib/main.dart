@@ -1,5 +1,3 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lotosui/bloc/active_bloc.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:lotosui/routes.dart';
 import 'package:flutter/material.dart';
@@ -17,16 +15,11 @@ class LotosApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       showPerformanceOverlay: false,
-      title: 'Lotos',
+      title: 'Traider',
       themeMode: ThemeMode.system,
       theme: lightTheme,
-      // initialRoute: '/home',
       routes: routes,
-      // home: const HiddenDrawer(),
-      home: BlocProvider(
-        create: (context) => ActiveBloc(),
-        child: const NavigatePage(),
-      ),
+      home: const NavigatePage(),
     );
   }
 }

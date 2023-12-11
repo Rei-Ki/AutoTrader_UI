@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 class Search extends StatefulWidget {
   const Search({
     super.key,
-    required this.textController,
     required this.onChange,
   });
 
-  final TextEditingController textController;
   final void Function(String) onChange;
 
   @override
@@ -15,12 +13,14 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  final TextEditingController textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
       child: SearchBar(
-        controller: widget.textController,
+        controller: textController,
         elevation: MaterialStateProperty.all(0),
         constraints:
             const BoxConstraints(maxWidth: 250, minHeight: 40, maxHeight: 40),
@@ -30,7 +30,7 @@ class _SearchState extends State<Search> {
           InkWell(
             child: const Icon(Icons.clear_rounded, size: 20),
             onTap: () {
-              widget.textController.text = '';
+              textController.text = '';
               setState(() {});
             },
           ),

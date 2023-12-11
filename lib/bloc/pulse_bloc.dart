@@ -38,7 +38,7 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
     }
   }
 
-  // add functions
+  // other functions
   getServerPulse() async {
     await Future.delayed(const Duration(seconds: 1));
 

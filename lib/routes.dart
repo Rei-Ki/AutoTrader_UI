@@ -1,4 +1,4 @@
-import 'package:lotosui/active_page/instrument_page/instrument_page.dart';
+import 'package:lotosui/instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
 
 final routes = {

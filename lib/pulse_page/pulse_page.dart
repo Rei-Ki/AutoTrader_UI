@@ -3,6 +3,7 @@ import 'package:lotosui/bloc/data_classes.dart';
 import 'package:flutter/material.dart';
 import 'package:lotosui/bloc/pulse_bloc.dart';
 import 'package:lotosui/widgets/search.dart';
+import '../widgets/pulse_tile.dart';
 
 class PulsePage extends StatefulWidget {
   const PulsePage({super.key});
@@ -12,9 +13,8 @@ class PulsePage extends StatefulWidget {
 }
 
 class _PulsePageState extends State<PulsePage> {
-  final TextEditingController searchedInstrumentsText = TextEditingController();
   List<Pulse> allPulses = [];
-  late BuildContext pulseBlocContext;
+  late BuildContext blocContext;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class _PulsePageState extends State<PulsePage> {
   buildPulseBloc() {
     return BlocBuilder<PulseBloc, PulseState>(builder: (context, state) {
       if (state is PulseInitialState) {
-        pulseBlocContext = context;
+        blocContext = context;
         context.read<PulseBloc>().add(GetPulseEvent());
       }
 
@@ -56,13 +56,14 @@ class _PulsePageState extends State<PulsePage> {
   buildPulseList(List<Pulse> pulse) {
     return Column(
       children: [
-        Search(
-          textController: searchedInstrumentsText,
-          onChange: searchOnChange,
-        ),
+        Search(onChange: searchOnChange),
         buildList(pulse),
       ],
     );
+  }
+
+  searchOnChange(value) {
+    blocContext.read<PulseBloc>().add(PulseSearchEvent(value, allPulses));
   }
 
   Expanded buildList(List<Pulse> pulse) {
@@ -74,47 +75,6 @@ class _PulsePageState extends State<PulsePage> {
             data: pulse[index],
           );
         },
-      ),
-    );
-  }
-
-  searchOnChange(value) {
-    pulseBlocContext.read<PulseBloc>().add(
-          PulseSearchEvent(value, allPulses),
-        );
-  }
-}
-
-// Плитка ------------------------------------
-class PulseTile extends StatelessWidget {
-  const PulseTile({
-    super.key,
-    required this.data,
-  });
-
-  final Pulse data;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Theme.of(context).primaryColor.withOpacity(0.1),
-        ),
-        child: ListTile(
-          leading: const Icon(Icons.notifications_active_outlined),
-          title: Text(
-            data.title,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          subtitle: Text(
-            "Цена: ${data.price}\nКоличество: ${data.quantity}\nОперация: ${data.operation}",
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
-          trailing: Text(data.date),
-        ),
       ),
     );
   }

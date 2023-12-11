@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import '../bloc/data_classes.dart';
 
+// ignore: must_be_immutable
 class AnalyticsPlot extends StatefulWidget {
-  const AnalyticsPlot({super.key});
+  AnalyticsPlot({
+    super.key,
+    required this.chartSegments,
+  });
+
+  List<Segment> chartSegments;
 
   @override
   State<AnalyticsPlot> createState() => _AnalyticsPlotState();
 }
 
 class _AnalyticsPlotState extends State<AnalyticsPlot> {
-  // todo Показывать на что и как диверсифицированы средства
-  late List<Segment> chartData;
-  late int total;
-
-  @override
-  void initState() {
-    chartData = data;
-    total = getTotal();
-    super.initState();
-  }
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,7 @@ class _AnalyticsPlotState extends State<AnalyticsPlot> {
       child: SfCircularChart(
         // Сколько на счету
         title: ChartTitle(
-          text: total.toString(),
+          text: "${getTotal()}",
           textStyle: const TextStyle(fontSize: 26),
         ),
         legend: const Legend(
@@ -42,7 +40,7 @@ class _AnalyticsPlotState extends State<AnalyticsPlot> {
             innerRadius: "60%",
             animationDuration: 400,
             animationDelay: 0,
-            dataSource: chartData,
+            dataSource: widget.chartSegments,
             xValueMapper: (Segment data, _) => data.name,
             yValueMapper: (Segment data, _) => data.value,
             dataLabelSettings: const DataLabelSettings(
@@ -59,29 +57,11 @@ class _AnalyticsPlotState extends State<AnalyticsPlot> {
     );
   }
 
-  List<Segment> data = [
-    Segment(name: "AAPL", value: 1500),
-    Segment(name: "GOOGL", value: 2000),
-    Segment(name: "MSFT", value: 1200),
-    Segment(name: "AMZN", value: 1800),
-    Segment(name: "FB", value: 2500),
-    Segment(name: "JPM", value: 1600),
-    Segment(name: "XOM", value: 3000),
-    Segment(name: "Свободные", value: 5000),
-  ];
-
   int getTotal() {
-    total = 0;
-    for (var i = 0; i < chartData.length; i++) {
-      total += chartData[i].value;
+    int total = 0;
+    for (var i = 0; i < widget.chartSegments.length; i++) {
+      total += widget.chartSegments[i].value;
     }
     return total;
   }
-}
-
-class Segment {
-  final String name;
-  final int value;
-
-  Segment({required this.name, required this.value});
 }

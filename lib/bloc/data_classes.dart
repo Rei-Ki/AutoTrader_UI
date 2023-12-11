@@ -1,3 +1,17 @@
+// Segment для графика аналитики
+class Segment {
+  late String name;
+  late int value;
+
+  Segment({required this.name, required this.value});
+
+  Segment.fromJson(Map<String, dynamic> json) {
+    name = json['name'] ?? '';
+    value = json['value'] ?? '';
+  }
+}
+
+// Pulse для страницы пульса
 class Pulse {
   late String title;
   late String operation;
@@ -22,6 +36,7 @@ class Pulse {
   }
 }
 
+// Instrument для страницы инструментов
 class Instrument {
   late String title;
   late String type;

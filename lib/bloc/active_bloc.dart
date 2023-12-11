@@ -37,10 +37,11 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     }
   }
 
-  // ADD functions
+  // other functions
   getServerInstruments() async {
     await Future.delayed(const Duration(seconds: 1));
-    // TODO сделать async запрос к серверу за инструментами
+    // todo сделать подключение по вебсокетам к серверу
+    // todo сделать async запрос к серверу за инструментами
     var inst1 = Instrument(isActive: true, title: "CRU3", type: "Фьючерс");
     var inst2 = Instrument(isActive: false, title: "SiZ3", type: "Фьючерс");
     var inst3 = Instrument(isActive: true, title: "SiU3", type: "Фьючерс");
@@ -82,5 +83,3 @@ class ActiveSearchEvent extends ActiveEvent {
   List<Instrument> instruments;
   ActiveSearchEvent(this.search, this.instruments);
 }
-// class GetPulseEvent extends ActiveEvent {}
-// class GetAnalyticsEvent extends ActiveEvent {}
