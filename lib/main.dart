@@ -1,3 +1,6 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/bloc.dart';
 import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +25,10 @@ class LotosApp extends StatelessWidget {
         '/home': (context) => const NavigatePage(),
         '/instrumentInfo': (context) => const InstrumentPage(),
       },
-      home: const NavigatePage(),
+      home: BlocProvider(
+        create: (context) => MainBloc(),
+        child: const NavigatePage(),
+      ),
     );
   }
 }

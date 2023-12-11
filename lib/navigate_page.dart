@@ -46,10 +46,6 @@ class _NavigatePageState extends State<NavigatePage> {
         return buildMainPage(context, state.title);
       }
 
-      if (state is MainChangeActive) {}
-      if (state is MainChangePulse) {}
-      if (state is MainChangeAnalytics) {}
-
       if (state is MainErrorState) {
         return const Center(child: Text("Oops, Something went wrong"));
       }

@@ -39,12 +39,6 @@ class MainAppBarUpdatedState extends MainState {
 
 class MainErrorState extends MainState {}
 
-class MainChangeActive extends MainState {}
-
-class MainChangePulse extends MainState {}
-
-class MainChangeAnalytics extends MainState {}
-
 // Events ------------------------------------
 abstract class MainEvent {}
 
