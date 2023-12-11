@@ -38,6 +38,8 @@ class _SearchState extends State<Search> {
         IconButton(
           icon: const Icon(Icons.clear_rounded),
           onPressed: () {
+            // todo починить отображение после нажатия сюда пропадает все
+            //  из списка, чтобы вернуть начать печатать надо
             textController.text = '';
             setState(() {});
           },
