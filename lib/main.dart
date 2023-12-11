@@ -1,5 +1,5 @@
+import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
-import 'package:lotosui/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:lotosui/style.dart';
 
@@ -18,7 +18,10 @@ class LotosApp extends StatelessWidget {
       title: 'Traider',
       themeMode: ThemeMode.system,
       theme: lightTheme,
-      routes: routes,
+      routes: {
+        '/home': (context) => const NavigatePage(),
+        '/instrumentInfo': (context) => const InstrumentPage(),
+      },
       home: const NavigatePage(),
     );
   }

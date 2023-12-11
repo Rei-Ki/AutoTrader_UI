@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math' as math;
 
+// ignore: must_be_immutable
 class Plot extends StatefulWidget {
   Plot({
     super.key,

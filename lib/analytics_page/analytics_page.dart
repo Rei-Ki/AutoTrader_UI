@@ -47,7 +47,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         return const Center(child: Text("Oops, Something went wrong"));
       }
 
-      return const Text("Maybe server is down");
+      return Container();
     });
   }
 

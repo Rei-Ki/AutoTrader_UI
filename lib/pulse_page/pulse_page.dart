@@ -49,7 +49,7 @@ class _PulsePageState extends State<PulsePage> {
         return buildPulseList(searched);
       }
 
-      return const Text("Maybe server is down");
+      return Container();
     });
   }
 

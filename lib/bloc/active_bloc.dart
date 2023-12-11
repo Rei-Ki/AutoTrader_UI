@@ -39,7 +39,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
   // other functions
   getServerInstruments() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(microseconds: 1));
     // todo сделать подключение по вебсокетам к серверу
     // todo сделать async запрос к серверу за инструментами
     var inst1 = Instrument(isActive: true, title: "CRU3", type: "Фьючерс");

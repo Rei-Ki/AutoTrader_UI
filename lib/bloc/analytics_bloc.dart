@@ -21,7 +21,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
 
   // other functions
   getServerSegmentsData() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(microseconds: 1));
     List<Segment> segments = [
       Segment(name: "AAPL", value: 1500),
       Segment(name: "GOOGL", value: 2000),

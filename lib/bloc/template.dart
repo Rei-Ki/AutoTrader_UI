@@ -14,7 +14,7 @@ class SomeBloc extends Bloc<SomeEvent, SomeState> {
   }
 
   // other functions
-  getServer() async {
+  get() async {
     await Future.delayed(const Duration(seconds: 1));
   }
 }
