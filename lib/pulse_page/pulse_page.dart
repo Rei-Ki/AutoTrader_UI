@@ -42,7 +42,7 @@ class _PulsePageState extends State<PulsePage> {
         return buildPulseList(allPulses);
       }
 
-      if (state is PulseErrorState) {
+      if (state is ErrorState) {
         return const Center(child: Text("Oops, Something went wrong"));
       }
 

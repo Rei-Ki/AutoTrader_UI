@@ -27,6 +27,17 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     // Active Events
     on<GetActiveEvent>(getActive); //
     on<ActiveSearchEvent>(searchActive); //
+
+    // Theme switch Events
+    on<ThemeSwitchEvent>(themeSwitch); //
+  }
+
+  themeSwitch(event, emit) {
+    try {
+      //
+    } catch (error) {
+      emit(ErrorState());
+    }
   }
 
   getPulse(event, emit) async {
@@ -35,7 +46,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       List<Pulse> pulse = await getServerPulse();
       emit(PulseLoadedState(pulse));
     } catch (error) {
-      emit(PulseErrorState());
+      emit(ErrorState());
     }
   }
 
@@ -45,7 +56,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       List<Instrument> instuments = await getServerInstruments();
       emit(ActiveLoadedState(instuments));
     } catch (error) {
-      emit(ActiveErrorState());
+      emit(ErrorState());
     }
   }
 
@@ -55,7 +66,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       List<Segment> segments = await getServerSegmentsData();
       emit(AnalyticsLoadedState(segments));
     } catch (error) {
-      emit(AnalyticsErrorState());
+      emit(ErrorState());
     }
   }
 
@@ -63,7 +74,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     try {
       emit(MainAppBarUpdatedState(event.title));
     } catch (error) {
-      emit(MainErrorState());
+      emit(ErrorState());
     }
   }
 
@@ -161,7 +172,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
       emit(ActiveSearchingState(searchedList));
     } catch (error) {
-      emit(ActiveErrorState());
+      emit(ErrorState());
     }
   }
 
@@ -181,7 +192,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
       emit(PulseSearchingState(searchedList));
     } catch (error) {
-      emit(PulseErrorState());
+      emit(ErrorState());
     }
   }
 }

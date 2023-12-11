@@ -2,11 +2,7 @@ import 'data_classes.dart';
 
 abstract class MainEvent {}
 
-class MainActiveSwitchState extends MainEvent {}
-
-class MainPulseSwitchState extends MainEvent {}
-
-class MainAnalyticsSwitchState extends MainEvent {}
+class ThemeSwitchEvent extends MainEvent {}
 
 // Main Events
 class MainSetAppBarTitleEvent extends MainEvent {

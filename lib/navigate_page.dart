@@ -48,7 +48,7 @@ class _NavigatePageState extends State<NavigatePage> {
         return buildMainPage(context, state.title);
       }
 
-      if (state is MainErrorState) {
+      if (state is ErrorState) {
         return const Center(child: Text("Oops, Something went wrong"));
       }
 
@@ -58,8 +58,6 @@ class _NavigatePageState extends State<NavigatePage> {
 
   Scaffold buildMainPage(BuildContext context, String appBar) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      // ----------------------------------------------------
       body: pages.elementAt(selectedIndex),
       // ----------------------------------------------------
       appBar: buildAppBar(appBar),
@@ -121,11 +119,24 @@ class _NavigatePageState extends State<NavigatePage> {
   }
 
   AppBar buildAppBar(String appBar) {
+    bool isDark = false;
     return AppBar(
       title: Text(appBar),
       elevation: 0,
       backgroundColor: Colors.transparent,
       centerTitle: true,
+      actions: [
+        IconButton(
+          isSelected: isDark,
+          onPressed: () {
+            isDark = !isDark;
+            setState(() {});
+          },
+          icon: const Icon(Icons.wb_sunny_outlined),
+          selectedIcon: const Icon(Icons.dark_mode_outlined),
+        ),
+        const SizedBox(width: 5),
+      ],
     );
   }
 }

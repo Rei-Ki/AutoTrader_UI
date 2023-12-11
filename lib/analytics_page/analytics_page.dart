@@ -44,7 +44,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         return buildAnalytics(segments);
       }
 
-      if (state is AnalyticsErrorState) {
+      if (state is ErrorState) {
         return const Center(child: Text("Oops, Something went wrong"));
       }
 

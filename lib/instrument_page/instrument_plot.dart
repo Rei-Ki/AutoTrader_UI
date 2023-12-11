@@ -22,6 +22,9 @@ class _PlotState extends State<Plot> {
   late ZoomPanBehavior zoomPanBehavior;
   // int selectedTimeframe = 4;
 
+  // todo Добавить блок сюда
+  // сделать передачу параметров через блок а не навигацию
+
   @override
   void initState() {
     chartData = getChartData();
@@ -78,6 +81,7 @@ class _PlotState extends State<Plot> {
                 markerSettings: MarkerSettings(
                   isVisible: true,
                   borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
+                  color: Theme.of(context).scaffoldBackgroundColor,
                 ),
               )
             ],
@@ -98,7 +102,7 @@ class _PlotState extends State<Plot> {
               labelPosition: ChartDataLabelPosition.outside,
             ),
           ),
-          // ---------------------------------------------------------------
+          // timeframes ---------------------------------------------------------------
           Container(
             margin: const EdgeInsets.all(5),
             height: 25,

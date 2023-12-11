@@ -124,7 +124,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
       borderRadius: 50,
       height: 35,
       selectedIndex: selectedStrategy,
-      unSelectedBackgroundColors: const [Colors.white],
+      unSelectedBackgroundColors: [Theme.of(context).scaffoldBackgroundColor],
       selectedBackgroundColors: [
         Theme.of(context).primaryColor.withOpacity(0.7)
       ],

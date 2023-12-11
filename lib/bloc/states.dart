@@ -2,11 +2,10 @@ import 'data_classes.dart';
 
 abstract class MainState {}
 
-class MainActiveState extends MainState {}
+// base States
+class InitialState extends MainState {}
 
-class MainPulseState extends MainState {}
-
-class MainAnalyticsState extends MainState {}
+class ErrorState extends MainState {}
 
 // Pulse States
 class PulseInitialState extends MainState {}
@@ -18,16 +17,12 @@ class PulseLoadedState extends MainState {
   PulseLoadedState(this.pulses);
 }
 
-class PulseErrorState extends MainState {}
-
 class PulseSearchingState extends MainState {
   List<Pulse> searched;
   PulseSearchingState(this.searched);
 }
 
 // Main States
-class InitialState extends MainState {}
-
 class MainAppBarUpdatedState extends MainState {
   String title;
   MainAppBarUpdatedState(this.title);
@@ -36,7 +31,6 @@ class MainAppBarUpdatedState extends MainState {
 // class MainChangeActive extends State {}
 // class MainChangePulse extends State {}
 // class MainChangeAnalytics extends State {}
-class MainErrorState extends MainState {}
 
 // Analytics States
 class AnalyticsInitialState extends MainState {}
@@ -48,14 +42,10 @@ class AnalyticsLoadedState extends MainState {
   AnalyticsLoadedState(this.segments);
 }
 
-class AnalyticsErrorState extends MainState {}
-
 // Active States
 class ActiveInitialState extends MainState {}
 
 class ActiveLoadingState extends MainState {}
-
-class ActiveErrorState extends MainState {}
 
 class ActiveLoadedState extends MainState {
   List<Instrument> instruments;
