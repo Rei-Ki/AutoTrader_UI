@@ -4,14 +4,8 @@ import 'dart:math' as math;
 
 // ignore: must_be_immutable
 class Plot extends StatefulWidget {
-  Plot({
-    super.key,
-    required this.selectedTimeframe,
-    required this.timeFrames,
-  });
+  const Plot({super.key});
 
-  int selectedTimeframe;
-  List<String> timeFrames;
   @override
   State<Plot> createState() => _PlotState();
 }
@@ -20,10 +14,22 @@ class _PlotState extends State<Plot> {
   late List<LiveData> chartData;
   late ChartSeriesController chartSeriesController;
   late ZoomPanBehavior zoomPanBehavior;
-  // int selectedTimeframe = 4;
+  int selectedTimeframe = 4;
+  List<String> timeFrames = [
+    '1m',
+    '5m',
+    '15m',
+    '30m',
+    '60m',
+    '2h',
+    '4h',
+    '1D',
+    '1W',
+    '1MN'
+  ];
 
   // todo Добавить блок сюда
-  // сделать передачу параметров через блок а не навигацию
+  // todo Сделать выбор таймфреймов выпадающим списком и поместить его к цене
 
   @override
   void initState() {
@@ -43,88 +49,100 @@ class _PlotState extends State<Plot> {
     return SafeArea(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const SizedBox(width: 35),
-              Text(
-                chartData.last.speed.toStringAsFixed(2),
-                style: const TextStyle(fontSize: 30),
-              ),
-              Text(widget.timeFrames[widget.selectedTimeframe]),
-            ],
-          ),
+          buildTopPanel(),
           // График --------------------------------
-          SfCartesianChart(
-            zoomPanBehavior: zoomPanBehavior,
-            margin: const EdgeInsets.only(left: 8, right: 4),
-            series: <ChartSeries<LiveData, int>>[
-              AreaSeries<LiveData, int>(
-                onRendererCreated: (ChartSeriesController controller) {
-                  chartSeriesController = controller;
-                },
-                borderWidth: 3,
-                borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
-                gradient: LinearGradient(
-                  transform: const GradientRotation(math.pi / 2),
-                  colors: [
-                    Theme.of(context).primaryColor.withOpacity(0.5),
-                    Theme.of(context).primaryColor.withOpacity(0.2),
-                    Colors.transparent,
-                  ],
-                ),
-                dataSource: chartData,
-                xValueMapper: (LiveData sales, _) => sales.time,
-                yValueMapper: (LiveData sales, _) => sales.speed,
-                animationDuration: 800,
-                animationDelay: 400,
-                markerSettings: MarkerSettings(
-                  isVisible: true,
-                  borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                ),
-              )
-            ],
-            primaryXAxis: NumericAxis(
-              majorGridLines: const MajorGridLines(width: 1),
-              edgeLabelPlacement: EdgeLabelPlacement.shift,
-              interval: 2,
-              title: AxisTitle(text: ''),
-              decimalPlaces: 0,
-              labelPosition: ChartDataLabelPosition.outside,
-            ),
-            primaryYAxis: NumericAxis(
-              opposedPosition: true,
-              axisLine: const AxisLine(width: 0),
-              enableAutoIntervalOnZooming: true,
-              title: AxisTitle(text: ''),
-              decimalPlaces: 3,
-              labelPosition: ChartDataLabelPosition.outside,
-            ),
-          ),
+          buildChart(context),
           // timeframes ---------------------------------------------------------------
-          Container(
-            margin: const EdgeInsets.all(5),
-            height: 25,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemCount: widget.timeFrames.length,
-              itemBuilder: (context, index) {
-                return TextButton(
-                  onPressed: () {
-                    widget.selectedTimeframe = index;
-                    setState(() {});
-
-                    // todo сделать тут запрос
-                    getTime(widget.timeFrames[widget.selectedTimeframe]);
-                  },
-                  child: Text(widget.timeFrames[index]),
-                );
-              },
-            ),
-          )
+          buildTimeframes()
         ],
+      ),
+    );
+  }
+
+  Row buildTopPanel() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        const SizedBox(width: 35),
+        Text(
+          chartData.last.speed.toStringAsFixed(2),
+          style: const TextStyle(fontSize: 30),
+        ),
+        Text(timeFrames[selectedTimeframe]),
+      ],
+    );
+  }
+
+  SfCartesianChart buildChart(BuildContext context) {
+    return SfCartesianChart(
+      zoomPanBehavior: zoomPanBehavior,
+      margin: const EdgeInsets.only(left: 8, right: 4),
+      series: <ChartSeries<LiveData, int>>[
+        AreaSeries<LiveData, int>(
+          onRendererCreated: (ChartSeriesController controller) {
+            chartSeriesController = controller;
+          },
+          borderWidth: 3,
+          borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
+          gradient: LinearGradient(
+            transform: const GradientRotation(math.pi / 2),
+            colors: [
+              Theme.of(context).primaryColor.withOpacity(0.5),
+              Theme.of(context).primaryColor.withOpacity(0.2),
+              Colors.transparent,
+            ],
+          ),
+          dataSource: chartData,
+          xValueMapper: (LiveData sales, _) => sales.time,
+          yValueMapper: (LiveData sales, _) => sales.speed,
+          animationDuration: 800,
+          animationDelay: 400,
+          markerSettings: MarkerSettings(
+            isVisible: true,
+            borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
+        )
+      ],
+      primaryXAxis: NumericAxis(
+        majorGridLines: const MajorGridLines(width: 1),
+        edgeLabelPlacement: EdgeLabelPlacement.shift,
+        interval: 2,
+        title: AxisTitle(text: ''),
+        decimalPlaces: 0,
+        labelPosition: ChartDataLabelPosition.outside,
+      ),
+      primaryYAxis: NumericAxis(
+        opposedPosition: true,
+        axisLine: const AxisLine(width: 0),
+        enableAutoIntervalOnZooming: true,
+        title: AxisTitle(text: ''),
+        decimalPlaces: 3,
+        labelPosition: ChartDataLabelPosition.outside,
+      ),
+    );
+  }
+
+  Container buildTimeframes() {
+    return Container(
+      margin: const EdgeInsets.all(5),
+      height: 25,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemCount: timeFrames.length,
+        itemBuilder: (context, index) {
+          return TextButton(
+            onPressed: () {
+              selectedTimeframe = index;
+              setState(() {});
+
+              // todo сделать тут запрос
+              getTime(timeFrames[selectedTimeframe]);
+            },
+            child: Text(timeFrames[index]),
+          );
+        },
       ),
     );
   }

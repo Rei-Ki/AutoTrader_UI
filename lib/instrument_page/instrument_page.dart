@@ -1,6 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/instrument_page/instrument_plot.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter/material.dart';
+
+import '../bloc/bloc.dart';
+import '../bloc/states.dart';
 // import 'dart:async';
 
 class InstrumentPage extends StatefulWidget {
@@ -17,23 +21,11 @@ class _InstrumentPageState extends State<InstrumentPage> {
   List<String> strategies = ["fractal", "corridor"];
   TextEditingController risk = TextEditingController();
   TextEditingController planLimit = TextEditingController();
-  List<String> timeFrames = [
-    '1m',
-    '5m',
-    '15m',
-    '30m',
-    '60m',
-    '2h',
-    '4h',
-    '1D',
-    '1W',
-    // '1MN'
-  ];
 
   @override
   void didChangeDependencies() {
     final args = ModalRoute.of(context)?.settings.arguments;
-    assert(args != null && args is String, "You mast provide String args");
+    assert(args != null, "You mast provide String args");
 
     title = args as String;
     setState(() {});
@@ -42,6 +34,20 @@ class _InstrumentPageState extends State<InstrumentPage> {
 
   @override
   Widget build(BuildContext context) {
+    // return BlocProvider(
+    //   create: (context) => MainBloc(),
+    //   child: buildInstrumentPageBloc(context),
+    // );
+    return buildInstrumentPage(context);
+  }
+
+  // buildInstrumentPageBloc(BuildContext context) {
+  //   return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
+  //     return Container();
+  //   });
+  // }
+
+  Scaffold buildInstrumentPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -51,10 +57,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
       ),
       body: Column(
         children: [
-          Plot(
-            selectedTimeframe: selectedTimeframe,
-            timeFrames: timeFrames,
-          ),
+          const Plot(),
           inputFields(),
           strategyTabs(context),
           startButton(context)
@@ -90,6 +93,29 @@ class _InstrumentPageState extends State<InstrumentPage> {
     );
   }
 
+  Widget strategyTabs(BuildContext context) {
+    return FlutterToggleTab(
+      width: 60, // width in percent
+      borderRadius: 50,
+      height: 35,
+      selectedIndex: selectedStrategy,
+      unSelectedBackgroundColors: [Theme.of(context).scaffoldBackgroundColor],
+      selectedBackgroundColors: [
+        Theme.of(context).primaryColor.withOpacity(0.7)
+      ],
+      selectedTextStyle: const TextStyle(color: Colors.black, fontSize: 14),
+      unSelectedTextStyle: const TextStyle(fontSize: 14),
+      labels: strategies,
+      selectedLabelIndex: (index) {
+        setState(() {
+          selectedStrategy = index;
+          // todo сделать чтобы после старта пропадал этот свитчер
+          print(strategies[index]);
+        });
+      },
+    );
+  }
+
   IconButton startButton(BuildContext context) {
     return IconButton(
       padding: const EdgeInsets.all(0),
@@ -115,29 +141,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
         size: 70,
         color: Theme.of(context).primaryColor.withOpacity(0.8),
       ),
-    );
-  }
-
-  Widget strategyTabs(BuildContext context) {
-    return FlutterToggleTab(
-      width: 60, // width in percent
-      borderRadius: 50,
-      height: 35,
-      selectedIndex: selectedStrategy,
-      unSelectedBackgroundColors: [Theme.of(context).scaffoldBackgroundColor],
-      selectedBackgroundColors: [
-        Theme.of(context).primaryColor.withOpacity(0.7)
-      ],
-      selectedTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
-      unSelectedTextStyle: const TextStyle(color: Colors.black, fontSize: 14),
-      labels: strategies,
-      selectedLabelIndex: (index) {
-        setState(() {
-          selectedStrategy = index;
-          // todo сделать чтобы после старта пропадал этот свитчер
-          print(strategies[index]);
-        });
-      },
     );
   }
 }

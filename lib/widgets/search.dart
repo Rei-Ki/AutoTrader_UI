@@ -30,6 +30,7 @@ class _SearchState extends State<Search> {
           EdgeInsets.symmetric(horizontal: 12.0)),
       overlayColor: MaterialStateProperty.all(Colors.transparent),
       controller: textController,
+      backgroundColor: MaterialStateProperty.all(Colors.transparent),
       elevation: MaterialStateProperty.all(0),
       constraints:
           const BoxConstraints(maxWidth: 250, minHeight: 49, maxHeight: 49),

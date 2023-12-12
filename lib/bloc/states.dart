@@ -7,6 +7,18 @@ class InitialState extends MainState {}
 
 class ErrorState extends MainState {}
 
+// InstrumentsPage
+
+class InstrumentLoadingState extends MainState {}
+
+class InstrumentLoadedState extends MainState {}
+
+class TimeframeChangedState extends MainState {
+  // todo change List<int> to List<Candle>
+  List<int> chartData;
+  TimeframeChangedState(this.chartData);
+}
+
 // Pulse States
 class PulseInitialState extends MainState {}
 

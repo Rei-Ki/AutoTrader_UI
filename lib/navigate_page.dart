@@ -32,10 +32,7 @@ class _NavigatePageState extends State<NavigatePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MainBloc(),
-      child: buildMainBloc(),
-    );
+    return buildMainBloc();
   }
 
   buildMainBloc() {
@@ -77,12 +74,9 @@ class _NavigatePageState extends State<NavigatePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 gap: 3,
                 iconSize: 24,
-                color: Colors.black,
-                activeColor: Colors.black,
                 tabBackgroundColor:
                     Theme.of(context).primaryColor.withOpacity(0.1),
                 textStyle: const TextStyle(
-                  color: Colors.black,
                   fontSize: 14,
                 ),
                 tabs: [

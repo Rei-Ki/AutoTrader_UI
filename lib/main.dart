@@ -4,10 +4,6 @@ import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const LotosApp());
-}
-
 /*
 Сделать чтобы при нажатии на инструмент (актив) была страница его
 и кнопка включить и он переходил в активные
@@ -15,16 +11,15 @@ void main() {
 todo Использовать Hive
 */
 
+void main() {
+  runApp(const LotosApp());
+}
+
 class LotosApp extends StatelessWidget {
   const LotosApp({super.key});
   // Добавить темную тему и светлую
   @override
   Widget build(BuildContext context) {
-    // Переключение темы
-    // final ThemeData themeData = ThemeData(
-    //     useMaterial3: true,
-    //     brightness: false ? Brightness.dark : Brightness.light);
-
     return BlocProvider(
       create: (context) => MainBloc(),
       child: MaterialApp(
@@ -42,31 +37,29 @@ class LotosApp extends StatelessWidget {
     );
   }
 
+  // Темы
   ThemeData appTheme(BuildContext context) {
     return ThemeData(
-      // primaryColor: Colors.purple,
-      scaffoldBackgroundColor: Colors.white,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.pink,
-        surface: Colors.white,
-      ),
+      // scaffoldBackgroundColor: background,
+      // background: Colors.white
+      // seedColor: Colors.pink
 
-      // colorSchemeSeed: ,
+      colorScheme: ColorScheme.fromSeed(
+        brightness: Brightness.light,
+        seedColor: Colors.pink,
+      ),
       appBarTheme: const AppBarTheme(
         titleTextStyle: TextStyle(
-          color: Colors.black,
           fontSize: 22,
           fontWeight: FontWeight.w500,
         ),
       ),
       textTheme: const TextTheme(
         bodyMedium: TextStyle(
-          color: Colors.black,
           fontSize: 18,
           fontWeight: FontWeight.w500,
         ),
         labelSmall: TextStyle(
-          color: Colors.black,
           fontSize: 14,
           fontWeight: FontWeight.w200,
         ),

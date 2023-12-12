@@ -15,32 +15,48 @@ import 'events.dart';
 class MainBloc extends Bloc<MainEvent, MainState> {
   MainBloc() : super(InitialState()) {
     // Pulse Events
-    on<GetPulseEvent>(getPulse); //
-    on<PulseSearchEvent>(pulseSearch); //
+    on<GetPulseEvent>(onGetPulse); //
+    on<PulseSearchEvent>(onPulseSearch); //
 
     // Analytics Events
-    on<AnalyticsDataLoadEvent>(getSegmentsData); //
+    on<AnalyticsDataLoadEvent>(onAnalyticsDataLoad); //
 
     // Main Events
-    on<MainSetAppBarTitleEvent>(setAppBarTitle); //
+    on<MainSetAppBarTitleEvent>(onMainSetAppBarTitle); //
 
     // Active Events
-    on<GetActiveEvent>(getActive); //
-    on<ActiveSearchEvent>(searchActive); //
+    on<GetActiveEvent>(onGetActive); //
+    on<ActiveSearchEvent>(onActiveSearch); //
+
+    // Instrument Events
+    on<TimeframeChangeEvent>(onTimeframeChange); //
 
     // Theme switch Events
-    on<ThemeSwitchEvent>(themeSwitch); //
+    on<ThemeSwitchEvent>(onThemeSwitch); //
   }
 
-  themeSwitch(event, emit) {
+  onTimeframeChange(event, emit) async {
     try {
-      //
+      // todo request to server
+      // todo create a json file with the requested data
+      List<int> chartData = await pushServer();
+      print("switch data{$event.timeframe}");
+
+      emit(TimeframeChangedState(chartData));
     } catch (error) {
       emit(ErrorState());
     }
   }
 
-  getPulse(event, emit) async {
+  onThemeSwitch(event, emit) {
+    try {
+      // todo make theme changing
+    } catch (error) {
+      emit(ErrorState());
+    }
+  }
+
+  onGetPulse(event, emit) async {
     try {
       emit(PulseLoadingState());
       List<Pulse> pulse = await getServerPulse();
@@ -50,7 +66,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
-  getActive(event, emit) async {
+  onGetActive(event, emit) async {
     try {
       emit(ActiveLoadingState());
       List<Instrument> instuments = await getServerInstruments();
@@ -60,7 +76,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
-  getSegmentsData(event, emit) async {
+  onAnalyticsDataLoad(event, emit) async {
     try {
       emit(AnalyticsLoadingState());
       List<Segment> segments = await getServerSegmentsData();
@@ -70,7 +86,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
-  setAppBarTitle(event, emit) async {
+  onMainSetAppBarTitle(event, emit) async {
     try {
       emit(MainAppBarUpdatedState(event.title));
     } catch (error) {
@@ -156,7 +172,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }
 
   // Реализация поиска для страниц
-  searchActive(event, emit) async {
+  onActiveSearch(event, emit) async {
     try {
       String search = event.search;
       List<Instrument> allInstruments = event.instruments;
@@ -176,7 +192,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
-  pulseSearch(event, emit) async {
+  onPulseSearch(event, emit) async {
     try {
       String search = event.search;
       List<Pulse> allPulses = event.pulses;
