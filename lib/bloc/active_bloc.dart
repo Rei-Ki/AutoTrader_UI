@@ -54,6 +54,8 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     };
     repo.send(json);
 
+    // todo оптимизировать чтобы каждый раз он не запрашивал а сохранил просто в памяти
+
     Completer<List<Instrument>> completer = Completer();
     List<Instrument> instruments = [];
 
