@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 и кнопка включить и он переходил в активные
 
 todo Использовать Hive
+
+todo Попробовать сменять все внутри скаффолда чтобы использовать лишь один блок
 */
 
 void main() {
@@ -38,17 +40,18 @@ class LotosApp extends StatelessWidget {
 
   // Темы
   ThemeData appTheme(BuildContext context) {
+    const brightness = Brightness.light;
     return ThemeData(
-      // scaffoldBackgroundColor: background,
-      // background: Colors.white
-      // seedColor: Colors.pink
-
       colorScheme: ColorScheme.fromSeed(
-        brightness: Brightness.light,
+        brightness: brightness,
         seedColor: Colors.pink,
       ),
       appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        elevation: 0,
         titleTextStyle: TextStyle(
+          color: brightness == Brightness.light ? Colors.black : Colors.white,
           fontSize: 22,
           fontWeight: FontWeight.w500,
         ),
