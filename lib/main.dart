@@ -1,8 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'bloc/main_bloc.dart';
 import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
+
+import 'repository.dart';
+import 'websockets.dart';
 
 /*
 Сделать чтобы при нажатии на инструмент (актив) была страница его
@@ -14,6 +18,10 @@ todo Попробовать сменять все внутри скаффолд�
 */
 
 void main() {
+  GetIt.I.registerLazySingleton<WebSocketsRepository>(
+    () => WebSocketsRepository("ws://localhost:8765"),
+  );
+
   runApp(const LotosApp());
 }
 

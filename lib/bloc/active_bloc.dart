@@ -1,10 +1,19 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:lotosui/bloc/data_classes.dart';
+import 'package:lotosui/repository.dart';
 
 class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
+  WebSocketsRepository repo = GetIt.I<WebSocketsRepository>();
+
   ActiveBloc() : super(ActiveInitialState()) {
     on<GetActiveEvent>(getActiveList);
     on<ActiveSearchEvent>(searchActive);
+
+    on<WebSocketsGetActiveEvent>(getActiveList);
   }
 
   getActiveList(event, emit) async {
@@ -38,17 +47,27 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
   }
 
   // other functions
-  getServerInstruments() async {
-    await Future.delayed(const Duration(microseconds: 1));
-    // todo сделать подключение по вебсокетам к серверу
-    // todo сделать async запрос к серверу за инструментами
-    var inst1 = Instrument(isActive: true, title: "CRU3", type: "Фьючерс");
-    var inst2 = Instrument(isActive: false, title: "SiZ3", type: "Фьючерс");
-    var inst3 = Instrument(isActive: true, title: "SiU3", type: "Фьючерс");
-    var inst4 = Instrument(isActive: false, title: "SRU3", type: "Фьючерс");
+  Future<List<Instrument>> getServerInstruments() async {
+    Map<String, dynamic> json = {
+      "data": {"class_code": "SPBFUT"},
+      "cmd": "get_all_instruments",
+    };
+    repo.send(json);
 
-    List<Instrument> instruments = [inst1, inst2, inst3, inst4];
-    return instruments;
+    Completer<List<Instrument>> completer = Completer();
+    List<Instrument> instruments = [];
+
+    repo.stream.listen((message) {
+      var jsonRec = jsonDecode(message);
+      for (var instrument in jsonRec["data"]) {
+        instruments.add(
+            Instrument(title: instrument, isActive: false, type: "Фьючерс"));
+      }
+      completer.complete(instruments);
+    });
+
+    // Ждем завершения асинхронной операции
+    return completer.future;
   }
 }
 
@@ -73,6 +92,12 @@ class ActiveSearchingState extends ActiveState {
   ActiveSearchingState(this.searched);
 }
 
+// Соккеты
+class WebSocketsActiveListState extends ActiveState {
+  List<Instrument> data;
+  WebSocketsActiveListState(this.data);
+}
+
 // Events
 abstract class ActiveEvent {}
 
@@ -82,4 +107,9 @@ class ActiveSearchEvent extends ActiveEvent {
   String search;
   List<Instrument> instruments;
   ActiveSearchEvent(this.search, this.instruments);
+}
+
+class WebSocketsGetActiveEvent extends ActiveEvent {
+  Map<String, dynamic> data;
+  WebSocketsGetActiveEvent(this.data);
 }
