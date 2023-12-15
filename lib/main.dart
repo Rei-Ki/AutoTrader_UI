@@ -4,16 +4,14 @@ import 'bloc/main_bloc.dart';
 import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
-
 import 'repository.dart';
-import 'websockets.dart';
 
 /*
 Сделать чтобы при нажатии на инструмент (актив) была страница его
 и кнопка включить и он переходил в активные
 
 todo Использовать Hive
-
+todo сделать обработку ошибки WS
 todo Попробовать сменять все внутри скаффолда чтобы использовать лишь один блок
 */
 

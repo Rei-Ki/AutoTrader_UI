@@ -7,7 +7,7 @@ import 'package:lotosui/bloc/data_classes.dart';
 import 'package:lotosui/repository.dart';
 
 class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
-  WebSocketsRepository repo = GetIt.I<WebSocketsRepository>();
+  late WebSocketsRepository repo;
 
   ActiveBloc() : super(ActiveInitialState()) {
     on<GetActiveEvent>(getActiveList);
@@ -48,6 +48,8 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
   // other functions
   Future<List<Instrument>> getServerInstruments() async {
+    repo = GetIt.I<WebSocketsRepository>();
+
     Map<String, dynamic> json = {
       "data": {"class_code": "SPBFUT"},
       "cmd": "get_all_instruments",

@@ -5,9 +5,13 @@ class WebSocketsRepository {
   late WebSocketChannel channel;
 
   WebSocketsRepository(String url) {
-    channel = WebSocketChannel.connect(
-      Uri.parse(url),
-    );
+    try {
+      channel = WebSocketChannel.connect(
+        Uri.parse(url),
+      );
+    } catch (error) {
+      print("WS error: ${error}");
+    }
   }
 
   Stream<dynamic> get stream => channel.stream;
