@@ -48,19 +48,20 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
   // other functions
   Future<List<Instrument>> getServerInstruments() async {
-    // repo = GetIt.I<WebSocketsRepository>();
+    repo = GetIt.I<WebSocketsRepository>();
 
     Map<String, dynamic> json = {
       "data": {"class_code": "SPBFUT"},
       "cmd": "get_all_instruments",
     };
-    repo.send(json);
-
-    // todo оптимизировать чтобы каждый раз он не запрашивал а сохранил просто в памяти
 
     Completer<List<Instrument>> completer = Completer();
     List<Instrument> instruments = [];
 
+    // todo оптимизировать чтобы каждый раз он не запрашивал а сохранил просто в памяти
+    
+    repo.send(json);  // отправка на сервер
+    // Принимание и заполнение инструментов
     // repo.stream.listen((message) {
     //   var jsonRec = jsonDecode(message);
     //   for (var instrument in jsonRec["data"]) {
@@ -70,8 +71,9 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     //   completer.complete(instruments);
     // });
 
+    // закомментить при настоящей работе
     instruments.add(
-        Instrument(title: "Инструмент 1", isActive: false, type: "Фьючерс"));
+        Instrument(title: "Пример инструмента", isActive: false, type: "Фьючерс"));
     completer.complete(instruments);
 
     // Ждем завершения асинхронной операции

@@ -20,9 +20,10 @@ class _InstrumentPageState extends State<InstrumentPage> {
 
   @override
   void didChangeDependencies() {
-    // final args = ModalRoute.of(context)?.settings.arguments;
+    final args = ModalRoute.of(context)?.settings.arguments;
     // todo сделать смену страниц через блок
-    // title = args as String;
+    title = args as String;
+    
     setState(() {});
     super.didChangeDependencies();
   }

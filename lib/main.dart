@@ -1,38 +1,27 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'bloc/main_bloc.dart';
 import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
-import 'repository.dart';
 
 /*
 Сделать чтобы при нажатии на инструмент (актив) была страница его
 и кнопка включить и он переходил в активные
 
 todo Использовать Hive
-todo сделать обработку ошибки WS
-todo Попробовать сменять все внутри скаффолда чтобы использовать лишь один блок
-todo пофиксить переход на страницы (слетает активы)
 todo использовать релейтив лейауты
 
-todo починить название у страницы инструмента
 todo сделать сохранение в ПЗУ (используя Hive) названий всех инструментов чтобы их не запрашивать зря (но иногда обновлять)
 todo добавить страницу настроек
-todo перенести объявление WebSockets в инициализацию блока главного
 todo сделать смену тем
 */
 
 void main() {
-  GetIt.I.registerLazySingleton<WebSocketsRepository>(
-    () => WebSocketsRepository("ws://localhost:8765"),
-  );
-
-  runApp(const LotosApp());
+  runApp(const AutoTraderApp());
 }
 
-class LotosApp extends StatelessWidget {
-  const LotosApp({super.key});
+class AutoTraderApp extends StatelessWidget {
+  const AutoTraderApp({super.key});
 
   @override
   Widget build(BuildContext context) {

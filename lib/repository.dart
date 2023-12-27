@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WebSocketsRepository {
@@ -17,6 +18,7 @@ class WebSocketsRepository {
   Stream<dynamic> get stream => channel.stream;
 
   void send(Map<String, dynamic> message) {
+    debugPrint("Отправка сообщения на сервер: $message");
     channel.sink.add(jsonEncode(message));
   }
 
