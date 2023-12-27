@@ -16,10 +16,6 @@ class _ActivePageState extends State<ActivePage> {
   late List<Instrument> allInstruments;
   late BuildContext blocContext;
 
-  // todo сделать корректное использование блока, каждый блок должен без
-  //блок провайдера, а из контекста блок билдером браться
-  // https://stackoverflow.com/questions/59633438/how-to-use-bloc-pattern-between-two-screens
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

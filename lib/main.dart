@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/control_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
@@ -25,31 +26,57 @@ class AutoTraderApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MainBloc(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        showPerformanceOverlay: false,
-        title: 'Traider',
-        theme: appTheme(context),
-        routes: {
-          '/home': (context) => const NavigatePage(),
-          '/instrumentInfo': (context) => const InstrumentPage(),
-        },
-        home: const NavigatePage(),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => MainBloc()),
+        BlocProvider(create: (context) => ControlBloc()),
+      ],
+      child: buildControlBloc(),
+    );
+  }
+  
+  buildControlBloc() {
+    return BlocBuilder<ControlBloc, ControlState>(builder: (context, state) {
+      if (state is ChangeThemeState) {
+        return buildMaterialApp(context, state.isDark);
+      }
+
+      return buildMaterialApp(context, false);
+    });
+  }
+
+  MaterialApp buildMaterialApp(BuildContext context, themeMode) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      showPerformanceOverlay: false,
+      title: 'Traider',
+      theme: themeMode ?  appTheme(context, Brightness.light) : appTheme(context, Brightness.dark),
+      routes: {
+        '/home': (context) => const NavigatePage(),
+        '/instrumentInfo': (context) => const InstrumentPage(),
+      },
+      home: const NavigatePage(),
     );
   }
 
   // Темы
-  ThemeData appTheme(BuildContext context) {
-    const brightness = Brightness.light;
+  ThemeData appTheme(BuildContext context, brightness) {
+    // var isDark = context.watch<ControlBloc>().isDark;
+    // var isDark = true;
+
+    // Brightness brightness = Brightness.light;
+    // if (isDark) {
+    //   brightness = Brightness.light;
+    // } else {
+    //   brightness = Brightness.dark;
+    // }
+
     return ThemeData(
       colorScheme: ColorScheme.fromSeed(
         brightness: brightness,
         seedColor: Colors.pink,
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,

@@ -8,6 +8,7 @@ import 'package:lotosui/analytics_page/analytics_page.dart';
 import 'package:lotosui/pulse_page/pulse_page.dart';
 import 'package:lotosui/repository.dart';
 
+import 'bloc/control_bloc.dart';
 import 'bloc/main_bloc.dart';
 
 class NavigatePage extends StatefulWidget {
@@ -46,7 +47,7 @@ class _NavigatePageState extends State<NavigatePage> {
       if (state is MainInitialState) {
         if (!GetIt.I.isRegistered<WebSocketsRepository>()) {
           GetIt.I.registerLazySingleton<WebSocketsRepository>(
-            () => WebSocketsRepository("ws://localhost:8765"));
+              () => WebSocketsRepository("ws://localhost:8765"));
         }
 
         return buildMainPage(context, appBarTitles[selectedIndex]);
@@ -57,14 +58,15 @@ class _NavigatePageState extends State<NavigatePage> {
       }
 
       if (state is MainErrorState) {
-        return const Center(child: Text("Oops, Something went wrong (Navigate)"));
+        return const Center(
+            child: Text("Oops, Something went wrong (Navigate)"));
       }
 
       return Container();
     });
   }
 
-  // todo сделать вот тут выбранный инструмент как вкладку
+  // todo попровать может сделать вот тут выбранный инструмент как вкладку
 
   Scaffold buildMainPage(BuildContext context, String appBar) {
     return Scaffold(
@@ -118,8 +120,9 @@ class _NavigatePageState extends State<NavigatePage> {
     );
   }
 
-  AppBar buildAppBar(String appBar) {
-    bool isDark = false;
+  buildAppBar(String appBar) {
+    var isDark = context.watch<ControlBloc>().isDark;
+
     // todo сделать переключение тем
     return AppBar(
       title: Text(appBar),
@@ -127,8 +130,7 @@ class _NavigatePageState extends State<NavigatePage> {
         IconButton(
           isSelected: isDark,
           onPressed: () {
-            isDark = !isDark;
-            setState(() {});
+            context.read<ControlBloc>().add(ChangeThemeEvent());
           },
           icon: const Icon(Icons.wb_sunny_outlined),
           selectedIcon: const Icon(Icons.dark_mode_outlined),

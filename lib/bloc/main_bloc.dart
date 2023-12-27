@@ -14,18 +14,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }
 
   // other functions
-  get() async {
-    await Future.delayed(const Duration(seconds: 1));
-  }
+
 }
-
-/*
-  Смена тем
-  смена стилей
-
-  todo делать так чтобы тут была смена темы и наверное вебсоккеты обрабатывать
-  todo сделать смену темы, задника, смену названия AppBar navigate_page
-*/
 
 // States ------------------------------------
 abstract class MainState {}
@@ -52,5 +42,3 @@ class MainSetAppBarTitleEvent extends MainEvent {
   String title;
   MainSetAppBarTitleEvent(this.title);
 }
-
-class MainSetThemeEvent extends MainEvent {}
