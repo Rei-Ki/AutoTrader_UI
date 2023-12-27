@@ -14,7 +14,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
   String? title;
   int selectedStrategy = 0;
   int selectedTimeframe = 4;
-  List<String> strategies = ["fractal", "corridor"];
+  List<String> strategies = ["fractal strategy", "corridor strategy"];
   TextEditingController risk = TextEditingController();
   TextEditingController planLimit = TextEditingController();
 
