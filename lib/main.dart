@@ -34,7 +34,7 @@ class AutoTraderApp extends StatelessWidget {
       child: buildControlBloc(),
     );
   }
-  
+
   buildControlBloc() {
     return BlocBuilder<ControlBloc, ControlState>(builder: (context, state) {
       if (state is ChangeThemeState) {
@@ -50,7 +50,9 @@ class AutoTraderApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       showPerformanceOverlay: false,
       title: 'Traider',
-      theme: themeMode ?  appTheme(context, Brightness.light) : appTheme(context, Brightness.dark),
+      theme: themeMode
+          ? appTheme(context, Brightness.light)
+          : appTheme(context, Brightness.dark),
       routes: {
         '/home': (context) => const NavigatePage(),
         '/instrumentInfo': (context) => const InstrumentPage(),
@@ -61,16 +63,6 @@ class AutoTraderApp extends StatelessWidget {
 
   // Темы
   ThemeData appTheme(BuildContext context, brightness) {
-    // var isDark = context.watch<ControlBloc>().isDark;
-    // var isDark = true;
-
-    // Brightness brightness = Brightness.light;
-    // if (isDark) {
-    //   brightness = Brightness.light;
-    // } else {
-    //   brightness = Brightness.dark;
-    // }
-
     return ThemeData(
       colorScheme: ColorScheme.fromSeed(
         brightness: brightness,

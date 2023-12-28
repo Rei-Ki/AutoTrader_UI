@@ -4,10 +4,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:lotosui/active_page/active_page.dart';
 import 'package:lotosui/analytics_page/analytics_page.dart';
-// import 'package:lotosui/profile_page/profile_page.dart';
 import 'package:lotosui/pulse_page/pulse_page.dart';
 import 'package:lotosui/repository.dart';
-
 import 'bloc/control_bloc.dart';
 import 'bloc/main_bloc.dart';
 
@@ -32,10 +30,7 @@ class _NavigatePageState extends State<NavigatePage> {
     // InstrumentPage(),
     PulsePage(),
     AnalyticsPage(),
-    // ProfilePage(),
   ];
-
-  // todo сделать смену темы, задника, смену названия AppBar navigate_page
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +61,7 @@ class _NavigatePageState extends State<NavigatePage> {
     });
   }
 
-  // todo попровать может сделать вот тут выбранный инструмент как вкладку
+  // todo попровать может сделать вот тут выбранный инструмент как вкладку (может упростит код)
 
   Scaffold buildMainPage(BuildContext context, String appBar) {
     return Scaffold(

@@ -1,13 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:lotosui/bloc/data_classes.dart';
 import 'package:lotosui/repository.dart';
+import 'package:get_it/get_it.dart';
+import 'dart:async';
 
 class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
-  late WebSocketsRepository repo;
+  late WebSocketsRepository repo = GetIt.I<WebSocketsRepository>();
 
   ActiveBloc() : super(ActiveInitialState()) {
     on<GetActiveEvent>(getActiveList);
@@ -48,8 +46,6 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
   // other functions
   Future<List<Instrument>> getServerInstruments() async {
-    repo = GetIt.I<WebSocketsRepository>();
-
     Map<String, dynamic> json = {
       "data": {"class_code": "SPBFUT"},
       "cmd": "get_all_instruments",
@@ -59,8 +55,8 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     List<Instrument> instruments = [];
 
     // todo оптимизировать чтобы каждый раз он не запрашивал а сохранил просто в памяти
-    
-    repo.send(json);  // отправка на сервер
+
+    repo.send(json); // отправка на сервер
     // Принимание и заполнение инструментов
     // repo.stream.listen((message) {
     //   var jsonRec = jsonDecode(message);
@@ -72,8 +68,8 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     // });
 
     // закомментить при настоящей работе
-    instruments.add(
-        Instrument(title: "Пример инструмента", isActive: false, type: "Фьючерс"));
+    instruments.add(Instrument(
+        title: "Пример инструмента", isActive: false, type: "Фьючерс"));
     completer.complete(instruments);
 
     // Ждем завершения асинхронной операции

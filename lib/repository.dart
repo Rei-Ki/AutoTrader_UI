@@ -11,7 +11,7 @@ class WebSocketsRepository {
         Uri.parse(url),
       );
     } catch (error) {
-      print("WS error: ${error}");
+      debugPrint("WS error: $error");
     }
   }
 
@@ -23,6 +23,7 @@ class WebSocketsRepository {
   }
 
   void close() {
+    debugPrint("Закрытие канала вебсоккетов");
     channel.sink.close();
   }
 }

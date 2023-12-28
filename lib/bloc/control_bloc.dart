@@ -10,37 +10,26 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
   }
 
   onChangeThemeEvent(event, emit) async {
+    isDark = !isDark;
+    emit(ChangeThemeState(isDark));
+  }
+
+  onSomeEvent(event, emit) async {
     try {
-      isDark = !isDark;
-      emit(ChangeThemeState(isDark));
+      //
     } catch (error) {
-      // 
+      //
     }
   }
 
-
-  // onEvent(event, emit) async {
-  //   try {
-  //     //
-  //   } catch (error) {
-  //     //
-  //   }
-  // }
-
   // other functions
 }
-
-/*
-  Смена тем
-  смена стилей
-
-  todo сделать смену темы, задника, смену названия AppBar navigate_page
-*/
 
 // States ------------------------------------
 abstract class ControlState {}
 
 class ControlInitialState extends ControlState {}
+
 class ChangeThemeState extends ControlState {
   bool isDark;
   ChangeThemeState(this.isDark);
