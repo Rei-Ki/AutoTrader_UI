@@ -5,7 +5,7 @@ import 'package:lotosui/bloc/data_classes.dart';
 class PulseBloc extends Bloc<PulseEvent, PulseState> {
   PulseBloc() : super(PulseInitialState()) {
     on<GetPulseEvent>(getPulse);
-    on<PulseSearchEvent>(pulseSearch);
+    on<UpdatePulseEvent>(onUpdatePulse);
   }
 
   getPulse(event, emit) async {
@@ -18,21 +18,9 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
     }
   }
 
-  pulseSearch(event, emit) async {
+  onUpdatePulse(event, emit) async {
     try {
-      String search = event.search;
-      List<Pulse> allPulses = event.pulses;
-      List<Pulse> searchedList = [];
-
-      // filtering of string
-      allPulses.forEach((instrument) {
-        String title = instrument.title.toLowerCase();
-        if (title.contains(search.toLowerCase())) {
-          searchedList.add(instrument);
-        }
-      });
-
-      emit(PulseSearchingState(searchedList));
+      emit(UpdatePulseState(event.data));
     } catch (error) {
       emit(PulseErrorState());
     }
@@ -99,18 +87,18 @@ class PulseLoadedState extends PulseState {
 
 class PulseErrorState extends PulseState {}
 
-class PulseSearchingState extends PulseState {
-  List<Pulse> searched;
-  PulseSearchingState(this.searched);
-}
-
 // Events
 abstract class PulseEvent {}
 
 class GetPulseEvent extends PulseEvent {}
 
-class PulseSearchEvent extends PulseEvent {
-  String search;
-  List<Pulse> pulses;
-  PulseSearchEvent(this.search, this.pulses);
+// Search
+class UpdatePulseEvent extends PulseEvent {
+  List<Pulse> data;
+  UpdatePulseEvent(this.data);
+}
+
+class UpdatePulseState extends PulseState {
+  List<Pulse> data;
+  UpdatePulseState(this.data);
 }

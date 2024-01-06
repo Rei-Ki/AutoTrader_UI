@@ -3,6 +3,7 @@ import 'package:lotosui/bloc/data_classes.dart';
 import 'package:flutter/material.dart';
 import 'package:lotosui/bloc/pulse_bloc.dart';
 import 'package:lotosui/widgets/search.dart';
+import '../bloc/search_bloc.dart';
 import '../widgets/pulse_tile.dart';
 
 class PulsePage extends StatefulWidget {
@@ -13,13 +14,28 @@ class PulsePage extends StatefulWidget {
 }
 
 class _PulsePageState extends State<PulsePage> {
-  List<Pulse> allPulses = [];
-  late BuildContext blocContext;
+  late List<Pulse> allPulses;
+  late PulseBloc pulseBloc;
+  late SearchBloc<Pulse> searchBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    searchBloc = SearchBloc<Pulse>();
+
+    searchBloc.searchResultStream.listen((List<Pulse> result) {
+      pulseBloc.add(UpdatePulseEvent(result));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PulseBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => PulseBloc()),
+        BlocProvider.value(value: searchBloc),
+      ],
       child: buildPulseBloc(),
     );
   }
@@ -27,7 +43,7 @@ class _PulsePageState extends State<PulsePage> {
   buildPulseBloc() {
     return BlocBuilder<PulseBloc, PulseState>(builder: (context, state) {
       if (state is PulseInitialState) {
-        blocContext = context;
+        pulseBloc = context.read<PulseBloc>();
         context.read<PulseBloc>().add(GetPulseEvent());
       }
 
@@ -40,13 +56,12 @@ class _PulsePageState extends State<PulsePage> {
         return buildPulseList(allPulses);
       }
 
-      if (state is PulseErrorState) {
-        return const Center(child: Text("Oops, Something went wrong"));
+      if (state is UpdatePulseState) {
+        return buildPulseList(state.data);
       }
 
-      if (state is PulseSearchingState) {
-        List<Pulse> searched = state.searched;
-        return buildPulseList(searched);
+      if (state is PulseErrorState) {
+        return const Center(child: Text("Oops, Something went wrong"));
       }
 
       return Container();
@@ -62,10 +77,6 @@ class _PulsePageState extends State<PulsePage> {
     );
   }
 
-  searchOnChange(value) {
-    blocContext.read<PulseBloc>().add(PulseSearchEvent(value, allPulses));
-  }
-
   Expanded buildList(List<Pulse> pulse) {
     return Expanded(
       child: ListView.builder(
@@ -77,5 +88,9 @@ class _PulsePageState extends State<PulsePage> {
         },
       ),
     );
+  }
+
+  searchOnChange(value) {
+    searchBloc.add(SearchingEvent(value, allPulses, Pulse));
   }
 }

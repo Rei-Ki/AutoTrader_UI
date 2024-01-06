@@ -9,7 +9,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
   ActiveBloc() : super(ActiveInitialState()) {
     on<GetActiveEvent>(getActiveList);
-    on<UpdateActiveEvent>(onUpdateActiveEvent);
+    on<UpdateActiveEvent>(onUpdateActive);
 
     on<WebSocketsGetActiveEvent>(getActiveList);
   }
@@ -24,7 +24,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     }
   }
 
-  onUpdateActiveEvent(event, emit) {
+  onUpdateActive(event, emit) {
     try {
       emit(UpdateActiveState(event.data));
     } catch (error) {

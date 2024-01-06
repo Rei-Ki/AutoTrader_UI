@@ -39,7 +39,6 @@ class SearchBloc<T> extends Bloc<SearchEvent<T>, SearchState<T>> {
 
   Stream<SearchState<T>> mapEventToState(SearchEvent<T> event) async* {
     if (event is SearchingEvent<T>) {
-      // ... остальной код
       searchResultController.add(resultSearchedList);
     }
   }
