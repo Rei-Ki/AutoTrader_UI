@@ -17,6 +17,8 @@ class _PulsePageState extends State<PulsePage> {
   late List<Pulse> allPulses;
   late PulseBloc pulseBloc;
   late SearchBloc<Pulse> searchBloc;
+  List<String> selectedTags = [];
+  // todo поместить теги в pulse_bloc
 
   @override
   void initState() {
@@ -71,7 +73,11 @@ class _PulsePageState extends State<PulsePage> {
   buildPulseList(List<Pulse> pulse) {
     return Column(
       children: [
-        Search(onChange: searchOnChange),
+        Search(
+          onChange: searchOnChange,
+          tags: pulseBloc.allTags,
+          callback: onSelectedTags,
+        ),
         buildList(pulse),
       ],
     );
@@ -90,7 +96,26 @@ class _PulsePageState extends State<PulsePage> {
     );
   }
 
+  onSelectedTags(List<String> tags) {
+    selectedTags = tags;
+    searchBloc.add(
+      SearchingEvent(
+        "",
+        data: allPulses,
+        searchForType: Pulse,
+        tags: selectedTags,
+      ),
+    );
+  }
+
   searchOnChange(value) {
-    searchBloc.add(SearchingEvent(value, allPulses, Pulse));
+    searchBloc.add(
+      SearchingEvent(
+        value,
+        data: allPulses,
+        searchForType: Pulse,
+        tags: selectedTags,
+      ),
+    );
   }
 }

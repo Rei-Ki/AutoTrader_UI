@@ -14,10 +14,10 @@ class SearchBloc<T> extends Bloc<SearchEvent<T>, SearchState<T>> {
     try {
       Type searchForType = event.searchForType;
       String search = event.search;
-      List<T> allData = event.data;
+      List<String> tags = event.tags;
 
       // Первый этап фильтрации: фильтрация по тегам
-      List<T> tagSearch = searchTags(allData);
+      List<T> tagSearch = searchTags(event.data, tags);
 
       // Второй этап фильтрации: фильтрация по списку
       List<T> stringSearch = searchString(tagSearch, search, searchForType);
@@ -30,13 +30,27 @@ class SearchBloc<T> extends Bloc<SearchEvent<T>, SearchState<T>> {
     searchResultController.add(resultSearchedList);
   }
 
-  searchTags(List<T> data) {
+  searchTags(List<T> data, tags) {
+    if (tags.isEmpty) {
+      return data;
+    }
+
     List<T> filtered = [];
+    data.forEach((item) {
+      List<String> itemTags = (item as dynamic).tags;
+      if (tags.every((tag) => itemTags.contains(tag))) {
+        filtered.add(item);
+      }
+    });
 
     return filtered;
   }
 
   searchString(List<T> data, String search, Type searchForType) {
+    if (search.isEmpty) {
+      return data;
+    }
+
     List<T> filtered = [];
 
     data.forEach((item) {
@@ -83,6 +97,7 @@ abstract class SearchEvent<T> {
   String get search;
   List<T> get data;
   Type get searchForType;
+  List<String> get tags;
 }
 
 class SearchingEvent<T> extends SearchEvent<T> {
@@ -92,6 +107,13 @@ class SearchingEvent<T> extends SearchEvent<T> {
   final List<T> data;
   @override
   final Type searchForType;
+  @override
+  final List<String> tags;
 
-  SearchingEvent(this.search, this.data, this.searchForType);
+  SearchingEvent(
+    this.search, {
+    required this.tags,
+    required this.data,
+    required this.searchForType,
+  });
 }

@@ -17,6 +17,7 @@ class _ActivePageState extends State<ActivePage> {
   late List<Instrument> allInstruments;
   late ActiveBloc activeBloc;
   late SearchBloc<Instrument> searchBloc;
+  List<String> selectedTags = [];
 
   @override
   void initState() {
@@ -71,7 +72,11 @@ class _ActivePageState extends State<ActivePage> {
   buildActiveList(List<Instrument> instruments) {
     return Column(
       children: [
-        Search(onChange: searchOnChange),
+        Search(
+          onChange: searchOnChange,
+          tags: activeBloc.allTags,
+          callback: onSelectedTags,
+        ),
         buildList(instruments),
       ],
     );
@@ -90,7 +95,26 @@ class _ActivePageState extends State<ActivePage> {
     );
   }
 
+  onSelectedTags(List<String> tags) {
+    selectedTags = tags;
+    searchBloc.add(
+      SearchingEvent(
+        "",
+        data: allInstruments,
+        searchForType: Instrument,
+        tags: selectedTags,
+      ),
+    );
+  }
+
   searchOnChange(value) {
-    searchBloc.add(SearchingEvent(value, allInstruments, Instrument));
+    searchBloc.add(
+      SearchingEvent(
+        value,
+        data: allInstruments,
+        searchForType: Instrument,
+        tags: selectedTags,
+      ),
+    );
   }
 }

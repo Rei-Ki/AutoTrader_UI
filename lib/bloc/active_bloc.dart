@@ -6,6 +6,7 @@ import 'dart:async';
 
 class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
   late WSRepository repo = GetIt.I<WSRepository>();
+  List<String> allTags = ["Активные", "Фьючерсы"];
 
   ActiveBloc() : super(ActiveInitialState()) {
     on<GetActiveEvent>(getActiveList);
@@ -59,12 +60,19 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     instruments.add(Instrument(
       title: "Пример инструмента 1",
       type: "Фьючерс",
-      tags: ['futures'],
+      tags: ['Фьючерсы'],
     ));
+
     instruments.add(Instrument(
       title: "Пример инструмента 2",
       type: "Фьючерс",
-      tags: ['active', 'futures'],
+      tags: ['Активные', 'Фьючерсы'],
+    ));
+
+    instruments.add(Instrument(
+      title: "Пример инструмента 3",
+      type: "Фьючерс",
+      tags: ['Активные', 'Фьючерсы'],
     ));
 
     completer.complete(instruments);

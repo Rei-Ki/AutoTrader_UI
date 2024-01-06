@@ -4,16 +4,21 @@ class Search extends StatefulWidget {
   const Search({
     super.key,
     required this.onChange,
+    required this.tags,
+    required this.callback,
   });
 
   final void Function(String) onChange;
+  final void Function(List<String>) callback;
+  final List<String> tags;
 
   @override
   State<Search> createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {
-  bool isExpanded = true;
+  List<String> selectedTags = [];
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +33,13 @@ class _SearchState extends State<Search> {
     );
   }
 
-  List<String> allTags = ["Активные", "Фиючерсы", "Профессиональные", "Другое"];
-  Set<String> selectedTags = {};
-
   searchFilters(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Wrap(
         spacing: 5.0,
         children: List.generate(
-          allTags.length,
+          widget.tags.length,
           (index) {
             return Container(
               padding: const EdgeInsets.all(2),
@@ -45,11 +47,12 @@ class _SearchState extends State<Search> {
                 labelPadding: const EdgeInsets.symmetric(horizontal: 5),
                 selectedColor: Theme.of(context).primaryColor.withOpacity(0.25),
                 visualDensity: VisualDensity.compact,
-                showCheckmark: true,
-                label: Text(allTags[index]),
-                selected: selectedTags.contains(allTags[index]),
+                showCheckmark: false,
+                label: Text(widget.tags[index]),
+                selected: selectedTags.contains(widget.tags[index]),
                 onSelected: (selected) {
-                  toggleTag(allTags[index]);
+                  toggleTag(widget.tags[index]);
+                  widget.callback(selectedTags);
                   setState(() {});
                 },
                 shape: RoundedRectangleBorder(
