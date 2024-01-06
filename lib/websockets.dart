@@ -7,7 +7,7 @@ main() {
     "cmd": "echo",
   };
 
-  WebSocketsRepository ws = WebSocketsRepository("ws://localhost:8765");
+  WSRepository ws = WSRepository("ws://localhost:8765");
   ws.send(json);
 
   ws.stream.listen((message) {

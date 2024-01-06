@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class WebSocketsRepository {
+class WSRepository {
   late WebSocketChannel channel;
 
-  WebSocketsRepository(String url) {
+  WSRepository(String url) {
     try {
       channel = WebSocketChannel.connect(
         Uri.parse(url),

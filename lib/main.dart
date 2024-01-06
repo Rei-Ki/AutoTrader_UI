@@ -6,6 +6,7 @@ import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
 
 import 'themes.dart';
+import 'widgets/search_filters.dart';
 
 /*
 Сделать чтобы при нажатии на инструмент (актив) была страница его
@@ -17,6 +18,7 @@ todo использовать релейтив лейауты
 todo сделать сохранение в ПЗУ (используя Hive) названий всех инструментов чтобы их не запрашивать зря (но иногда обновлять)
 todo добавить страницу настроек
 todo сделать смену тем
+todo сделать не просто WS, а WSS (с TSL сертификатами)
 */
 
 void main() {
@@ -43,7 +45,7 @@ class AutoTraderApp extends StatelessWidget {
         return buildMaterialApp(context, state.isDark);
       }
 
-      return buildMaterialApp(context, false);
+      return buildMaterialApp(context, true);
     });
   }
 
@@ -58,6 +60,7 @@ class AutoTraderApp extends StatelessWidget {
       routes: {
         '/home': (context) => const NavigatePage(),
         '/instrumentInfo': (context) => const InstrumentPage(),
+        '/searchFiltersPage': (context) => const SearchFiltersPage(),
       },
       home: const NavigatePage(),
     );

@@ -5,11 +5,12 @@ import 'package:get_it/get_it.dart';
 import 'dart:async';
 
 class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
-  late WebSocketsRepository repo = GetIt.I<WebSocketsRepository>();
+  late WSRepository repo = GetIt.I<WSRepository>();
 
   ActiveBloc() : super(ActiveInitialState()) {
     on<GetActiveEvent>(getActiveList);
     on<ActiveSearchEvent>(searchActive);
+    on<UpdateActiveEvent>(onUpdateActiveEvent);
 
     on<WebSocketsGetActiveEvent>(getActiveList);
   }
@@ -44,6 +45,14 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     }
   }
 
+  onUpdateActiveEvent(event, emit) {
+    try {
+      emit(UpdateActiveState(event.data));
+    } catch (error) {
+      emit(ActiveErrorState());
+    }
+  }
+
   // other functions
   Future<List<Instrument>> getServerInstruments() async {
     Map<String, dynamic> json = {
@@ -56,7 +65,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
     // todo оптимизировать чтобы каждый раз он не запрашивал а сохранил просто в памяти
 
-    repo.send(json); // отправка на сервер
+    // repo.send(json); // отправка на сервер
     // Принимание и заполнение инструментов
     // repo.stream.listen((message) {
     //   var jsonRec = jsonDecode(message);
@@ -69,7 +78,10 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
     // закомментить при настоящей работе
     instruments.add(Instrument(
-        title: "Пример инструмента", isActive: false, type: "Фьючерс"));
+        title: "Пример инструмента 1", isActive: false, type: "Фьючерс"));
+    instruments.add(Instrument(
+        title: "Пример инструмента 2", isActive: true, type: "Фьючерс"));
+
     completer.complete(instruments);
 
     // Ждем завершения асинхронной операции
@@ -98,6 +110,11 @@ class ActiveSearchingState extends ActiveState {
   ActiveSearchingState(this.searched);
 }
 
+class UpdateActiveState extends ActiveState {
+  List<Instrument> data;
+  UpdateActiveState(this.data);
+}
+
 // Соккеты
 class WebSocketsActiveListState extends ActiveState {
   List<Instrument> data;
@@ -108,6 +125,11 @@ class WebSocketsActiveListState extends ActiveState {
 abstract class ActiveEvent {}
 
 class GetActiveEvent extends ActiveEvent {}
+
+class UpdateActiveEvent extends ActiveEvent {
+  List<Instrument> data;
+  UpdateActiveEvent(this.data);
+}
 
 class ActiveSearchEvent extends ActiveEvent {
   String search;
