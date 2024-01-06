@@ -10,29 +10,44 @@ class SearchBloc<T> extends Bloc<SearchEvent<T>, SearchState<T>> {
     on<SearchingEvent<T>>(onSearch);
   }
 
-  void onSearch(SearchEvent<T> event, Emitter<SearchState<T>> emit) async {
+  void onSearch(event, emit) async {
     try {
-      List<T> searchedList = [];
       Type searchForType = event.searchForType;
       String search = event.search;
       List<T> allData = event.data;
 
-      // Ваш блок поиска
-      allData.forEach((item) {
-        if (item.runtimeType == searchForType) {
-          String title = (item as dynamic).title.toLowerCase();
-          if (title.contains(search.toLowerCase())) {
-            searchedList.add(item);
-          }
-        }
-      });
+      // Первый этап фильтрации: фильтрация по тегам
+      List<T> tagSearch = searchTags(allData);
 
-      resultSearchedList = searchedList;
+      // Второй этап фильтрации: фильтрация по списку
+      List<T> stringSearch = searchString(tagSearch, search, searchForType);
+
+      resultSearchedList = stringSearch;
     } catch (error) {
       resultSearchedList = [];
     }
 
     searchResultController.add(resultSearchedList);
+  }
+
+  searchTags(List<T> data) {
+    List<T> filtered = [];
+
+    return filtered;
+  }
+
+  searchString(List<T> data, String search, Type searchForType) {
+    List<T> filtered = [];
+
+    data.forEach((item) {
+      if (item.runtimeType == searchForType) {
+        String title = (item as dynamic).title.toLowerCase();
+        if (title.contains(search.toLowerCase())) {
+          filtered.add(item);
+        }
+      }
+    });
+    return filtered;
   }
 
   Stream<List<T>> get searchResultStream => searchResultController.stream;

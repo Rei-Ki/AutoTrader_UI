@@ -57,9 +57,15 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
     // закомментить при настоящей работе
     instruments.add(Instrument(
-        title: "Пример инструмента 1", isActive: false, type: "Фьючерс"));
+      title: "Пример инструмента 1",
+      type: "Фьючерс",
+      tags: ['futures'],
+    ));
     instruments.add(Instrument(
-        title: "Пример инструмента 2", isActive: true, type: "Фьючерс"));
+      title: "Пример инструмента 2",
+      type: "Фьючерс",
+      tags: ['active', 'futures'],
+    ));
 
     completer.complete(instruments);
 

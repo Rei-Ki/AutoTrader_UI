@@ -18,6 +18,7 @@ class Pulse {
   late int price;
   late int quantity;
   late String date;
+  late List<String> tags;
 
   Pulse({
     required this.title,
@@ -25,6 +26,7 @@ class Pulse {
     required this.price,
     required this.date,
     required this.quantity,
+    required this.tags,
   });
 
   Pulse.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,9 @@ class Pulse {
     price = json['price'] ?? '';
     quantity = json['quantity'] ?? '';
     date = json['date'] ?? '';
+    tags = (json['tags'] as List<dynamic>? ?? [])
+        .map((tag) => tag.toString())
+        .toList();
   }
 }
 
@@ -40,17 +45,19 @@ class Pulse {
 class Instrument {
   late String title;
   late String type;
-  late bool isActive;
+  late List<String> tags;
 
   Instrument({
     required this.title,
     required this.type,
-    required this.isActive,
+    required this.tags,
   });
 
   Instrument.fromJson(Map<String, dynamic> json) {
     title = json['title'] ?? '';
     type = json['type'] ?? '';
-    isActive = json['isActive'] ?? '';
+    tags = (json['tags'] as List<dynamic>? ?? [])
+        .map((tag) => tag.toString())
+        .toList();
   }
 }

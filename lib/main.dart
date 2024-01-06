@@ -6,7 +6,6 @@ import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
 
 import 'themes.dart';
-import 'widgets/search_filters.dart';
 
 /*
 Сделать чтобы при нажатии на инструмент (актив) была страница его
@@ -61,7 +60,6 @@ class AutoTraderApp extends StatelessWidget {
       routes: {
         '/home': (context) => const NavigatePage(),
         '/instrumentInfo': (context) => const InstrumentPage(),
-        '/searchFiltersPage': (context) => const SearchFiltersPage(),
       },
       home: const NavigatePage(),
     );

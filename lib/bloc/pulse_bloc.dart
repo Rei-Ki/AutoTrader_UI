@@ -33,40 +33,40 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
     // todo сделать async запрос к серверу за пульсом
 
     var p1 = Pulse(
-      title: 'CRU3',
-      operation: "покупка",
-      date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
-      price: 100,
-      quantity: 2,
-    );
+        title: 'CRU3',
+        operation: "покупка",
+        date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
+        price: 100,
+        quantity: 2,
+        tags: []);
     var p2 = Pulse(
-      title: 'SiZ3',
-      operation: "покупка",
-      date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
-      price: 200,
-      quantity: 4,
-    );
+        title: 'SiZ3',
+        operation: "покупка",
+        date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
+        price: 200,
+        quantity: 4,
+        tags: []);
     var p3 = Pulse(
-      title: 'SiZ3',
-      operation: "продажа",
-      date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
-      price: 130,
-      quantity: 1,
-    );
+        title: 'SiZ3',
+        operation: "продажа",
+        date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
+        price: 130,
+        quantity: 1,
+        tags: []);
     var p4 = Pulse(
-      title: 'CRU3',
-      operation: "продажа",
-      date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
-      price: 150,
-      quantity: 1,
-    );
+        title: 'CRU3',
+        operation: "продажа",
+        date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
+        price: 150,
+        quantity: 1,
+        tags: []);
     var p5 = Pulse(
-      title: 'CRU3',
-      operation: "продажа",
-      date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
-      price: 110,
-      quantity: 1,
-    );
+        title: 'CRU3',
+        operation: "продажа",
+        date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
+        price: 110,
+        quantity: 1,
+        tags: []);
 
     List<Pulse> pulses = [p1, p2, p3, p4, p5];
     return pulses;

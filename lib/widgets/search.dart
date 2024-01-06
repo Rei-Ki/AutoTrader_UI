@@ -13,13 +13,54 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  // final TextEditingController textController = TextEditingController();
+  bool isExpanded = true;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-      child: searchBar(context),
+      padding: const EdgeInsets.only(left: 30, right: 30, top: 8),
+      child: Column(
+        children: [
+          searchBar(context),
+          isExpanded ? searchFilters(context) : const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+
+  List<String> allTags = ["Активные", "Фиючерсы", "Профессиональные", "Другое"];
+  Set<String> selectedTags = {};
+
+  searchFilters(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Wrap(
+        spacing: 5.0,
+        children: List.generate(
+          allTags.length,
+          (index) {
+            return Container(
+              padding: const EdgeInsets.all(2),
+              child: ChoiceChip(
+                labelPadding: const EdgeInsets.symmetric(horizontal: 5),
+                selectedColor: Theme.of(context).primaryColor.withOpacity(0.25),
+                visualDensity: VisualDensity.compact,
+                showCheckmark: true,
+                label: Text(allTags[index]),
+                selected: selectedTags.contains(allTags[index]),
+                onSelected: (selected) {
+                  toggleTag(allTags[index]);
+                  setState(() {});
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                  side: const BorderSide(color: Colors.transparent),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -28,7 +69,6 @@ class _SearchState extends State<Search> {
       padding: const MaterialStatePropertyAll<EdgeInsets>(
           EdgeInsets.symmetric(horizontal: 12.0)),
       overlayColor: MaterialStateProperty.all(Colors.transparent),
-      // controller: textController,
       backgroundColor: MaterialStateProperty.all(Colors.transparent),
       elevation: MaterialStateProperty.all(0),
       constraints:
@@ -38,19 +78,10 @@ class _SearchState extends State<Search> {
         IconButton(
           icon: const Icon(Icons.more_vert_rounded),
           onPressed: () {
-            Navigator.of(context).pushNamed('/searchFiltersPage');
+            isExpanded = !isExpanded;
+            setState(() {});
           },
         ),
-        // todo сделать по нажатию на кнопки фильтры вылезающие под поиском и фильтрация в реальном времени
-        // IconButton(
-        //   icon: const Icon(Icons.clear_rounded),
-        //   onPressed: () {
-        //     // todo починить отображение после нажатия сюда пропадает все
-        //     //  из списка, чтобы вернуть начать печатать надо
-        //     textController.text = '';
-        //     setState(() {});
-        //   },
-        // ),
       ],
       side: MaterialStateProperty.all(
         BorderSide(
@@ -62,5 +93,13 @@ class _SearchState extends State<Search> {
         widget.onChange(value);
       },
     );
+  }
+
+  void toggleTag(String tag) {
+    if (selectedTags.contains(tag)) {
+      selectedTags.remove(tag);
+    } else {
+      selectedTags.add(tag);
+    }
   }
 }

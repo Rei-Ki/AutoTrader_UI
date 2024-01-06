@@ -9,7 +9,6 @@ import 'package:lotosui/pulse_page/pulse_page.dart';
 import 'package:lotosui/repository.dart';
 import 'bloc/control_bloc.dart';
 import 'bloc/main_bloc.dart';
-import 'widgets/search_filters.dart';
 
 class NavigatePage extends StatefulWidget {
   const NavigatePage({super.key});
