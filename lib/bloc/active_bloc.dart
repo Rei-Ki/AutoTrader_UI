@@ -9,7 +9,6 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
   ActiveBloc() : super(ActiveInitialState()) {
     on<GetActiveEvent>(getActiveList);
-    on<ActiveSearchEvent>(searchActive);
     on<UpdateActiveEvent>(onUpdateActiveEvent);
 
     on<WebSocketsGetActiveEvent>(getActiveList);
@@ -20,26 +19,6 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
       emit(ActiveLoadingState());
       List<Instrument> instuments = await getServerInstruments();
       emit(ActiveLoadedState(instuments));
-    } catch (error) {
-      emit(ActiveErrorState());
-    }
-  }
-
-  searchActive(event, emit) async {
-    try {
-      String search = event.search;
-      List<Instrument> allInstruments = event.instruments;
-      List<Instrument> searchedList = [];
-
-      // filtering of string
-      allInstruments.forEach((instrument) {
-        String title = instrument.title.toLowerCase();
-        if (title.contains(search.toLowerCase())) {
-          searchedList.add(instrument);
-        }
-      });
-
-      emit(ActiveSearchingState(searchedList));
     } catch (error) {
       emit(ActiveErrorState());
     }
@@ -105,11 +84,6 @@ class ActiveLoadedState extends ActiveState {
 }
 
 // Поиск
-class ActiveSearchingState extends ActiveState {
-  List<Instrument> searched;
-  ActiveSearchingState(this.searched);
-}
-
 class UpdateActiveState extends ActiveState {
   List<Instrument> data;
   UpdateActiveState(this.data);
@@ -129,12 +103,6 @@ class GetActiveEvent extends ActiveEvent {}
 class UpdateActiveEvent extends ActiveEvent {
   List<Instrument> data;
   UpdateActiveEvent(this.data);
-}
-
-class ActiveSearchEvent extends ActiveEvent {
-  String search;
-  List<Instrument> instruments;
-  ActiveSearchEvent(this.search, this.instruments);
 }
 
 class WebSocketsGetActiveEvent extends ActiveEvent {

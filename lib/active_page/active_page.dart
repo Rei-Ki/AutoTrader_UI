@@ -60,11 +60,6 @@ class _ActivePageState extends State<ActivePage> {
         return buildActiveList(state.data);
       }
 
-      if (state is ActiveSearchingState) {
-        List<Instrument> searched = state.searched;
-        return buildActiveList(searched);
-      }
-
       if (state is ActiveErrorState) {
         return const Center(child: Text("Oops, Something went wrong (Active)"));
       }
@@ -97,8 +92,5 @@ class _ActivePageState extends State<ActivePage> {
 
   searchOnChange(value) {
     searchBloc.add(SearchingEvent(value, allInstruments, Instrument));
-    // blocContext
-    //     .read<ActiveBloc>()
-    //     .add(ActiveSearchEvent(value, allInstruments));
   }
 }
