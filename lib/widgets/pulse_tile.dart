@@ -9,10 +9,12 @@ class PulseTile extends StatelessWidget {
 
   final Pulse data;
 
+  // todo написать свою плитку, а не использовать ListTile
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -25,7 +27,7 @@ class PulseTile extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           subtitle: Text(
-            "Цена: ${data.price}\nКоличество: ${data.quantity}\nОперация: ${data.operation}",
+            "${data.operation} | Цена: ${data.quantity}*${data.price}",
             style: Theme.of(context).textTheme.labelSmall,
           ),
           trailing: Text(data.date),

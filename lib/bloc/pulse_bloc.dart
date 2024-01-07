@@ -35,7 +35,7 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
     // todo сделать async запрос к серверу за пульсом
 
     var p1 = Pulse(
-        title: 'CRU3',
+        title: 'CRU3 старт',
         operation: "покупка",
         date: DateFormat('dd.MM.yy\nkk:mm').format(DateTime.now()),
         price: 100,
