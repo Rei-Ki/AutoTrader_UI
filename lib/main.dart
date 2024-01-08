@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/control_bloc.dart';
+import 'bloc/login_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
 
+import 'login_page/login_page.dart';
 import 'themes.dart';
 
 /*
@@ -24,15 +26,39 @@ void main() {
   runApp(const AutoTraderApp());
 }
 
-class AutoTraderApp extends StatelessWidget {
+class AutoTraderApp extends StatefulWidget {
   const AutoTraderApp({super.key});
+
+  @override
+  State<AutoTraderApp> createState() => _AutoTraderAppState();
+}
+
+class _AutoTraderAppState extends State<AutoTraderApp> {
+  late ControlBloc controlBloc;
+  late LoginBloc loginBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controlBloc = ControlBloc();
+    loginBloc = LoginBloc();
+
+    loginBloc.loginResultStream.listen((bool result) {
+      print("Logging result: $result");
+
+      controlBloc.add(LoggingEvent(result));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => MainBloc()),
-        BlocProvider(create: (context) => ControlBloc()),
+        BlocProvider.value(value: controlBloc),
+        BlocProvider.value(value: loginBloc),
+        // BlocProvider(create: (context) => LoginBloc()),
       ],
       child: buildControlBloc(),
     );
@@ -40,27 +66,41 @@ class AutoTraderApp extends StatelessWidget {
 
   buildControlBloc() {
     return BlocBuilder<ControlBloc, ControlState>(builder: (context, state) {
-      if (state is ChangeThemeState) {
-        return buildMaterialApp(context, state.isDark);
+      bool isLogged = context.read<LoginBloc>().isLogged;
+
+      if (state is ControlInitialState) {
+        return buildMaterialApp(context, isLogged);
       }
 
-      return buildMaterialApp(context, true);
+      if (state is UpdateLoginState) {
+        return buildMaterialApp(context, state.isLogged);
+      }
+
+      if (state is ChangeThemeState) {
+        return buildMaterialApp(context, isLogged);
+      }
+
+      return buildMaterialApp(context, isLogged);
     });
   }
 
-  MaterialApp buildMaterialApp(BuildContext context, themeMode) {
+  MaterialApp buildMaterialApp(BuildContext context, isLogged) {
+    var isDark = context.watch<ControlBloc>().isDark;
+    LoginBloc loginBloc = context.read<LoginBloc>();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       showPerformanceOverlay: false,
       title: 'Traider',
-      theme: themeMode
+      theme: isDark
           ? appTheme(context, Brightness.light)
           : appTheme(context, Brightness.dark),
       routes: {
         '/home': (context) => const NavigatePage(),
         '/instrumentInfo': (context) => const InstrumentPage(),
       },
-      home: const NavigatePage(),
+      // todo сделать вход по логину
+      home: isLogged ? const NavigatePage() : LoginPage(bloc: loginBloc),
     );
   }
 }

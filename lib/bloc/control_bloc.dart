@@ -7,6 +7,11 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
 
   ControlBloc() : super(ControlInitialState()) {
     on<ChangeThemeEvent>(onChangeThemeEvent);
+    on<LoggingEvent>(onLoggingEvent);
+  }
+
+  onLoggingEvent(event, emit) async {
+    emit(UpdateLoginState(event.isLogged));
   }
 
   onChangeThemeEvent(event, emit) async {
@@ -35,7 +40,17 @@ class ChangeThemeState extends ControlState {
   ChangeThemeState(this.isDark);
 }
 
+class UpdateLoginState extends ControlState {
+  bool isLogged;
+  UpdateLoginState(this.isLogged);
+}
+
 // Events ------------------------------------
 abstract class ControlEvent {}
 
 class ChangeThemeEvent extends ControlEvent {}
+
+class LoggingEvent extends ControlEvent {
+  bool isLogged;
+  LoggingEvent(this.isLogged);
+}
