@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ControlBloc extends Bloc<ControlEvent, ControlState> {
   // todo сохранить переменную в ПЗУ при изменении
   // todo сделать запрос к хранилищу данных чтобы спросить какая была тема
-  bool isDark = false;
+  bool isDark = true;
 
   ControlBloc() : super(ControlInitialState()) {
     on<ChangeThemeEvent>(onChangeThemeEvent);
