@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'bloc/control_bloc.dart';
 import 'login_page/login_bloc.dart';
 import 'bloc/main_bloc.dart';
@@ -20,9 +22,18 @@ todo использовать релейтив лейауты
 todo сделать сохранение в ПЗУ (используя Hive) названий всех инструментов чтобы их не запрашивать зря (но иногда обновлять)
 todo добавить страницу настроек
 todo сделать не просто WS, а WSS (с TSL сертификатами)
+
+todo подключить логгер какой-то (Talker)
+todo подключить бд Firebase
+
 */
 
 void main() {
+  // Регистрация толкера (для логирования)
+  GetIt.I.registerSingleton(TalkerFlutter.init());
+
+  GetIt.I<Talker>().debug("Talker started...");
+
   runApp(const AutoTraderApp());
 }
 
@@ -45,8 +56,6 @@ class _AutoTraderAppState extends State<AutoTraderApp> {
     loginBloc = LoginBloc();
 
     loginBloc.loginResultStream.listen((bool result) {
-      print("Logging result: $result");
-
       controlBloc.add(LoggingEvent(result));
     });
   }
@@ -92,6 +101,9 @@ class _AutoTraderAppState extends State<AutoTraderApp> {
       debugShowCheckedModeBanner: false,
       showPerformanceOverlay: false,
       title: 'Traider',
+      navigatorObservers: [
+        TalkerRouteObserver(GetIt.I<Talker>()),
+      ],
       theme: isDark
           ? appTheme(context, Brightness.light)
           : appTheme(context, Brightness.dark),

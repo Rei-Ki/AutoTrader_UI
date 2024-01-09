@@ -19,14 +19,6 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
     emit(ChangeThemeState(isDark));
   }
 
-  onSomeEvent(event, emit) async {
-    try {
-      //
-    } catch (error) {
-      //
-    }
-  }
-
   // other functions
 }
 

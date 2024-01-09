@@ -4,6 +4,8 @@ import 'package:lotosui/repository.dart';
 import 'package:get_it/get_it.dart';
 import 'dart:async';
 
+import 'package:talker_flutter/talker_flutter.dart';
+
 class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
   late WSRepository repo = GetIt.I<WSRepository>();
   List<String> allTags = ["Активные", "Фьючерсы"];
@@ -20,16 +22,18 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
       emit(ActiveLoadingState());
       List<Instrument> instuments = await getServerInstruments();
       emit(ActiveLoadedState(instuments));
-    } catch (error) {
+    } catch (e, st) {
       emit(ActiveErrorState());
+      GetIt.I<Talker>().handle(e, st);
     }
   }
 
   onUpdateActive(event, emit) {
     try {
       emit(UpdateActiveState(event.data));
-    } catch (error) {
+    } catch (e, st) {
       emit(ActiveErrorState());
+      GetIt.I<Talker>().handle(e, st);
     }
   }
 
@@ -80,6 +84,12 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     // Ждем завершения асинхронной операции
     return completer.future;
   }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
+    GetIt.I<Talker>().error(error, stackTrace);
+  }
 }
 
 // States
@@ -112,7 +122,9 @@ class WebSocketsActiveListState extends ActiveState {
 // Events
 abstract class ActiveEvent {}
 
-class GetActiveEvent extends ActiveEvent {}
+class GetActiveEvent extends ActiveEvent {
+  // todo разобраться оставить это или это
+}
 
 class UpdateActiveEvent extends ActiveEvent {
   List<Instrument> data;
@@ -120,6 +132,7 @@ class UpdateActiveEvent extends ActiveEvent {
 }
 
 class WebSocketsGetActiveEvent extends ActiveEvent {
+  // todo разобраться оставить это или это
   Map<String, dynamic> data;
   WebSocketsGetActiveEvent(this.data);
 }

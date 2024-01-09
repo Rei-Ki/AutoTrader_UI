@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class SomeBloc extends Bloc<SomeEvent, SomeState> {
   SomeBloc() : super(SomeInitialState()) {
@@ -8,14 +10,21 @@ class SomeBloc extends Bloc<SomeEvent, SomeState> {
   someT(event, emit) async {
     try {
       //
-    } catch (error) {
+    } catch (e, st) {
       //
+      GetIt.I<Talker>().error(e, st);
     }
   }
 
   // other functions
   get() async {
     await Future.delayed(const Duration(seconds: 1));
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
+    GetIt.I<Talker>().error(error, stackTrace);
   }
 }
 

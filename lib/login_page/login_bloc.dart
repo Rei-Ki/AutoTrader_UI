@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final loginResultController = StreamController<bool>.broadcast();
@@ -20,9 +22,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       String username = event.username;
 
       isLogged = true;
-      print(isLogged);
-    } catch (error) {
-      print("Logging error: $error");
+    } catch (e, st) {
+      GetIt.I<Talker>().handle(e, st);
     }
 
     loginResultController.add(isLogged);
@@ -32,7 +33,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is StartLoginEvent) {
-      print("object");
       loginResultController.add(isLogged);
     }
   }
@@ -41,6 +41,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> close() {
     loginResultController.close();
     return super.close();
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
+    GetIt.I<Talker>().error(error, stackTrace);
   }
 }
 

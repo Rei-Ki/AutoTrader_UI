@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class MainBloc extends Bloc<MainEvent, MainState> {
   MainBloc() : super(MainInitialState()) {
@@ -8,13 +10,19 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   setAppBarTitle(event, emit) async {
     try {
       emit(MainAppBarUpdatedState(event.title));
-    } catch (error) {
+    } catch (e, st) {
       emit(MainErrorState());
+      GetIt.I<Talker>().handle(e, st);
     }
   }
 
   // other functions
 
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
+    GetIt.I<Talker>().error(error, stackTrace);
+  }
 }
 
 // States ------------------------------------

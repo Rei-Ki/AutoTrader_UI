@@ -61,3 +61,25 @@ class Instrument {
         .toList();
   }
 }
+
+// Candle для свечей
+class Candle {
+  late double open;
+  late double high;
+  late double low;
+  late double close;
+
+  Candle({
+    required this.open,
+    required this.high,
+    required this.low,
+    required this.close,
+  });
+
+  Candle.fromJson(Map<String, dynamic> json) {
+    open = json['open'] ?? -100;
+    high = json['high'] ?? -100;
+    low = json['low'] ?? -100;
+    close = json['close'] ?? -100;
+  }
+}

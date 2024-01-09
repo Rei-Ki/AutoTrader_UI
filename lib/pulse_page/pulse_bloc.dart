@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:lotosui/bloc/data_classes.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class PulseBloc extends Bloc<PulseEvent, PulseState> {
   List<String> allTags = ["Активные", "Фьючерсы"];
@@ -15,16 +17,18 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
       emit(PulseLoadingState());
       List<Pulse> pulse = await getServerPulse();
       emit(PulseLoadedState(pulse));
-    } catch (error) {
+    } catch (e, st) {
       emit(PulseErrorState());
+      GetIt.I<Talker>().handle(e, st);
     }
   }
 
   onUpdatePulse(event, emit) async {
     try {
       emit(UpdatePulseState(event.data));
-    } catch (error) {
+    } catch (e, st) {
       emit(PulseErrorState());
+      GetIt.I<Talker>().handle(e, st);
     }
   }
 
@@ -72,6 +76,12 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
 
     List<Pulse> pulses = [p1, p2, p3, p4, p5];
     return pulses;
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
+    GetIt.I<Talker>().error(error, stackTrace);
   }
 }
 

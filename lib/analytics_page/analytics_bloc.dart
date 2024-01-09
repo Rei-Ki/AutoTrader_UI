@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../bloc/data_classes.dart';
 
@@ -14,8 +16,9 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
       List<Segment> segments = await getServerSegmentsData();
 
       emit(AnalyticsLoadedState(segments));
-    } catch (error) {
+    } catch (e, st) {
       emit(AnalyticsErrorState());
+      GetIt.I<Talker>().handle(e, st);
     }
   }
 
@@ -34,6 +37,12 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     ];
 
     return segments;
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
+    GetIt.I<Talker>().error(error, stackTrace);
   }
 }
 

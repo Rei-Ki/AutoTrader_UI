@@ -17,6 +17,7 @@ dependencies:
   flutter_slidable: ^3.0.1
   timeline_tile: ^2.0.0
   avatar_glow: ^2.0.2
+  talker_flutter: ^3.6.0
   web_socket_channel: ^2.4.0
 
   toggle_switch: ^2.1.0

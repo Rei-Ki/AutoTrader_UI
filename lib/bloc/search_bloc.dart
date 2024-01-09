@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class SearchBloc<T> extends Bloc<SearchEvent<T>, SearchState<T>> {
   final searchResultController = StreamController<List<T>>.broadcast();
@@ -23,8 +25,9 @@ class SearchBloc<T> extends Bloc<SearchEvent<T>, SearchState<T>> {
       List<T> stringSearch = searchString(tagSearch, search, searchForType);
 
       resultSearchedList = stringSearch;
-    } catch (error) {
+    } catch (e, st) {
       resultSearchedList = [];
+      GetIt.I<Talker>().handle(e, st);
     }
 
     searchResultController.add(resultSearchedList);
@@ -76,6 +79,12 @@ class SearchBloc<T> extends Bloc<SearchEvent<T>, SearchState<T>> {
   Future<void> close() {
     searchResultController.close();
     return super.close();
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
+    GetIt.I<Talker>().error(error, stackTrace);
   }
 }
 
