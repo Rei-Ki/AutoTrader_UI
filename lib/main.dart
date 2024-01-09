@@ -23,9 +23,9 @@ todo сделать сохранение в ПЗУ (используя Hive) н�
 todo добавить страницу настроек
 todo сделать не просто WS, а WSS (с TSL сертификатами)
 
-todo подключить логгер какой-то (Talker)
 todo подключить бд Firebase
 
+todo Сделать кнопки графика единым организмом чтобы горела только одна кнопка
 */
 
 void main() {
@@ -67,7 +67,6 @@ class _AutoTraderAppState extends State<AutoTraderApp> {
         BlocProvider(create: (context) => MainBloc()),
         BlocProvider.value(value: controlBloc),
         BlocProvider.value(value: loginBloc),
-        // BlocProvider(create: (context) => LoginBloc()),
       ],
       child: buildControlBloc(),
     );

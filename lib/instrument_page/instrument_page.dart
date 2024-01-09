@@ -57,40 +57,76 @@ class _InstrumentPageState extends State<InstrumentPage> {
   buildInstrumentPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title ?? 'Инструмент не выбран')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalDialog(context);
+        },
+        child: Text("123"),
+      ),
       body: Column(
         children: [
-          const Plot(),
-          inputFields(),
-          strategyTabs(context),
-          startButton(context)
+          Expanded(
+            child: ListView(
+              children: const [
+                Plot(),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget inputFields() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: risk,
-              decoration: const InputDecoration(
-                hintText: "% допустимого риска (Базовое 20%)",
-                hintStyle: TextStyle(fontSize: 14),
-              ),
-            ),
-            TextField(
-              controller: planLimit,
-              decoration: const InputDecoration(
-                hintText: "Лимит план. чистых позиций (Базовое: 10000)",
-                hintStyle: TextStyle(fontSize: 14),
-              ),
+  showModalDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              inputFields(),
+              const SizedBox(height: 25),
+              strategyTabs(context),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Закрыть диалоговое окно
+              },
+              child: const Text('Закрыть'),
             ),
           ],
-        ),
+        );
+      },
+    );
+  }
+
+  Widget inputFields() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: 10),
+          const Text("% допустимого риска"),
+          TextField(
+            controller: risk,
+            decoration: const InputDecoration(
+              hintText: "базовое: 20%",
+            ),
+          ),
+          const SizedBox(height: 30),
+          const Text("лимит чистых позиций"),
+          TextField(
+            controller: planLimit,
+            decoration: const InputDecoration(
+              hintText: "базовое: 10000",
+            ),
+          ),
+        ],
       ),
     );
   }
