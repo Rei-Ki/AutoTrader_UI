@@ -6,10 +6,18 @@ class ActiveTile extends StatelessWidget {
   const ActiveTile({
     super.key,
     required this.data,
+    required this.icon,
+    required this.label,
+    required this.text,
+    required this.trailing,
   });
 
   final Instrument data;
-
+  final IconData icon;
+  final String label;
+  final String text;
+  final Widget trailing;
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -41,25 +49,77 @@ class ActiveTile extends StatelessWidget {
     );
   }
 
-  ListTile buildTile(BuildContext context) {
-    return ListTile(
-      leading: const Icon(Icons.data_usage_rounded, size: 29),
-      trailing: const Icon(Icons.more_vert_rounded, size: 27),
-      title: Text(
-        data.title,
-        style: Theme.of(context).textTheme.bodyMedium,
+  buildTile(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 15),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(icon, size: 27),
+              buildLabels()
+            ],
+          ),
+          trailing,
+        ],
       ),
-      subtitle: Text(
-        "Тип: ${data.type}",
-        style: Theme.of(context).textTheme.labelSmall,
+    );
+  }
+
+  Padding buildLabels() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 20, 
+              fontWeight: FontWeight.w500, 
+              letterSpacing: 0.8, 
+            ) 
+          ),
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 15, 
+              fontWeight: FontWeight.w300,  
+            ) 
+          )
+        ]
       ),
-      // Events -----------------------------------------------
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          '/instrumentInfo',
-          arguments: data.title,
-        );
-      },
     );
   }
 }
+    
+    // ListTile(
+    //   leading: const Icon(icon),
+    //   trailing: const Icon(Icons.more_vert_rounded, size: 27),
+    //   title: Text(
+    //     data.title,
+    //     style: Theme.of(context).textTheme.bodyMedium,
+    //   ),
+    //   subtitle: Text(
+    //     "Тип: ${data.type}",
+    //     style: Theme.of(context).textTheme.labelSmall,
+    //   ),
+    //   // Events -----------------------------------------------
+    //   onTap: () {
+    //     Navigator.of(context).pushNamed(
+    //       '/instrumentInfo',
+    //       arguments: data.title,
+    //     );
+    //   },
+    // );
+

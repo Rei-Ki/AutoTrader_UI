@@ -89,6 +89,10 @@ class _ActivePageState extends State<ActivePage> {
         itemBuilder: (context, i) {
           return ActiveTile(
             data: instruments[i],
+            icon: Icons.data_usage_rounded,
+            label: 'Это надпись',
+            text: 'Это подпись',
+            trailing: Icon(Icons.more_vert_rounded, size: 27),
           );
         },
       ),
