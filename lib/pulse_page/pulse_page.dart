@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/bloc/data_classes.dart';
 import 'package:flutter/material.dart';
-import 'package:lotosui/bloc/pulse_bloc.dart';
+import 'package:lotosui/pulse_page/pulse_bloc.dart';
 import 'package:lotosui/widgets/search.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import '../bloc/search_bloc.dart';

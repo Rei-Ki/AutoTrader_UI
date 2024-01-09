@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lotosui/bloc/active_bloc.dart';
+import 'package:lotosui/active_page/active_bloc.dart';
 import 'package:lotosui/bloc/data_classes.dart';
 import 'package:lotosui/widgets/search.dart';
 import '../bloc/search_bloc.dart';

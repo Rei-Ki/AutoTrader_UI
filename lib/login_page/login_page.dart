@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lotosui/bloc/login_bloc.dart';
+import 'package:lotosui/login_page/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({

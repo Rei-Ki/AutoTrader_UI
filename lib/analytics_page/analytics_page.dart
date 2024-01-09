@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/analytics_page/analytics_plot.dart';
 import 'package:lotosui/bloc/data_classes.dart';
 
-import '../bloc/analytics_bloc.dart';
+import 'analytics_bloc.dart';
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
