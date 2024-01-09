@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/active_page/active_bloc.dart';
 import 'package:lotosui/bloc/data_classes.dart';
+import 'package:lotosui/instrument_page/instrument_bloc.dart';
 import 'package:lotosui/widgets/search.dart';
 import '../bloc/search_bloc.dart';
-import '../widgets/active_tile.dart';
+import '../widgets/custom_tile.dart';
 
 class ActivePage extends StatefulWidget {
   const ActivePage({super.key});
@@ -22,7 +23,6 @@ class _ActivePageState extends State<ActivePage> {
   @override
   void initState() {
     super.initState();
-
     searchBloc = SearchBloc<Instrument>();
 
     searchBloc.searchResultStream.listen((List<Instrument> result) {
@@ -87,15 +87,23 @@ class _ActivePageState extends State<ActivePage> {
       child: ListView.builder(
         itemCount: instruments.length,
         itemBuilder: (context, i) {
-          return ActiveTile(
+          return CustomTile<Instrument>(
             data: instruments[i],
-            icon: Icons.data_usage_rounded,
-            label: 'Это надпись',
-            text: 'Это подпись',
-            trailing: Icon(Icons.more_vert_rounded, size: 27),
+            icon: const Icon(Icons.data_usage_rounded, size: 27),
+            label: instruments[i].title,
+            text: instruments[i].type,
+            trailing: const Icon(Icons.more_vert_rounded, size: 27),
+            callback: onTileTap,
           );
         },
       ),
+    );
+  }
+
+  onTileTap(Instrument data) {
+    Navigator.of(context).pushNamed(
+      '/instrumentInfo',
+      arguments: data,
     );
   }
 

@@ -1,6 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/instrument_page/instrument_plot.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter/material.dart';
+
+import '../bloc/data_classes.dart';
+import 'instrument_bloc.dart';
 // import 'dart:async';
 
 class InstrumentPage extends StatefulWidget {
@@ -17,27 +21,40 @@ class _InstrumentPageState extends State<InstrumentPage> {
   List<String> strategies = ["fractal strategy", "corridor strategy"];
   TextEditingController risk = TextEditingController();
   TextEditingController planLimit = TextEditingController();
+  late InstrumentBloc instrumentBloc;
 
   @override
   void didChangeDependencies() {
     final args = ModalRoute.of(context)?.settings.arguments;
-    // todo сделать смену страниц через блок
-    title = args as String;
-    
+
+    if (args != null) {
+      instrumentBloc = InstrumentBloc(data: args as Instrument);
+    } else {
+      Instrument data = Instrument(title: "None", tags: [], type: "None");
+      instrumentBloc = InstrumentBloc(data: data);
+    }
+
     setState(() {});
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    // return BlocProvider(
-    //   create: (context) => MainBloc(),
-    //   child: buildInstrumentPageBloc(context),
-    // );
-    return buildInstrumentPage(context);
+    return BlocProvider.value(
+      value: instrumentBloc,
+      child: buildInstrumentBloc(),
+    );
   }
 
-  Scaffold buildInstrumentPage(BuildContext context) {
+  BlocBuilder<dynamic, dynamic> buildInstrumentBloc() {
+    return BlocBuilder<InstrumentBloc, InstrumentState>(
+      builder: (context, state) {
+        return buildInstrumentPage(context);
+      },
+    );
+  }
+
+  buildInstrumentPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title ?? 'Инструмент не выбран')),
       body: Column(

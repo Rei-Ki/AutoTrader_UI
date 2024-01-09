@@ -10,7 +10,9 @@ import '../repository.dart';
 class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   late WSRepository repo = GetIt.I<WSRepository>();
 
-  InstrumentBloc() : super(InstrumentInitialState()) {
+  Instrument data;
+
+  InstrumentBloc({required this.data}) : super(InstrumentInitialState()) {
     on<FetchPlotDataEvent>(onFetchPlotData);
   }
 

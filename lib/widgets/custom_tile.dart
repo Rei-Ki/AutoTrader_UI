@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:lotosui/bloc/data_classes.dart';
 
-class ActiveTile extends StatelessWidget {
-  const ActiveTile({
-    super.key,
+class CustomTile<T> extends StatelessWidget {
+  const CustomTile({
+    Key? key,
     required this.data,
     required this.icon,
     required this.label,
     required this.text,
     required this.trailing,
-  });
+    required this.callback,
+    this.padding = const EdgeInsets.only(left: 25, right: 25, top: 5),
+  }) : super(key: key);
 
-  final Instrument data;
-  final IconData icon;
+  final T data;
+  final Icon icon;
   final String label;
   final String text;
   final Widget trailing;
-  
+  final EdgeInsetsGeometry padding;
+  final Function(T) callback;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 25, right: 25, top: 5),
+      padding: padding,
       child: Slidable(
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
@@ -38,12 +41,17 @@ class ActiveTile extends StatelessWidget {
           ],
         ),
         // Child -----------------------------------------------------
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(10),
+        child: InkWell(
+          onTap: () {
+            callback(data);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: buildTile(context),
           ),
-          child: buildTile(context),
         ),
       ),
     );
@@ -51,7 +59,7 @@ class ActiveTile extends StatelessWidget {
 
   buildTile(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 15),
+      padding: const EdgeInsets.only(left: 15, right: 10, top: 10, bottom: 15),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,10 +69,7 @@ class ActiveTile extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(icon, size: 27),
-              buildLabels()
-            ],
+            children: [icon, buildLabels(context)],
           ),
           trailing,
         ],
@@ -72,9 +77,9 @@ class ActiveTile extends StatelessWidget {
     );
   }
 
-  Padding buildLabels() {
+  Padding buildLabels(context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30),
+      padding: const EdgeInsets.only(left: 15),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -84,20 +89,22 @@ class ActiveTile extends StatelessWidget {
             label,
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 20, 
-              fontWeight: FontWeight.w500, 
-              letterSpacing: 0.8, 
-            ) 
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.8,
+            ),
+            softWrap: true,
           ),
           Text(
             text,
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 15, 
-              fontWeight: FontWeight.w300,  
-            ) 
+              fontSize: 15,
+              fontWeight: FontWeight.w300,
+            ),
+            softWrap: true,
           )
-        ]
+        ],
       ),
     );
   }
