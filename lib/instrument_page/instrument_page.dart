@@ -1,6 +1,9 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/instrument_page/instrument_plot.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter/material.dart';
+
+import 'instrument_bloc.dart';
 // import 'dart:async';
 
 class InstrumentPage extends StatefulWidget {
@@ -23,18 +26,25 @@ class _InstrumentPageState extends State<InstrumentPage> {
     final args = ModalRoute.of(context)?.settings.arguments;
     // todo сделать смену страниц через блок
     title = args as String;
-    
+
     setState(() {});
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    // return BlocProvider(
-    //   create: (context) => MainBloc(),
-    //   child: buildInstrumentPageBloc(context),
-    // );
-    return buildInstrumentPage(context);
+    return BlocProvider(
+      create: (context) => InstrumentBloc(),
+      child: createInstrumentBloc(),
+    );
+  }
+
+  BlocBuilder<InstrumentBloc, InstrumentState> createInstrumentBloc() {
+    return BlocBuilder<InstrumentBloc, InstrumentState>(
+      builder: (context, state) {
+        return buildInstrumentPage(context);
+      },
+    );
   }
 
   Scaffold buildInstrumentPage(BuildContext context) {

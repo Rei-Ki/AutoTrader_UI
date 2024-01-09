@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-
+import 'dart:math';
 import '../bloc/data_classes.dart';
 import '../repository.dart';
 
@@ -16,9 +16,10 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   onFetchPlotData(event, emit) async {
     try {
-      //
+      List<Candle> data = await getPlotData();
+
+      emit(FetchPlotDataState(data: data));
     } catch (e, st) {
-      //
       GetIt.I<Talker>().handle(e, st);
     }
   }
@@ -37,8 +38,6 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
     Completer<List<Candle>> completer = Completer();
     List<Candle> candles = [];
 
-    // todo оптимизировать чтобы каждый раз он не запрашивал а сохранил просто в памяти
-
     // repo.send(json); // отправка на сервер
     // Принимание и заполнение инструментов
     // repo.stream.listen((message) {
@@ -49,6 +48,19 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
     //   }
     //   completer.complete(instruments);
     // });
+
+    Random random = Random();
+
+    for (int i = 0; i < 20; i++) {
+      Candle candle = Candle(
+        close: random.nextDouble() * 100,
+        high: random.nextDouble() * 100,
+        low: random.nextDouble() * 100,
+        open: random.nextDouble() * 100,
+      );
+
+      candles.add(candle);
+    }
 
     completer.complete(candles);
 
@@ -77,8 +89,8 @@ class InstrumentErrorState extends InstrumentState {}
 
 // Запрос данных графика
 class FetchPlotDataState extends InstrumentState {
-  String name;
-  FetchPlotDataState({required this.name});
+  List<Candle> data;
+  FetchPlotDataState({required this.data});
 }
 
 class FetchPlotDataEvent extends InstrumentEvent {
