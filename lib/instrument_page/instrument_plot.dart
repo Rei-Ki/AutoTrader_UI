@@ -1,8 +1,10 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:lotosui/instrument_page/instrument_bloc.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'dart:math' as math;
 
 import '../bloc/data_classes.dart';
@@ -13,10 +15,12 @@ class Plot extends StatefulWidget {
     super.key,
     required this.bloc,
     required this.candles,
+    required this.swiperController,
   });
 
   final List<Candle> candles;
   final InstrumentBloc bloc;
+  final SwiperController swiperController;
 
   @override
   State<Plot> createState() => _PlotState();
@@ -26,7 +30,6 @@ class _PlotState extends State<Plot> {
   late ChartSeriesController chartSeriesController;
   late ZoomPanBehavior zoomPanBehavior;
   int selectedTimeframe = 4;
-  SwiperController swiperController = SwiperController();
   List<Color> colorList = [];
   List<String> timeFrames = [
     '1m',
@@ -82,7 +85,7 @@ class _PlotState extends State<Plot> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text(
-          lastCandle!.toStringAsFixed(3),
+          lastCandle != null ? lastCandle.toStringAsFixed(3) : "Null",
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w700,
@@ -135,19 +138,20 @@ class _PlotState extends State<Plot> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: SizedBox(
-            height: 30,
+            height: 25,
             child: Swiper(
-              onTap: (value) => swiperController.move(value),
+              onTap: (value) => widget.swiperController.move(value),
               itemCount: timeFrames.length,
               allowImplicitScrolling: true,
               scale: 0.3,
               layout: SwiperLayout.DEFAULT,
               control: const SwiperControl(),
-              controller: swiperController,
+              controller: widget.swiperController,
               onIndexChanged: (value) {
-                swiperController.index = value;
+                widget.swiperController.index = value;
+                GetIt.I<Talker>().info("Выбранный таймфрейм: $value");
               },
-              viewportFraction: 0.1,
+              viewportFraction: 0.15,
               itemBuilder: (context, i) {
                 return Container(
                   margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -156,10 +160,11 @@ class _PlotState extends State<Plot> {
                     color: getColor(i, timeFrames.length),
                   ),
                   child: Center(
-                    child: swiperController.index == i
+                    child: widget.swiperController.index == i
                         ? Text(timeFrames[i].toString(),
                             style: const TextStyle(color: Colors.white))
-                        : Text(timeFrames[i].toString()),
+                        : Text(timeFrames[i].toString(),
+                            style: const TextStyle(fontSize: 12)),
                   ),
                 );
               },
@@ -223,7 +228,7 @@ class _PlotState extends State<Plot> {
 
   Color getColor(int index, int timeframesLenght) {
     double step = 0.2;
-    int delta = (swiperController.index - index).abs();
+    int delta = (widget.swiperController.index - index).abs();
     int half = timeframesLenght ~/ 2;
     if (delta.abs() > half) {
       delta = timeframesLenght - delta;

@@ -1,3 +1,4 @@
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/instrument_page/instrument_plot.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
@@ -16,7 +17,10 @@ class InstrumentPage extends StatefulWidget {
 
 class _InstrumentPageState extends State<InstrumentPage> {
   int selectedStrategy = 0;
+  //! todo прокинуть в таймфреймы контроллер свайпа
+  SwiperController swiperController = SwiperController();
   int selectedTimeframe = 4;
+
   List<String> strategies = ["fractal strategy", "corridor strategy"];
   TextEditingController risk = TextEditingController();
   TextEditingController planLimit = TextEditingController();
@@ -44,19 +48,18 @@ class _InstrumentPageState extends State<InstrumentPage> {
       child: Scaffold(
         appBar: AppBar(title: Text(instrumentBloc.data.title)),
         floatingActionButton: createFAB(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: buildInstrumentBloc(),
       ),
     );
   }
 
   FloatingActionButton createFAB(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-        showModalDialog(context);
-      },
-      backgroundColor: Colors.amber,
+    return FloatingActionButton.extended(
+      onPressed: () => showModalDialog(context),
       elevation: 0,
-      child: Icon(
+      hoverElevation: 0,
+      label: Icon(
         Icons.play_arrow_outlined,
         size: 60, // Размер иконки
         color: Theme.of(context).primaryColor.withOpacity(0.8),
@@ -64,7 +67,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
     );
   }
 
-  //! todo селать нормальный блок этот фигня какая то
   //! todo сделать что бы данные обновлялись без передачи а просто watch
 
   BlocBuilder<dynamic, dynamic> buildInstrumentBloc() {
@@ -94,7 +96,10 @@ class _InstrumentPageState extends State<InstrumentPage> {
         Expanded(
           child: ListView(
             children: [
-              Plot(bloc: instrumentBloc, candles: candlesAll),
+              Plot(
+                  swiperController: swiperController,
+                  bloc: instrumentBloc,
+                  candles: candlesAll),
             ],
           ),
         ),
