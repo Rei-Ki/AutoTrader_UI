@@ -1,20 +1,33 @@
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lotosui/instrument_page/instrument_bloc.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math' as math;
 
+import '../bloc/data_classes.dart';
+
 // ignore: must_be_immutable
 class Plot extends StatefulWidget {
-  const Plot({super.key});
+  const Plot({
+    super.key,
+    required this.bloc,
+    required this.candles,
+  });
+
+  final List<Candle> candles;
+  final InstrumentBloc bloc;
 
   @override
   State<Plot> createState() => _PlotState();
 }
 
 class _PlotState extends State<Plot> {
-  late List<LiveData> chartData;
   late ChartSeriesController chartSeriesController;
   late ZoomPanBehavior zoomPanBehavior;
   int selectedTimeframe = 4;
+  SwiperController swiperController = SwiperController();
+  List<Color> colorList = [];
   List<String> timeFrames = [
     '1m',
     '5m',
@@ -25,15 +38,15 @@ class _PlotState extends State<Plot> {
     '4h',
     '1D',
     '1W',
-    '1MN'
+    '1M'
   ];
 
-  // todo Добавить блок сюда
+  // todo возможно обработка данных сломана
+
   // todo Сделать выбор таймфреймов выпадающим списком и поместить его к цене
 
   @override
   void initState() {
-    chartData = getChartData();
     zoomPanBehavior = ZoomPanBehavior(
       enablePinching: true,
       enableMouseWheelZooming: true,
@@ -42,6 +55,8 @@ class _PlotState extends State<Plot> {
       enablePanning: true,
     );
     super.initState();
+
+    // print(widget.candles);
   }
 
   @override
@@ -53,22 +68,27 @@ class _PlotState extends State<Plot> {
           // График --------------------------------
           buildChart(context),
           // timeframes ---------------------------------------------------------------
-          buildTimeframes()
+          buildTimeframes(timeFrames)
         ],
       ),
     );
   }
 
   Row buildTopPanel() {
+    var lastCandle =
+        widget.candles.isNotEmpty ? widget.candles.last.close : null;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        const SizedBox(width: 35),
         Text(
-          chartData.last.speed.toStringAsFixed(2),
-          style: const TextStyle(fontSize: 30),
+          lastCandle!.toStringAsFixed(3),
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w700,
+            color: Theme.of(context).primaryColor,
+          ),
         ),
-        Text(timeFrames[selectedTimeframe]),
       ],
     );
   }
@@ -77,8 +97,8 @@ class _PlotState extends State<Plot> {
     return SfCartesianChart(
       zoomPanBehavior: zoomPanBehavior,
       margin: const EdgeInsets.only(left: 8, right: 4),
-      series: <ChartSeries<LiveData, int>>[
-        AreaSeries<LiveData, int>(
+      series: <ChartSeries<Candle, int>>[
+        AreaSeries<Candle, int>(
           onRendererCreated: (ChartSeriesController controller) {
             chartSeriesController = controller;
           },
@@ -92,9 +112,9 @@ class _PlotState extends State<Plot> {
               Colors.transparent,
             ],
           ),
-          dataSource: chartData,
-          xValueMapper: (LiveData sales, _) => sales.time,
-          yValueMapper: (LiveData sales, _) => sales.speed,
+          dataSource: context.watch<InstrumentBloc>().candles,
+          xValueMapper: (Candle data, int index) => data.time,
+          yValueMapper: (Candle data, int index) => data.close,
           animationDuration: 800,
           animationDelay: 400,
           markerSettings: MarkerSettings(
@@ -109,27 +129,44 @@ class _PlotState extends State<Plot> {
     );
   }
 
-  Container buildTimeframes() {
-    return Container(
-      margin: const EdgeInsets.all(5),
-      height: 25,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        itemCount: timeFrames.length,
-        itemBuilder: (context, index) {
-          return TextButton(
-            onPressed: () {
-              selectedTimeframe = index;
-              setState(() {});
-
-              // todo сделать тут запрос
-              getTime(timeFrames[selectedTimeframe]);
-            },
-            child: Text(timeFrames[index]),
-          );
-        },
-      ),
+  buildTimeframes(timeFrames) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: SizedBox(
+            height: 30,
+            child: Swiper(
+              onTap: (value) => swiperController.move(value),
+              itemCount: timeFrames.length,
+              allowImplicitScrolling: true,
+              scale: 0.3,
+              layout: SwiperLayout.DEFAULT,
+              control: const SwiperControl(),
+              controller: swiperController,
+              onIndexChanged: (value) {
+                swiperController.index = value;
+              },
+              viewportFraction: 0.1,
+              itemBuilder: (context, i) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: getColor(i, timeFrames.length),
+                  ),
+                  child: Center(
+                    child: swiperController.index == i
+                        ? Text(timeFrames[i].toString(),
+                            style: const TextStyle(color: Colors.white))
+                        : Text(timeFrames[i].toString()),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -149,19 +186,11 @@ class _PlotState extends State<Plot> {
       // todo не совсем уверен в том что неделя там именно 7
       return timeFrame * 60 * 24 * 7;
     }
-    if (timeFrameString.contains("MN")) {
+    if (timeFrameString.contains("M")) {
       // todo не совсем уверен в том что месяц именно 30
       return timeFrame * 60 * 24 * 30;
     }
     return 60; // возвращение по стандарту часового интервала
-  }
-
-  List<LiveData> getChartData() {
-    List<LiveData> data = [];
-    for (var i = 0; i < 20; i++) {
-      data.add(LiveData(i, math.Random().nextDouble() * 20 + 10));
-    }
-    return data;
   }
 
   int getDigitsFromString(String input) {
@@ -191,10 +220,15 @@ class _PlotState extends State<Plot> {
       labelPosition: ChartDataLabelPosition.outside,
     );
   }
-}
 
-class LiveData {
-  LiveData(this.time, this.speed);
-  final int time;
-  final num speed;
+  Color getColor(int index, int timeframesLenght) {
+    double step = 0.2;
+    int delta = (swiperController.index - index).abs();
+    int half = timeframesLenght ~/ 2;
+    if (delta.abs() > half) {
+      delta = timeframesLenght - delta;
+    }
+    double opacity = (1 - delta * step);
+    return Theme.of(context).primaryColor.withOpacity(opacity);
+  }
 }

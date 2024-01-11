@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:math' as math;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -11,19 +11,23 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   late WSRepository repo = GetIt.I<WSRepository>();
 
   Instrument data;
+  List<Candle> candles = [];
 
   InstrumentBloc({required this.data}) : super(InstrumentInitialState()) {
-    on<FetchPlotDataEvent>(onFetchPlotData);
+    on<UpdatePlotDataEvent>(onUpdatePlotData);
   }
 
-  onFetchPlotData(event, emit) async {
+  onUpdatePlotData(event, emit) async {
     try {
       //
+      candles = await getPlotData();
+      emit(UpdatePlotDataState(candles: candles));
     } catch (e, st) {
-      //
       GetIt.I<Talker>().handle(e, st);
     }
   }
+
+  //! todo сделать чтобы данные получались из потока
 
   // other functions
   // todo сделать запросы к серверу по вебсоккетам для инструмента для графика
@@ -33,13 +37,8 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
     //   "cmd": "get_all_instruments",
     // };
 
-    // todo сделать на сервере функцию
-    // todo сделать запрос тут
-
     Completer<List<Candle>> completer = Completer();
     List<Candle> candles = [];
-
-    // todo оптимизировать чтобы каждый раз он не запрашивал а сохранил просто в памяти
 
     // repo.send(json); // отправка на сервер
     // Принимание и заполнение инструментов
@@ -52,6 +51,17 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
     //   completer.complete(instruments);
     // });
 
+    for (var i = 0; i < 20; i++) {
+      candles.add(
+        Candle(
+          time: i,
+          open: math.Random().nextDouble() * 20 + 10,
+          high: math.Random().nextDouble() * 20 + 10,
+          low: math.Random().nextDouble() * 20 + 10,
+          close: math.Random().nextDouble() * 20 + 10,
+        ),
+      );
+    }
     completer.complete(candles);
 
     // Ждем завершения асинхронной операции
@@ -78,12 +88,9 @@ class InstrumentLoadedState extends InstrumentState {}
 class InstrumentErrorState extends InstrumentState {}
 
 // Запрос данных графика
-class FetchPlotDataState extends InstrumentState {
-  String name;
-  FetchPlotDataState({required this.name});
+class UpdatePlotDataState extends InstrumentState {
+  List<Candle> candles;
+  UpdatePlotDataState({required this.candles});
 }
 
-class FetchPlotDataEvent extends InstrumentEvent {
-  String name;
-  FetchPlotDataEvent({required this.name});
-}
+class UpdatePlotDataEvent extends InstrumentEvent {}

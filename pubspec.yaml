@@ -19,6 +19,7 @@ dependencies:
   avatar_glow: ^2.0.2
   talker_flutter: ^3.6.0
   web_socket_channel: ^2.4.0
+  card_swiper: ^3.0.1
 
   toggle_switch: ^2.1.0
   flutter_toggle_tab: ^1.4.1

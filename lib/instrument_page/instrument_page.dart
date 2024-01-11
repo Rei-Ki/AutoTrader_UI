@@ -15,7 +15,6 @@ class InstrumentPage extends StatefulWidget {
 }
 
 class _InstrumentPageState extends State<InstrumentPage> {
-  String? title;
   int selectedStrategy = 0;
   int selectedTimeframe = 4;
   List<String> strategies = ["fractal strategy", "corridor strategy"];
@@ -28,7 +27,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
     final args = ModalRoute.of(context)?.settings.arguments;
 
     if (args != null) {
-      instrumentBloc = InstrumentBloc(data: args as Instrument);
+      instrumentBloc = args as InstrumentBloc;
     } else {
       Instrument data = Instrument(title: "None", tags: [], type: "None");
       instrumentBloc = InstrumentBloc(data: data);
@@ -42,38 +41,64 @@ class _InstrumentPageState extends State<InstrumentPage> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: instrumentBloc,
-      child: buildInstrumentBloc(),
+      child: Scaffold(
+        appBar: AppBar(title: Text(instrumentBloc.data.title)),
+        floatingActionButton: createFAB(context),
+        body: buildInstrumentBloc(),
+      ),
     );
   }
+
+  FloatingActionButton createFAB(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        showModalDialog(context);
+      },
+      backgroundColor: Colors.amber,
+      elevation: 0,
+      child: Icon(
+        Icons.play_arrow_outlined,
+        size: 60, // Размер иконки
+        color: Theme.of(context).primaryColor.withOpacity(0.8),
+      ),
+    );
+  }
+
+  //! todo селать нормальный блок этот фигня какая то
+  //! todo сделать что бы данные обновлялись без передачи а просто watch
 
   BlocBuilder<dynamic, dynamic> buildInstrumentBloc() {
     return BlocBuilder<InstrumentBloc, InstrumentState>(
       builder: (context, state) {
-        return buildInstrumentPage(context);
+        if (state is InstrumentInitialState) {
+          instrumentBloc.add(UpdatePlotDataEvent());
+
+          return buildInstrumentColumn(context);
+        }
+
+        if (state is UpdatePlotDataState) {
+          return buildInstrumentColumn(context);
+        }
+
+        return const Center(
+            child: Text("Ooops, something went wrong (instrument)"));
       },
     );
   }
 
-  buildInstrumentPage(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title ?? 'Инструмент не выбран')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalDialog(context);
-        },
-        child: Text("123"),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              children: const [
-                Plot(),
-              ],
-            ),
+  buildInstrumentColumn(BuildContext context) {
+    List<Candle> candlesAll = context.watch<InstrumentBloc>().candles;
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            children: [
+              Plot(bloc: instrumentBloc, candles: candlesAll),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

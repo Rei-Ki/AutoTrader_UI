@@ -101,9 +101,10 @@ class _ActivePageState extends State<ActivePage> {
   }
 
   onTileTap(Instrument data) {
+    InstrumentBloc instrumentBloc = InstrumentBloc(data: data);
     Navigator.of(context).pushNamed(
       '/instrumentInfo',
-      arguments: data,
+      arguments: instrumentBloc,
     );
   }
 

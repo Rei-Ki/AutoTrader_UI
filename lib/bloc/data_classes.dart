@@ -46,16 +46,19 @@ class Instrument {
   late String title;
   late String type;
   late List<String> tags;
+  late List<Candle> candles;
 
   Instrument({
     required this.title,
     required this.type,
     required this.tags,
+    this.candles = const [],
   });
 
   Instrument.fromJson(Map<String, dynamic> json) {
     title = json['title'] ?? '';
     type = json['type'] ?? '';
+    candles = List<Candle>.empty();
     tags = (json['tags'] as List<dynamic>? ?? [])
         .map((tag) => tag.toString())
         .toList();
@@ -68,12 +71,14 @@ class Candle {
   late double high;
   late double low;
   late double close;
+  late int time;
 
   Candle({
     required this.open,
     required this.high,
     required this.low,
     required this.close,
+    required this.time,
   });
 
   Candle.fromJson(Map<String, dynamic> json) {
@@ -81,5 +86,6 @@ class Candle {
     high = json['high'] ?? -100;
     low = json['low'] ?? -100;
     close = json['close'] ?? -100;
+    time = json['time'] ?? 0;
   }
 }
