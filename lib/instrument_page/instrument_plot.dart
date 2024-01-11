@@ -145,7 +145,7 @@ class _PlotState extends State<Plot> {
               allowImplicitScrolling: true,
               scale: 0.3,
               layout: SwiperLayout.DEFAULT,
-              control: const SwiperControl(),
+              control: const SwiperControl(), //size: 25
               controller: widget.swiperController,
               onIndexChanged: (value) {
                 widget.swiperController.index = value;
