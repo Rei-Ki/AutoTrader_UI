@@ -77,12 +77,6 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
     List<Pulse> pulses = [p1, p2, p3, p4, p5];
     return pulses;
   }
-
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    super.onError(error, stackTrace);
-    GetIt.I<Talker>().error(error, stackTrace);
-  }
 }
 
 // States

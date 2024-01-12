@@ -80,12 +80,6 @@ class SearchBloc<T> extends Bloc<SearchEvent<T>, SearchState<T>> {
     searchResultController.close();
     return super.close();
   }
-
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    super.onError(error, stackTrace);
-    GetIt.I<Talker>().error(error, stackTrace);
-  }
 }
 
 // States ------------------------------------

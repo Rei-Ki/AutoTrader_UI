@@ -34,7 +34,13 @@ void main() {
 
   GetIt.I<Talker>().debug("Talker started...");
 
-  runApp(const AutoTraderApp());
+  runTalkerZonedGuarded(
+    GetIt.I<Talker>(),
+    () => runApp(const AutoTraderApp()),
+    (error, stack) => GetIt.I<Talker>().error(error, stack),
+  );
+
+  // runApp(const AutoTraderApp());
 }
 
 class AutoTraderApp extends StatefulWidget {

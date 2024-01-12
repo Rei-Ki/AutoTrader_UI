@@ -67,8 +67,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
     );
   }
 
-  //! todo сделать что бы данные обновлялись без передачи а просто watch
-
   BlocBuilder<dynamic, dynamic> buildInstrumentBloc() {
     return BlocBuilder<InstrumentBloc, InstrumentState>(
       builder: (context, state) {
@@ -175,7 +173,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
       selectedLabelIndex: (index) {
         setState(() {
           selectedStrategy = index;
-          // todo сделать чтобы после старта пропадал этот свитчер
           print(strategies[index]);
         });
       },

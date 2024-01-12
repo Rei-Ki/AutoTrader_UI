@@ -84,12 +84,6 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     // Ждем завершения асинхронной операции
     return completer.future;
   }
-
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    super.onError(error, stackTrace);
-    GetIt.I<Talker>().error(error, stackTrace);
-  }
 }
 
 // States
