@@ -39,8 +39,6 @@ void main() {
     () => runApp(const AutoTraderApp()),
     (error, stack) => GetIt.I<Talker>().error(error, stack),
   );
-
-  // runApp(const AutoTraderApp());
 }
 
 class AutoTraderApp extends StatefulWidget {
