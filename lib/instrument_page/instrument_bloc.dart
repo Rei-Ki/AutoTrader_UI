@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 import '../bloc/data_classes.dart';
@@ -50,11 +51,19 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
     //   }
     //   completer.complete(instruments);
     // });
+    DateTime now = DateTime.now();
 
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < 25; i++) {
+      // Создание времени с шагом в 1 минуту
+      DateTime candleTime = now.add(Duration(hours: i));
+
+      // Форматирование времени в HH:MM
+      // String formattedTime = DateFormat('dd.MM.yyyy HH:mm').format(candleTime);
+      String formattedTime = DateFormat('HH:mm').format(candleTime);
+
       candles.add(
         Candle(
-          time: i,
+          time: formattedTime,
           open: math.Random().nextDouble() * 20 + 10,
           high: math.Random().nextDouble() * 20 + 10,
           low: math.Random().nextDouble() * 20 + 10,

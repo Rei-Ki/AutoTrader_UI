@@ -10,7 +10,7 @@ class CustomTile<T> extends StatelessWidget {
     required this.text,
     required this.trailing,
     required this.callback,
-    this.padding = const EdgeInsets.only(left: 25, right: 25, top: 5),
+    this.padding = const EdgeInsets.only(left: 0, right: 0, top: 5),
   }) : super(key: key);
 
   final T data;
@@ -23,34 +23,39 @@ class CustomTile<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding,
-      child: Slidable(
-        endActionPane: ActionPane(
-          motion: const DrawerMotion(),
-          children: [
-            SlidableAction(
-              onPressed: (context) {
-                debugPrint("Slidable delete is clicked!");
-              },
-              backgroundColor: Colors.red,
-              borderRadius: BorderRadius.circular(10),
-              icon: Icons.delete_outline_rounded,
-              label: "Удалить",
+    return UnconstrainedBox(
+      child: Padding(
+        padding: padding,
+        child: Slidable(
+          endActionPane: ActionPane(
+            motion: const DrawerMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (context) {
+                  debugPrint("Slidable delete is clicked!");
+                },
+                backgroundColor: Colors.red,
+                borderRadius: BorderRadius.circular(10),
+                icon: Icons.delete_outline_rounded,
+                label: "Удалить",
+              ),
+            ],
+          ),
+          // Child -----------------------------------------------------
+          child: InkWell(
+            onTap: () {
+              callback(data);
+            },
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: buildTile(context),
+              ),
             ),
-          ],
-        ),
-        // Child -----------------------------------------------------
-        child: InkWell(
-          onTap: () {
-            callback(data);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: buildTile(context),
           ),
         ),
       ),
@@ -109,24 +114,3 @@ class CustomTile<T> extends StatelessWidget {
     );
   }
 }
-    
-    // ListTile(
-    //   leading: const Icon(icon),
-    //   trailing: const Icon(Icons.more_vert_rounded, size: 27),
-    //   title: Text(
-    //     data.title,
-    //     style: Theme.of(context).textTheme.bodyMedium,
-    //   ),
-    //   subtitle: Text(
-    //     "Тип: ${data.type}",
-    //     style: Theme.of(context).textTheme.labelSmall,
-    //   ),
-    //   // Events -----------------------------------------------
-    //   onTap: () {
-    //     Navigator.of(context).pushNamed(
-    //       '/instrumentInfo',
-    //       arguments: data.title,
-    //     );
-    //   },
-    // );
-

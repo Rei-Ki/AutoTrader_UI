@@ -89,17 +89,15 @@ class _InstrumentPageState extends State<InstrumentPage> {
   }
 
   buildInstrumentColumn(BuildContext context) {
-    List<Candle> candlesAll = context.watch<InstrumentBloc>().candles;
-
     return Column(
       children: [
         Expanded(
           child: ListView(
             children: [
               Plot(
-                  swiperController: swiperController,
-                  bloc: instrumentBloc,
-                  candles: candlesAll),
+                swiperController: swiperController,
+                bloc: instrumentBloc,
+              ),
             ],
           ),
         ),

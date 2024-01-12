@@ -82,7 +82,7 @@ class _ActivePageState extends State<ActivePage> {
     );
   }
 
-  Expanded buildList(List<Instrument> instruments) {
+  buildList(List<Instrument> instruments) {
     return Expanded(
       child: ListView.builder(
         itemCount: instruments.length,

@@ -2,6 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:lotosui/instrument_page/instrument_bloc.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -14,11 +15,9 @@ class Plot extends StatefulWidget {
   const Plot({
     super.key,
     required this.bloc,
-    required this.candles,
     required this.swiperController,
   });
 
-  final List<Candle> candles;
   final InstrumentBloc bloc;
   final SwiperController swiperController;
 
@@ -29,8 +28,8 @@ class Plot extends StatefulWidget {
 class _PlotState extends State<Plot> {
   late ChartSeriesController chartSeriesController;
   late ZoomPanBehavior zoomPanBehavior;
-  int selectedTimeframe = 4;
-  List<Color> colorList = [];
+  late TooltipBehavior tooltipBehavior;
+  bool isLegendVisible = false;
   List<String> timeFrames = [
     '1m',
     '5m',
@@ -57,9 +56,12 @@ class _PlotState extends State<Plot> {
       enableSelectionZooming: true,
       enablePanning: true,
     );
-    super.initState();
+    tooltipBehavior = TooltipBehavior(
+      //! todo реализовать это
+      enable: true,
+    );
 
-    // print(widget.candles);
+    super.initState();
   }
 
   @override
@@ -77,58 +79,112 @@ class _PlotState extends State<Plot> {
     );
   }
 
-  Row buildTopPanel() {
+  buildTopPanel() {
     var lastCandle =
-        widget.candles.isNotEmpty ? widget.candles.last.close : null;
+        widget.bloc.candles.isNotEmpty ? widget.bloc.candles.last.close : null;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
       children: [
-        Text(
-          lastCandle != null ? lastCandle.toStringAsFixed(3) : "Null",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).primaryColor,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              lastCandle != null ? lastCandle.toStringAsFixed(3) : "Null",
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ],
+        ),
+        InkWell(
+          onTap: () => setState(() {
+            isLegendVisible = !isLegendVisible;
+          }),
+          child: Container(
+            height: 15,
+            width: 50,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         ),
+        const SizedBox(height: 8),
       ],
     );
   }
 
   SfCartesianChart buildChart(BuildContext context) {
+    var candles = context.watch<InstrumentBloc>().candles;
+
     return SfCartesianChart(
+      enableAxisAnimation: true,
       zoomPanBehavior: zoomPanBehavior,
+      primaryXAxis: getPrimaryXAxis(candles.length, 20),
+      primaryYAxis: getPrimaryYAxis(),
+      tooltipBehavior: tooltipBehavior,
+      legend: getLegend(),
       margin: const EdgeInsets.only(left: 8, right: 4),
-      series: <ChartSeries<Candle, int>>[
-        AreaSeries<Candle, int>(
-          onRendererCreated: (ChartSeriesController controller) {
-            chartSeriesController = controller;
-          },
+      series: [
+        AreaSeries<Candle, dynamic>(
+          enableTooltip: true,
+          legendItemText: widget.bloc.data.title,
+          // trendlines: [
+          //   Trendline(
+          //     name: "trandline 1",
+          //     enableTooltip: true,
+          //     intercept: 2,
+          //     valueField: "close",
+          //     type: TrendlineType.movingAverage,
+          //     period: 18,
+          //   ),
+          // ],
+          isVisibleInLegend: true,
+          legendIconType: LegendIconType.circle,
           borderWidth: 3,
-          borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
-          gradient: LinearGradient(
-            transform: const GradientRotation(math.pi / 2),
-            colors: [
-              Theme.of(context).primaryColor.withOpacity(0.5),
-              Theme.of(context).primaryColor.withOpacity(0.2),
-              Colors.transparent,
-            ],
-          ),
-          dataSource: context.watch<InstrumentBloc>().candles,
-          xValueMapper: (Candle data, int index) => data.time,
-          yValueMapper: (Candle data, int index) => data.close,
           animationDuration: 800,
           animationDelay: 400,
-          markerSettings: MarkerSettings(
-            isVisible: true,
-            borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
-            color: Theme.of(context).scaffoldBackgroundColor,
-          ),
+          dataSource: candles,
+          xValueMapper: (Candle data, _) => data.time,
+          yValueMapper: (Candle data, _) => data.close,
+          borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
+          onRendererCreated: (controller) => chartSeriesController = controller,
+          markerSettings: markerSettings(context),
+          gradient: linearGradient(context),
         )
       ],
-      primaryXAxis: getPrimaryXAxis(),
-      primaryYAxis: getPrimaryYAxis(),
+    );
+  }
+
+  Legend getLegend() {
+    return Legend(
+      //! todo Сделать чтобы легенды хранили трендовые линии чтобы можно было отключать ненужное
+      isVisible: isLegendVisible,
+      position: LegendPosition.top,
+      iconBorderColor: Colors.black,
+      alignment: ChartAlignment.center,
+      overflowMode: LegendItemOverflowMode.wrap,
+    );
+  }
+
+  MarkerSettings markerSettings(BuildContext context) {
+    return MarkerSettings(
+      isVisible: true,
+      borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
+      color: Theme.of(context).scaffoldBackgroundColor,
+    );
+  }
+
+  LinearGradient linearGradient(BuildContext context) {
+    return LinearGradient(
+      transform: const GradientRotation(math.pi / 2),
+      colors: [
+        Theme.of(context).primaryColor.withOpacity(0.5),
+        Theme.of(context).primaryColor.withOpacity(0.2),
+        Colors.transparent,
+      ],
     );
   }
 
@@ -138,18 +194,19 @@ class _PlotState extends State<Plot> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: SizedBox(
-            height: 25,
+            height: 30,
             child: Swiper(
               onTap: (value) => widget.swiperController.move(value),
               itemCount: timeFrames.length,
               allowImplicitScrolling: true,
               scale: 0.3,
               layout: SwiperLayout.DEFAULT,
-              control: const SwiperControl(), //size: 25
+              control: const SwiperControl(size: 20), //size: 25
               controller: widget.swiperController,
               onIndexChanged: (value) {
                 widget.swiperController.index = value;
-                GetIt.I<Talker>().info("Выбранный таймфрейм: $value");
+                GetIt.I<Talker>().info(
+                    "Выбранный таймфрейм: ${timeFrames[value]}, index: $value");
               },
               viewportFraction: 0.15,
               itemBuilder: (context, i) {
@@ -204,13 +261,17 @@ class _PlotState extends State<Plot> {
     return int.parse(matches.map((match) => match.group(0)!).join());
   }
 
-  NumericAxis getPrimaryXAxis() {
-    return NumericAxis(
+  getPrimaryXAxis(int dataLenght, int visibleData) {
+    return CategoryAxis(
       majorGridLines: const MajorGridLines(width: 1),
+      labelIntersectAction: AxisLabelIntersectAction.hide,
+      visibleMaximum: (dataLenght - 1).toDouble(),
+      visibleMinimum: (dataLenght - visibleData).toDouble(),
       edgeLabelPlacement: EdgeLabelPlacement.shift,
       interval: 2,
+      arrangeByIndex: true,
+      maximumLabels: 10,
       title: AxisTitle(text: ''),
-      decimalPlaces: 0,
       labelPosition: ChartDataLabelPosition.outside,
     );
   }
@@ -227,13 +288,25 @@ class _PlotState extends State<Plot> {
   }
 
   Color getColor(int index, int timeframesLenght) {
-    double step = 0.2;
+    double step = 0.43;
     int delta = (widget.swiperController.index - index).abs();
     int half = timeframesLenght ~/ 2;
     if (delta.abs() > half) {
       delta = timeframesLenght - delta;
     }
     double opacity = (1 - delta * step);
-    return Theme.of(context).primaryColor.withOpacity(opacity);
+    opacity = opacity < 0 ? 0 : opacity;
+    opacity = opacity > 1 ? 1 : opacity;
+    return Theme.of(context).primaryColor.withOpacity(opacity / 1.35);
+  }
+
+  String extractTime(String dateString) {
+    // Преобразование строки в DateTime
+    DateTime dateTime = DateFormat('dd.MM.yyyy HH:mm').parse(dateString);
+
+    // Форматирование времени в HH:mm
+    String formattedTime = DateFormat.Hm().format(dateTime);
+
+    return formattedTime;
   }
 }
