@@ -43,10 +43,6 @@ class _PlotState extends State<Plot> {
     '1M'
   ];
 
-  // todo возможно обработка данных сломана
-
-  // todo Сделать выбор таймфреймов выпадающим списком и поместить его к цене
-
   @override
   void initState() {
     zoomPanBehavior = ZoomPanBehavior(
@@ -56,10 +52,7 @@ class _PlotState extends State<Plot> {
       enableSelectionZooming: true,
       enablePanning: true,
     );
-    tooltipBehavior = TooltipBehavior(
-      //! todo реализовать это
-      enable: true,
-    );
+    tooltipBehavior = TooltipBehavior(enable: true, duration: 1);
 
     super.initState();
   }
@@ -129,18 +122,18 @@ class _PlotState extends State<Plot> {
       margin: const EdgeInsets.only(left: 8, right: 4),
       series: [
         AreaSeries<Candle, dynamic>(
+          name: widget.bloc.data.title,
           enableTooltip: true,
-          legendItemText: widget.bloc.data.title,
-          // trendlines: [
-          //   Trendline(
-          //     name: "trandline 1",
-          //     enableTooltip: true,
-          //     intercept: 2,
-          //     valueField: "close",
-          //     type: TrendlineType.movingAverage,
-          //     period: 18,
-          //   ),
-          // ],
+          trendlines: [
+            // Trendline(
+            //   name: "EMA 18 high",
+            //   markerSettings: const MarkerSettings(isVisible: true),
+            //   //! работает только с low или high
+            //   valueField: "high",
+            //   type: TrendlineType.movingAverage,
+            //   period: 18,
+            // ),
+          ],
           isVisibleInLegend: true,
           legendIconType: LegendIconType.circle,
           borderWidth: 3,
@@ -154,36 +147,6 @@ class _PlotState extends State<Plot> {
           markerSettings: markerSettings(context),
           gradient: linearGradient(context),
         )
-      ],
-    );
-  }
-
-  Legend getLegend() {
-    return Legend(
-      //! todo Сделать чтобы легенды хранили трендовые линии чтобы можно было отключать ненужное
-      isVisible: isLegendVisible,
-      position: LegendPosition.top,
-      iconBorderColor: Colors.black,
-      alignment: ChartAlignment.center,
-      overflowMode: LegendItemOverflowMode.wrap,
-    );
-  }
-
-  MarkerSettings markerSettings(BuildContext context) {
-    return MarkerSettings(
-      isVisible: true,
-      borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
-      color: Theme.of(context).scaffoldBackgroundColor,
-    );
-  }
-
-  LinearGradient linearGradient(BuildContext context) {
-    return LinearGradient(
-      transform: const GradientRotation(math.pi / 2),
-      colors: [
-        Theme.of(context).primaryColor.withOpacity(0.5),
-        Theme.of(context).primaryColor.withOpacity(0.2),
-        Colors.transparent,
       ],
     );
   }
@@ -232,6 +195,36 @@ class _PlotState extends State<Plot> {
     );
   }
 
+  Legend getLegend() {
+    return Legend(
+      //! todo Сделать чтобы легенды хранили трендовые линии чтобы можно было отключать ненужное
+      isVisible: isLegendVisible,
+      position: LegendPosition.top,
+      iconBorderColor: Colors.black,
+      alignment: ChartAlignment.center,
+      overflowMode: LegendItemOverflowMode.wrap,
+    );
+  }
+
+  MarkerSettings markerSettings(BuildContext context) {
+    return MarkerSettings(
+      isVisible: true,
+      borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
+      color: Theme.of(context).scaffoldBackgroundColor,
+    );
+  }
+
+  LinearGradient linearGradient(BuildContext context) {
+    return LinearGradient(
+      transform: const GradientRotation(math.pi / 2),
+      colors: [
+        Theme.of(context).primaryColor.withOpacity(0.5),
+        Theme.of(context).primaryColor.withOpacity(0.2),
+        Colors.transparent,
+      ],
+    );
+  }
+
   int getTime(String timeFrameString) {
     int timeFrame = getDigitsFromString(timeFrameString);
 
@@ -276,7 +269,7 @@ class _PlotState extends State<Plot> {
     );
   }
 
-  NumericAxis getPrimaryYAxis() {
+  getPrimaryYAxis() {
     return NumericAxis(
       opposedPosition: true,
       axisLine: const AxisLine(width: 0),
@@ -298,15 +291,5 @@ class _PlotState extends State<Plot> {
     opacity = opacity < 0 ? 0 : opacity;
     opacity = opacity > 1 ? 1 : opacity;
     return Theme.of(context).primaryColor.withOpacity(opacity / 1.35);
-  }
-
-  String extractTime(String dateString) {
-    // Преобразование строки в DateTime
-    DateTime dateTime = DateFormat('dd.MM.yyyy HH:mm').parse(dateString);
-
-    // Форматирование времени в HH:mm
-    String formattedTime = DateFormat.Hm().format(dateTime);
-
-    return formattedTime;
   }
 }
