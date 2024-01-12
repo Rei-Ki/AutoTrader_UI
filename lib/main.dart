@@ -34,10 +34,13 @@ void main() {
 
   GetIt.I<Talker>().debug("Talker started...");
 
+  FlutterError.onError =
+      (details) => GetIt.I<Talker>().handle(details.exception, details.stack);
+
   runTalkerZonedGuarded(
     GetIt.I<Talker>(),
     () => runApp(const AutoTraderApp()),
-    (error, stack) => GetIt.I<Talker>().error(error, stack),
+    (error, stack) => GetIt.I<Talker>().handle(error, stack),
   );
 }
 
