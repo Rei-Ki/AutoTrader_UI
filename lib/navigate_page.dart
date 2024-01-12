@@ -114,6 +114,12 @@ class _NavigatePageState extends State<NavigatePage> {
           icon: const Icon(Icons.wb_sunny_outlined),
           selectedIcon: const Icon(Icons.dark_mode_outlined),
         ),
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed("/talkerScreen");
+          },
+          icon: const Icon(Icons.bookmark_border_rounded),
+        ),
         const SizedBox(width: 5),
       ],
     );

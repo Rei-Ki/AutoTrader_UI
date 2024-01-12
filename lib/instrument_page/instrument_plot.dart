@@ -113,11 +113,11 @@ class _PlotState extends State<Plot> {
     var candles = context.watch<InstrumentBloc>().candles;
 
     return SfCartesianChart(
-      enableAxisAnimation: true,
+      enableAxisAnimation: false,
       zoomPanBehavior: zoomPanBehavior,
+      tooltipBehavior: tooltipBehavior,
       primaryXAxis: getPrimaryXAxis(candles.length, 20),
       primaryYAxis: getPrimaryYAxis(),
-      tooltipBehavior: tooltipBehavior,
       legend: getLegend(),
       margin: const EdgeInsets.only(left: 8, right: 4),
       series: [
@@ -261,7 +261,7 @@ class _PlotState extends State<Plot> {
       visibleMaximum: (dataLenght - 1).toDouble(),
       visibleMinimum: (dataLenght - visibleData).toDouble(),
       edgeLabelPlacement: EdgeLabelPlacement.shift,
-      interval: 2,
+      interval: 3,
       arrangeByIndex: true,
       maximumLabels: 10,
       title: AxisTitle(text: ''),

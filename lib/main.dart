@@ -117,12 +117,11 @@ class _AutoTraderAppState extends State<AutoTraderApp> {
       navigatorObservers: [
         TalkerRouteObserver(GetIt.I<Talker>()),
       ],
-      theme: isDark
-          ? appTheme(context, Brightness.light)
-          : appTheme(context, Brightness.dark),
+      theme: isDark ? lighMode : darkMode,
       routes: {
         '/home': (context) => const NavigatePage(),
         '/instrumentInfo': (context) => const InstrumentPage(),
+        '/talkerScreen': (context) => TalkerScreen(talker: GetIt.I<Talker>()),
       },
       // todo сделать вход по логину
       home: isLogged ? const NavigatePage() : LoginPage(bloc: loginBloc),
