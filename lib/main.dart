@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'bloc/control_bloc.dart';
 import 'login_page/login_bloc.dart';
@@ -34,6 +35,12 @@ void main() {
 
   GetIt.I<Talker>().debug("Talker started...");
 
+  Bloc.observer = TalkerBlocObserver(
+      talker: GetIt.I<Talker>(),
+      settings: const TalkerBlocLoggerSettings(
+        printStateFullData: false,
+        printEventFullData: false,
+      ));
   FlutterError.onError =
       (details) => GetIt.I<Talker>().handle(details.exception, details.stack);
 

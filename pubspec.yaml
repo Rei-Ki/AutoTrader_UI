@@ -17,7 +17,10 @@ dependencies:
   flutter_slidable: ^3.0.1
   timeline_tile: ^2.0.0
   avatar_glow: ^2.0.2
+
   talker_flutter: ^3.6.0
+  talker_bloc_logger: ^2.4.0
+
   web_socket_channel: ^2.4.0
   card_swiper: ^3.0.1
 
@@ -25,6 +28,7 @@ dependencies:
   flutter_toggle_tab: ^1.4.1
 
   syncfusion_flutter_charts: ^23.2.7
+
 
 dev_dependencies:
   flutter_test:
