@@ -71,7 +71,7 @@ class Candle {
   late double high;
   late double low;
   late double close;
-  late String time;
+  late DateTime time;
 
   Candle({
     required this.open,
@@ -88,5 +88,6 @@ class Candle {
     low = json['low'] ?? -100;
     close = json['close'] ?? -100;
     time = json['time'] ?? "";
+    //! Сделать перевод времени в нужный формат
   }
 }

@@ -116,11 +116,12 @@ class _PlotState extends State<Plot> {
       enableAxisAnimation: false,
       zoomPanBehavior: zoomPanBehavior,
       tooltipBehavior: tooltipBehavior,
-      primaryXAxis: getPrimaryXAxis(candles.length, 20),
+      primaryXAxis: getPrimaryXAxis(candles, 20),
       primaryYAxis: getPrimaryYAxis(),
       legend: getLegend(),
       margin: const EdgeInsets.only(left: 8, right: 4),
       series: [
+        // AreaSeries<Candle, dynamic>(
         AreaSeries<Candle, dynamic>(
           name: widget.bloc.data.title,
           enableTooltip: true,
@@ -135,10 +136,9 @@ class _PlotState extends State<Plot> {
             // ),
           ],
           isVisibleInLegend: true,
-          legendIconType: LegendIconType.circle,
           borderWidth: 3,
-          animationDuration: 800,
-          animationDelay: 400,
+          animationDuration: 0,
+          legendIconType: LegendIconType.circle,
           dataSource: candles,
           xValueMapper: (Candle data, _) => data.time,
           yValueMapper: (Candle data, _) => data.close,
@@ -254,17 +254,18 @@ class _PlotState extends State<Plot> {
     return int.parse(matches.map((match) => match.group(0)!).join());
   }
 
-  getPrimaryXAxis(int dataLenght, int visibleData) {
-    return CategoryAxis(
+  getPrimaryXAxis(List<Candle> data, int visibleData) {
+    DateTime? visibleMaximum = data.lastOrNull?.time;
+    DateTime? visibleMinimum =
+        data.length > visibleData ? data[data.length - visibleData].time : null;
+
+    return DateTimeAxis(
+      visibleMaximum: visibleMaximum,
+      visibleMinimum: visibleMinimum,
+      dateFormat: DateFormat.Hm(),
       majorGridLines: const MajorGridLines(width: 1),
       labelIntersectAction: AxisLabelIntersectAction.hide,
-      visibleMaximum: (dataLenght - 1).toDouble(),
-      visibleMinimum: (dataLenght - visibleData).toDouble(),
       edgeLabelPlacement: EdgeLabelPlacement.shift,
-      interval: 3,
-      arrangeByIndex: true,
-      maximumLabels: 10,
-      title: AxisTitle(text: ''),
       labelPosition: ChartDataLabelPosition.outside,
     );
   }

@@ -36,11 +36,13 @@ void main() {
   GetIt.I<Talker>().debug("Talker started...");
 
   Bloc.observer = TalkerBlocObserver(
-      talker: GetIt.I<Talker>(),
-      settings: const TalkerBlocLoggerSettings(
-        printStateFullData: false,
-        printEventFullData: false,
-      ));
+    talker: GetIt.I<Talker>(),
+    settings: const TalkerBlocLoggerSettings(
+      printStateFullData: false,
+      printEventFullData: false,
+    ),
+  );
+
   FlutterError.onError =
       (details) => GetIt.I<Talker>().handle(details.exception, details.stack);
 
