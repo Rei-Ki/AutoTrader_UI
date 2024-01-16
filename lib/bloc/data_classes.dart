@@ -71,23 +71,41 @@ class Candle {
   late double high;
   late double low;
   late double close;
-  late DateTime time;
+  late DateTime datetime;
+  late String sec;
+  late double volume;
+  late String classCode;
+  late int interval;
 
   Candle({
+    required this.close,
+    required this.low,
     required this.open,
     required this.high,
-    required this.low,
-    required this.close,
-    required this.time,
+    required this.datetime,
+    required this.sec,
+    required this.volume,
+    required this.classCode,
+    required this.interval,
+
     // required this.index,
   });
 
+  //! Сделать перевод даты в датувремя
+  // datetime: {month: 1, week_day: 1, sec: 0, hour: 17, ms: 0, year: 2024, count: 1, min: 58, day: 15}}
+
   Candle.fromJson(Map<String, dynamic> json) {
-    open = json['open'] ?? -100;
-    high = json['high'] ?? -100;
-    low = json['low'] ?? -100;
-    close = json['close'] ?? -100;
-    time = json['time'] ?? "";
-    //! Сделать перевод времени в нужный формат
+    open = json['open'] ?? 0;
+    high = json['high'] ?? 0;
+    low = json['low'] ?? 0;
+    close = json['close'] ?? 0;
+    sec = json['sec'] ?? "";
+    volume = json['volume'] ?? 0;
+    classCode = json['class'] ?? "";
+    interval = json['interval'] ?? 1;
+
+    //! Сделать перевод даты в датувремя
+
+    // DateTime datetime = json[''] ?? null;
   }
 }

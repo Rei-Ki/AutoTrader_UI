@@ -140,7 +140,7 @@ class _PlotState extends State<Plot> {
           animationDuration: 0,
           legendIconType: LegendIconType.circle,
           dataSource: candles,
-          xValueMapper: (Candle data, _) => data.time,
+          xValueMapper: (Candle data, _) => data.datetime,
           yValueMapper: (Candle data, _) => data.close,
           borderColor: Theme.of(context).primaryColor.withOpacity(0.7),
           onRendererCreated: (controller) => chartSeriesController = controller,
@@ -255,9 +255,10 @@ class _PlotState extends State<Plot> {
   }
 
   getPrimaryXAxis(List<Candle> data, int visibleData) {
-    DateTime? visibleMaximum = data.lastOrNull?.time;
-    DateTime? visibleMinimum =
-        data.length > visibleData ? data[data.length - visibleData].time : null;
+    DateTime? visibleMaximum = data.lastOrNull?.datetime;
+    DateTime? visibleMinimum = data.length > visibleData
+        ? data[data.length - visibleData].datetime
+        : null;
 
     return DateTimeAxis(
       visibleMaximum: visibleMaximum,

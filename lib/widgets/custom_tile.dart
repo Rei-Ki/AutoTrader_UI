@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class CustomTile<T> extends StatelessWidget {
-  const CustomTile({
+  CustomTile({
     Key? key,
     required this.data,
     required this.icon,
@@ -21,8 +21,14 @@ class CustomTile<T> extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final Function(T) callback;
 
+  late double screenWidth;
+
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width * 0.6;
+    screenWidth = screenWidth < 300 ? screenWidth : 300;
+    screenWidth = screenWidth > 200 ? screenWidth : 200;
+
     return UnconstrainedBox(
       child: Padding(
         padding: padding,
@@ -49,6 +55,7 @@ class CustomTile<T> extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               child: Container(
+                width: screenWidth,
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
@@ -86,12 +93,13 @@ class CustomTile<T> extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 15),
       child: Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 20,
@@ -102,6 +110,7 @@ class CustomTile<T> extends StatelessWidget {
           ),
           Text(
             text,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 15,

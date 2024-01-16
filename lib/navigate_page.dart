@@ -30,7 +30,7 @@ class _NavigatePageState extends State<NavigatePage> {
       if (state is MainInitialState) {
         if (!GetIt.I.isRegistered<WSRepository>()) {
           GetIt.I.registerLazySingleton<WSRepository>(
-              () => WSRepository("ws://localhost:8765"));
+              () => WSRepository("ws://localhost:33333"));
         }
 
         return buildMainPage(context, PagesEnum.values[selectedIndex].title);

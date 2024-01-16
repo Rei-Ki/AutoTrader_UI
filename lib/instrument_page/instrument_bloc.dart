@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -19,8 +20,10 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   onUpdatePlotData(event, emit) async {
     try {
+      // ! сделать в функцию эту чтобы она срабатывала при каждом смене таймфрейма и
+      //!   в событие передавался таймфрейм и иные даннм
       //
-      candles = await getPlotData();
+      candles = await getPlotData(data.title, "1", 100);
       emit(UpdatePlotDataState(candles: candles));
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
@@ -31,45 +34,47 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   // other functions
   // todo сделать запросы к серверу по вебсоккетам для инструмента для графика
-  Future<List<Candle>> getPlotData() async {
-    // Map<String, dynamic> json = {
-    //   "data": {"class_code": "SPBFUT"},
-    //   "cmd": "get_all_instruments",
-    // };
+  Future<List<Candle>> getPlotData(
+      String secCode, String interval, count) async {
+    Map<String, dynamic> json = {
+      "data": {
+        "class_code": "SPBFUT",
+        "sec_code": secCode,
+        "interval": interval,
+        "count": count,
+      },
+      "cmd": "get_chart_data",
+    };
 
     Completer<List<Candle>> completer = Completer();
     List<Candle> candles = [];
 
-    // repo.send(json); // отправка на сервер
+    repo.send(json); // отправка на сервер
+
     // Принимание и заполнение инструментов
-    // repo.stream.listen((message) {
-    //   var jsonRec = jsonDecode(message);
-    //   for (var instrument in jsonRec["data"]) {
-    //     instruments.add(
-    //         Instrument(title: instrument, isActive: false, type: "Фьючерс"));
-    //   }
-    //   completer.complete(instruments);
-    // });
-    DateTime now = DateTime.now();
+    //! попробовать сделать прослушивание канала и сразу емитить его как событие при изменении
+    repo.stream.listen((message) {
+      var jsonRec = jsonDecode(message);
+      for (var candle in jsonRec["data"]) {
+        print(candle);
+      }
+      // completer.complete(instruments);
+    });
 
-    for (var i = 0; i < 100; i++) {
-      // Создание времени с шагом в 1 минуту
-      DateTime candleTime = now.add(Duration(hours: i));
+    // DateTime now = DateTime.now();
+    // for (var i = 0; i < 100; i++) {
+    //   DateTime candleTime = now.add(Duration(hours: i));
 
-      // Форматирование времени в HH:MM
-      // String formattedTime = DateFormat('dd.MM.yyyy HH:mm').format(candleTime);
-      // String formattedTime = DateFormat('HH:mm').format(candleTime);
-
-      candles.add(
-        Candle(
-          time: candleTime,
-          open: math.Random().nextDouble() * 20 + 10,
-          high: math.Random().nextDouble() * 20 + 10,
-          low: math.Random().nextDouble() * 20 + 10,
-          close: math.Random().nextDouble() * 20 + 10,
-        ),
-      );
-    }
+    //   candles.add(
+    //     Candle(
+    //       time: candleTime,
+    //       open: math.Random().nextDouble() * 20 + 10,
+    //       high: math.Random().nextDouble() * 20 + 10,
+    //       low: math.Random().nextDouble() * 20 + 10,
+    //       close: math.Random().nextDouble() * 20 + 10,
+    //     ),
+    //   );
+    // }
     completer.complete(candles);
 
     // Ждем завершения асинхронной операции

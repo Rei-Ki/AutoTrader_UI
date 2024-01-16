@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/bloc/data_classes.dart';
 import 'package:lotosui/repository.dart';
@@ -7,21 +9,49 @@ import 'dart:async';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
+  Map<String, dynamic> requestJson = {
+    "data": {"class_code": "SPBFUT"},
+    "cmd": "get_all_instruments",
+  };
   late WSRepository repo = GetIt.I<WSRepository>();
+
   List<String> allTags = ["Активные", "Фьючерсы"];
 
   ActiveBloc() : super(ActiveInitialState()) {
     on<GetActiveEvent>(getActiveList);
     on<UpdateActiveEvent>(onUpdateActive);
+    on<GetWSRepositoryActiveEvent>(getWSRepositoryActive);
 
-    on<WebSocketsGetActiveEvent>(getActiveList);
+    // Подписываемся на события из репозитория и преобразуем их в состояние
+    repo.subscribe((dynamic data) {
+      Map<String, dynamic> decoded = jsonDecode(data);
+      if (decoded["cmd"] == "get_all_instruments") {
+        add(GetWSRepositoryActiveEvent(json: decoded));
+      }
+    });
+  }
+
+  getWSRepositoryActive(event, emit) async {
+    try {
+      List<Instrument> instruments = [];
+      List<String> data = (event.json["data"] as List<dynamic>).cast<String>();
+
+      for (var item in data) {
+        instruments
+            .add(Instrument(title: item.toString(), tags: [], type: "Фьючерс"));
+      }
+
+      emit(ActiveLoadedState(instruments));
+    } catch (e, st) {
+      GetIt.I<Talker>().handle(e, st);
+    }
   }
 
   getActiveList(event, emit) async {
     try {
       emit(ActiveLoadingState());
-      List<Instrument> instuments = await getServerInstruments();
-      emit(ActiveLoadedState(instuments));
+      repo.send(requestJson);
+      emit(ActiveLoadedState([]));
     } catch (e, st) {
       emit(ActiveErrorState());
       GetIt.I<Talker>().handle(e, st);
@@ -35,54 +65,6 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
       emit(ActiveErrorState());
       GetIt.I<Talker>().handle(e, st);
     }
-  }
-
-  // other functions
-  Future<List<Instrument>> getServerInstruments() async {
-    Map<String, dynamic> json = {
-      "data": {"class_code": "SPBFUT"},
-      "cmd": "get_all_instruments",
-    };
-
-    Completer<List<Instrument>> completer = Completer();
-    List<Instrument> instruments = [];
-
-    // todo оптимизировать чтобы каждый раз он не запрашивал а сохранил просто в памяти
-
-    // repo.send(json); // отправка на сервер
-    // Принимание и заполнение инструментов
-    // repo.stream.listen((message) {
-    //   var jsonRec = jsonDecode(message);
-    //   for (var instrument in jsonRec["data"]) {
-    //     instruments.add(
-    //         Instrument(title: instrument, isActive: false, type: "Фьючерс"));
-    //   }
-    //   completer.complete(instruments);
-    // });
-
-    // закомментить при настоящей работе
-    instruments.add(Instrument(
-      title: "Пример инструмента 1",
-      type: "Фьючерс",
-      tags: ['Фьючерсы'],
-    ));
-
-    instruments.add(Instrument(
-      title: "Пример инструмента 2",
-      type: "Фьючерс",
-      tags: ['Активные', 'Фьючерсы'],
-    ));
-
-    instruments.add(Instrument(
-      title: "Пример инструмента 3",
-      type: "Фьючерс",
-      tags: ['Активные', 'Фьючерсы'],
-    ));
-
-    completer.complete(instruments);
-
-    // Ждем завершения асинхронной операции
-    return completer.future;
   }
 }
 
@@ -107,26 +89,17 @@ class UpdateActiveState extends ActiveState {
   UpdateActiveState(this.data);
 }
 
-// Соккеты
-class WebSocketsActiveListState extends ActiveState {
-  List<Instrument> data;
-  WebSocketsActiveListState(this.data);
-}
-
 // Events
 abstract class ActiveEvent {}
 
-class GetActiveEvent extends ActiveEvent {
-  // todo разобраться оставить это или это
+class GetActiveEvent extends ActiveEvent {}
+
+class GetWSRepositoryActiveEvent extends ActiveEvent {
+  Map<String, dynamic>? json;
+  GetWSRepositoryActiveEvent({required this.json});
 }
 
 class UpdateActiveEvent extends ActiveEvent {
   List<Instrument> data;
   UpdateActiveEvent(this.data);
-}
-
-class WebSocketsGetActiveEvent extends ActiveEvent {
-  // todo разобраться оставить это или это
-  Map<String, dynamic> data;
-  WebSocketsGetActiveEvent(this.data);
 }

@@ -45,7 +45,7 @@ class _ActivePageState extends State<ActivePage> {
     return BlocBuilder<ActiveBloc, ActiveState>(builder: (context, state) {
       if (state is ActiveInitialState) {
         activeBloc = context.read<ActiveBloc>();
-        context.read<ActiveBloc>().add(GetActiveEvent());
+        activeBloc.add(GetActiveEvent());
       }
 
       if (state is ActiveLoadingState) {
