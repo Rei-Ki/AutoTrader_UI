@@ -60,6 +60,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
         List<Instrument> instruments = [];
 
         for (var item in cachedData) {
+          // TODO сделать лучший метод заполнения, учесть теги и типы
           instruments.add(
               Instrument(title: item.toString(), tags: [], type: "Фьючерс"));
         }

@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:convert';
-import 'dart:math' as math;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -16,27 +14,50 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   InstrumentBloc({required this.data}) : super(InstrumentInitialState()) {
     on<UpdatePlotDataEvent>(onUpdatePlotData);
+    on<GetWSRepositoryUpdatePlotEvent>(getWSRepositoryUpdatePlot);
+
+    // Подписываемся на события из репозитория и преобразуем их в состояние
+    repo.subscribe((dynamic data) {
+      Map<String, dynamic> decoded = jsonDecode(data);
+      if (decoded["cmd"] == "get_chart_data") {
+        add(GetWSRepositoryUpdatePlotEvent(json: decoded));
+      }
+    });
   }
 
-  onUpdatePlotData(event, emit) async {
+  getWSRepositoryUpdatePlot(event, emit) async {
     try {
-      // ! сделать в функцию эту чтобы она срабатывала при каждом смене таймфрейма и
-      //!   в событие передавался таймфрейм и иные даннм
-      //
-      candles = await getPlotData(data.title, "1", 100);
+      List data =
+          (event.json["data"] as List<dynamic>).cast<Map<String, dynamic>>();
+
+      for (var item in data) {
+        candles.add(Candle.fromJson(item));
+      }
+
       emit(UpdatePlotDataState(candles: candles));
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }
   }
 
-  //! todo сделать чтобы данные получались из потока
+  onUpdatePlotData(event, emit) async {
+    try {
+      //! сделать в функцию эту чтобы она срабатывала при каждом смене таймфрейма и в событие передавался таймфрейм и иные данные
+      //! потом учесть что есть возможность переключаться между таймфреймами а не только на одном сидеть
+      //! пока сделать чтобы блокировалось переключение таймфреймов при запуске инструмента
+
+      //TODO Сделать выбор интервала
+      getRequestPlotData(data.title, "1", 5);
+
+      emit(UpdatePlotDataState(candles: candles));
+    } catch (e, st) {
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
 
   // other functions
-  // todo сделать запросы к серверу по вебсоккетам для инструмента для графика
-  Future<List<Candle>> getPlotData(
-      String secCode, String interval, count) async {
-    Map<String, dynamic> json = {
+  getRequestPlotData(String secCode, String interval, count) {
+    Map<String, dynamic> requestJson = {
       "data": {
         "class_code": "SPBFUT",
         "sec_code": secCode,
@@ -46,39 +67,7 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
       "cmd": "get_chart_data",
     };
 
-    Completer<List<Candle>> completer = Completer();
-    List<Candle> candles = [];
-
-    repo.send(json); // отправка на сервер
-
-    // Принимание и заполнение инструментов
-    //! попробовать сделать прослушивание канала и сразу емитить его как событие при изменении
-    repo.stream.listen((message) {
-      var jsonRec = jsonDecode(message);
-      for (var candle in jsonRec["data"]) {
-        print(candle);
-      }
-      // completer.complete(instruments);
-    });
-
-    // DateTime now = DateTime.now();
-    // for (var i = 0; i < 100; i++) {
-    //   DateTime candleTime = now.add(Duration(hours: i));
-
-    //   candles.add(
-    //     Candle(
-    //       time: candleTime,
-    //       open: math.Random().nextDouble() * 20 + 10,
-    //       high: math.Random().nextDouble() * 20 + 10,
-    //       low: math.Random().nextDouble() * 20 + 10,
-    //       close: math.Random().nextDouble() * 20 + 10,
-    //     ),
-    //   );
-    // }
-    completer.complete(candles);
-
-    // Ждем завершения асинхронной операции
-    return completer.future;
+    repo.send(requestJson); // отправка на сервер
   }
 }
 
@@ -101,3 +90,8 @@ class UpdatePlotDataState extends InstrumentState {
 }
 
 class UpdatePlotDataEvent extends InstrumentEvent {}
+
+class GetWSRepositoryUpdatePlotEvent extends InstrumentEvent {
+  Map<String, dynamic>? json;
+  GetWSRepositoryUpdatePlotEvent({required this.json});
+}

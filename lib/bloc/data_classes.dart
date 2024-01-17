@@ -87,8 +87,6 @@ class Candle {
     required this.volume,
     required this.classCode,
     required this.interval,
-
-    // required this.index,
   });
 
   //! Сделать перевод даты в датувремя
@@ -103,9 +101,18 @@ class Candle {
     volume = json['volume'] ?? 0;
     classCode = json['class'] ?? "";
     interval = json['interval'] ?? 1;
-
-    //! Сделать перевод даты в датувремя
-
-    // DateTime datetime = json[''] ?? null;
+    datetime = parseDateTime(json['datetime']);
   }
+}
+
+DateTime parseDateTime(Map<String, dynamic> jsonDatetime) {
+  return DateTime(
+    jsonDatetime['year'],
+    jsonDatetime['month'],
+    jsonDatetime['day'],
+    jsonDatetime['hour'],
+    jsonDatetime['min'],
+    jsonDatetime['sec'],
+    jsonDatetime['ms'],
+  );
 }

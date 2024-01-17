@@ -67,7 +67,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
     );
   }
 
-  BlocBuilder<dynamic, dynamic> buildInstrumentBloc() {
+  buildInstrumentBloc() {
     return BlocBuilder<InstrumentBloc, InstrumentState>(
       builder: (context, state) {
         if (state is InstrumentInitialState) {
