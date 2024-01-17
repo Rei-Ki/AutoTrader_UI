@@ -3,17 +3,19 @@ import 'package:get_it/get_it.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'bloc/control_bloc.dart';
+import 'hive/instruments_hive.dart';
 import 'login_page/login_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import 'login_page/login_page.dart';
 import 'themes.dart';
 
 /*
-todo переформатировать код в блоках так чтобы стейты и события следовали друг за другом
+todo: переформатировать код в блоках так чтобы стейты и события следовали друг за другом
 todo Сделать чтобы при нажатии на инструмент (актив) была страница его и кнопка включить и он переходил в активные
 
 todo Использовать Hive
@@ -26,13 +28,14 @@ todo сделать не просто WS, а WSS (с TSL сертификата�
 
 todo подключить бд Firebase
 
-todo Сделать кнопки графика единым организмом чтобы горела только одна кнопка
 */
 
 void main() {
+  Hive.init("hive");
+  Hive.registerAdapter(CachedInstrumentsDataAdapter());
+
   // Регистрация толкера (для логирования)
   GetIt.I.registerSingleton(TalkerFlutter.init());
-
   GetIt.I<Talker>().debug("Talker started...");
 
   Bloc.observer = TalkerBlocObserver(
