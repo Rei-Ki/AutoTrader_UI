@@ -4,6 +4,7 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
   // todo сохранить переменную в ПЗУ при изменении
   // todo сделать запрос к хранилищу данных чтобы спросить какая была тема
   bool isDark = true;
+  bool isInstrumentsDataUpdated = false;
 
   ControlBloc() : super(ControlInitialState()) {
     on<ChangeThemeEvent>(onChangeThemeEvent);

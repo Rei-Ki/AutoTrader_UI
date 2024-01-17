@@ -3,12 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/bloc/data_classes.dart';
 import 'package:lotosui/repository.dart';
 import 'package:get_it/get_it.dart';
+import '../bloc/control_bloc.dart';
 import '../hive/hive.dart';
 import 'dart:convert';
 
 class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
-  bool isDataUpdated =
-      false; // чтобы хоть раз при заходе была актуальная информация
   Map<String, dynamic> requestJson = {
     "data": {"class_code": "SPBFUT"},
     "cmd": "get_all_instruments",
@@ -44,7 +43,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
       emit(ActiveLoadedState(instruments));
 
       await saveToCache(data, "instruments");
-      isDataUpdated = true;
+      GetIt.I<ControlBloc>().isInstrumentsDataUpdated = true;
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }
@@ -56,7 +55,8 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
       List<String> cachedData = await getFromCache("instruments");
 
-      if (cachedData.isNotEmpty || isDataUpdated) {
+      bool isDataUpdated = GetIt.I<ControlBloc>().isInstrumentsDataUpdated;
+      if (cachedData.isNotEmpty && isDataUpdated) {
         List<Instrument> instruments = [];
 
         for (var item in cachedData) {

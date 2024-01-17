@@ -27,7 +27,7 @@ class CustomTile<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width * 0.6;
     screenWidth = screenWidth < 300 ? screenWidth : 300;
-    screenWidth = screenWidth > 200 ? screenWidth : 200;
+    screenWidth = screenWidth > 200 ? screenWidth : 150;
 
     return UnconstrainedBox(
       child: Padding(

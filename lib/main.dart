@@ -72,6 +72,7 @@ class _AutoTraderAppState extends State<AutoTraderApp> {
     super.initState();
 
     controlBloc = ControlBloc();
+    GetIt.I.registerSingleton(controlBloc);
     loginBloc = LoginBloc();
 
     loginBloc.loginResultStream.listen((bool result) {
