@@ -62,7 +62,11 @@ class _ActivePageState extends State<ActivePage> {
       }
 
       if (state is ActiveErrorState) {
-        return const Center(child: Text("Oops, Something went wrong (Active)"));
+        return Center(
+            child: Text(
+          "Oops, Something went wrong (Active)",
+          style: Theme.of(context).textTheme.bodySmall,
+        ));
       }
 
       return Container();

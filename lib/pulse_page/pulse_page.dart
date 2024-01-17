@@ -63,7 +63,11 @@ class _PulsePageState extends State<PulsePage> {
       }
 
       if (state is PulseErrorState) {
-        return const Center(child: Text("Oops, Something went wrong"));
+        return Center(
+            child: Text(
+          "Oops, Something went wrong",
+          style: Theme.of(context).textTheme.bodySmall,
+        ));
       }
 
       return Container();

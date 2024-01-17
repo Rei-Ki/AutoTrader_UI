@@ -41,7 +41,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       }
 
       if (state is AnalyticsErrorState) {
-        return const Center(child: Text("Oops, Something went wrong"));
+        return Center(
+            child: Text(
+          "Oops, Something went wrong",
+          style: Theme.of(context).textTheme.bodySmall,
+        ));
       }
 
       return Container();

@@ -56,12 +56,13 @@ class _InstrumentPageState extends State<InstrumentPage> {
 
   FloatingActionButton createFAB(BuildContext context) {
     return FloatingActionButton.extended(
+      backgroundColor: Colors.transparent,
       onPressed: () => showModalDialog(context),
       elevation: 0,
       hoverElevation: 0,
       label: Icon(
         Icons.play_arrow_outlined,
-        size: 60, // Размер иконки
+        size: 80, // Размер иконки
         color: Theme.of(context).primaryColor.withOpacity(0.8),
       ),
     );
@@ -80,8 +81,12 @@ class _InstrumentPageState extends State<InstrumentPage> {
           return buildInstrumentColumn(context);
         }
 
-        return const Center(
-            child: Text("Ooops, something went wrong (instrument)"));
+        return Center(
+          child: Text(
+            "Ooops, something went wrong (instrument)",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        );
       },
     );
   }
@@ -137,7 +142,10 @@ class _InstrumentPageState extends State<InstrumentPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 10),
-          const Text("% допустимого риска"),
+          Text(
+            "% допустимого риска",
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           TextField(
             controller: risk,
             decoration: const InputDecoration(
@@ -145,7 +153,10 @@ class _InstrumentPageState extends State<InstrumentPage> {
             ),
           ),
           const SizedBox(height: 30),
-          const Text("лимит чистых позиций"),
+          Text(
+            "лимит чистых позиций",
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           TextField(
             controller: planLimit,
             decoration: const InputDecoration(

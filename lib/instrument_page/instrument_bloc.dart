@@ -47,7 +47,7 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
       //! пока сделать чтобы блокировалось переключение таймфреймов при запуске инструмента
 
       //TODO Сделать выбор интервала
-      getRequestPlotData(data.title, "1", 5);
+      getRequestPlotData(data.title, "1", 50);
 
       emit(UpdatePlotDataState(candles: candles));
     } catch (e, st) {

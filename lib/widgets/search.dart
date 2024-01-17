@@ -48,7 +48,10 @@ class _SearchState extends State<Search> {
                 selectedColor: Theme.of(context).primaryColor.withOpacity(0.25),
                 visualDensity: VisualDensity.compact,
                 showCheckmark: false,
-                label: Text(widget.tags[index]),
+                label: Text(
+                  widget.tags[index],
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
                 selected: selectedTags.contains(widget.tags[index]),
                 onSelected: (selected) {
                   toggleTag(widget.tags[index]);
@@ -77,6 +80,8 @@ class _SearchState extends State<Search> {
       constraints:
           const BoxConstraints(maxWidth: 300, minHeight: 49, maxHeight: 49),
       leading: const Icon(Icons.search, size: 20),
+      textStyle:
+          MaterialStateProperty.all(Theme.of(context).textTheme.bodyMedium),
       trailing: [
         IconButton(
           icon: const Icon(Icons.more_vert_rounded),

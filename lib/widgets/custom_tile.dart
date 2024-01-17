@@ -98,22 +98,13 @@ class CustomTile<T> extends StatelessWidget {
           Text(
             label,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.8,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium,
             softWrap: true,
           ),
           Text(
             text,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-              fontWeight: FontWeight.w300,
-            ),
+            style: Theme.of(context).textTheme.bodySmall,
             softWrap: true,
           )
         ],

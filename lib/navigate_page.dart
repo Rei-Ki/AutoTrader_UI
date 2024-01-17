@@ -30,7 +30,7 @@ class _NavigatePageState extends State<NavigatePage> {
       if (state is MainInitialState) {
         if (!GetIt.I.isRegistered<WSRepository>()) {
           GetIt.I.registerLazySingleton<WSRepository>(
-              () => WSRepository("ws://localhost:33333"));
+              () => WSRepository("ws://localhost:65000"));
         }
 
         return buildMainPage(context, PagesEnum.values[selectedIndex].title);
@@ -41,8 +41,11 @@ class _NavigatePageState extends State<NavigatePage> {
       }
 
       if (state is MainErrorState) {
-        return const Center(
-            child: Text("Oops, Something went wrong (Navigate)"));
+        return Center(
+            child: Text(
+          "Oops, Something went wrong (Navigate)",
+          style: Theme.of(context).textTheme.bodySmall,
+        ));
       }
 
       return Container();

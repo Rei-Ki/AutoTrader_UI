@@ -83,11 +83,7 @@ class _PlotState extends State<Plot> {
           children: [
             Text(
               lastCandle != null ? lastCandle.toStringAsFixed(3) : "Null",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w700,
-                color: Theme.of(context).primaryColor,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ],
         ),
