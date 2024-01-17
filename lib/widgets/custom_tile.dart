@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+// ignore: must_be_immutable
 class CustomTile<T> extends StatelessWidget {
   CustomTile({
     Key? key,
@@ -27,7 +28,7 @@ class CustomTile<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width * 0.6;
     screenWidth = screenWidth < 300 ? screenWidth : 300;
-    screenWidth = screenWidth > 200 ? screenWidth : 150;
+    screenWidth = screenWidth > 200 ? screenWidth : 200;
 
     return UnconstrainedBox(
       child: Padding(
@@ -52,16 +53,13 @@ class CustomTile<T> extends StatelessWidget {
             onTap: () {
               callback(data);
             },
-            child: Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: screenWidth,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: buildTile(context),
+            child: Container(
+              width: screenWidth,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: buildTile(context),
             ),
           ),
         ),
