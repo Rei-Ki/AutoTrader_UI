@@ -93,17 +93,13 @@ class _InstrumentPageState extends State<InstrumentPage> {
 
   buildInstrumentColumn(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: ListView(
-            children: [
-              Plot(
-                swiperController: swiperController,
-                bloc: instrumentBloc,
-              ),
-            ],
-          ),
+        Plot(
+          swiperController: swiperController,
+          bloc: instrumentBloc,
         ),
+        const SizedBox(height: 100),
       ],
     );
   }

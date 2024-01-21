@@ -14,10 +14,12 @@ class WSRepository {
   // Публичный поток для подписки на события
   Stream<dynamic> get stream => _controller.stream;
 
-  WSRepository(String url) {
+  // WSRepository(String url) {
+  WSRepository() {
     try {
       channel = WebSocketChannel.connect(
-        Uri.parse(url),
+        // Uri.parse(url),
+        Uri.parse("ws://89.204.92.172:65000"),
       );
 
       channel.stream.listen((dynamic message) {

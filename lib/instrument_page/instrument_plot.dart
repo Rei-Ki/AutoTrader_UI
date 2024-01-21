@@ -121,16 +121,6 @@ class _PlotState extends State<Plot> {
         AreaSeries<Candle, dynamic>(
           name: widget.bloc.data.title,
           enableTooltip: true,
-          trendlines: [
-            // Trendline(
-            //   name: "EMA 18 high",
-            //   markerSettings: const MarkerSettings(isVisible: true),
-            //   //! работает только с low или high
-            //   valueField: "high",
-            //   type: TrendlineType.movingAverage,
-            //   period: 18,
-            // ),
-          ],
           isVisibleInLegend: true,
           borderWidth: 3,
           animationDuration: 0,
@@ -257,6 +247,7 @@ class _PlotState extends State<Plot> {
         : null;
 
     return DateTimeAxis(
+      plotOffset: 5,
       visibleMaximum: visibleMaximum,
       visibleMinimum: visibleMinimum,
       dateFormat: DateFormat.Hm(),

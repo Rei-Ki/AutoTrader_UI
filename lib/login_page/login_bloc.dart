@@ -9,8 +9,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   // todo ДОВЕСТИ ДО УМА ЕГО
 
-  bool isLogged = false;
-  // bool isLogged = true;
+  // bool isLogged = false;
+  bool isLogged = true;
 
   LoginBloc() : super(LoginInitialState()) {
     on<StartLoginEvent>(onStartLogin);

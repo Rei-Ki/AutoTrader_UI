@@ -29,8 +29,7 @@ class _NavigatePageState extends State<NavigatePage> {
     return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
       if (state is MainInitialState) {
         if (!GetIt.I.isRegistered<WSRepository>()) {
-          GetIt.I.registerLazySingleton<WSRepository>(
-              () => WSRepository("ws://localhost:65000"));
+          GetIt.I.registerLazySingleton<WSRepository>(() => WSRepository());
         }
 
         return buildMainPage(context, PagesEnum.values[selectedIndex].title);

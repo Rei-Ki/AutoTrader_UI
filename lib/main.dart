@@ -31,6 +31,9 @@ todo Используйте BlocBuilder и различные состояния
 todo Интеграция с Firebase Firestore: 
 Приложение должно подключаться к Firebase Firestore и включать по крайней мере одну коллекцию. 
 Это проверит вашу способность работать с базами данных и облачными сервисами.
+
+todo Добавить блок в instrument_page.dart
+todo Добавить блок в login_page.dart
 */
 
 void main() {
