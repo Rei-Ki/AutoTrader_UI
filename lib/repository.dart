@@ -19,7 +19,8 @@ class WSRepository {
     try {
       channel = WebSocketChannel.connect(
         // Uri.parse(url),
-        Uri.parse("ws://89.204.92.172:65000"),
+        // todo рабоатет с localhost но не со статическим ip
+        Uri.parse("ws://localhost:65000"),
       );
 
       channel.stream.listen((dynamic message) {
