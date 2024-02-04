@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
@@ -10,6 +13,8 @@ import 'instrument_page/instrument_page.dart';
 import 'package:lotosui/navigate_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'login_page/login_page.dart';
 import 'themes.dart';
@@ -36,7 +41,10 @@ todo Добавить блок в instrument_page.dart
 todo Добавить блок в login_page.dart
 */
 
-void main() {
+void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   Hive.init("hive");
   Hive.registerAdapter(CachedInstrumentsDataAdapter());
 
@@ -80,6 +88,18 @@ class _AutoTraderAppState extends State<AutoTraderApp> {
     controlBloc = ControlBloc();
     GetIt.I.registerSingleton(controlBloc);
     loginBloc = LoginBloc();
+
+    // controlBloc.wsIp = "localhost:33333";
+    // controlBloc.wsIp = "192.168.0.5:33333";
+    // FirebaseFirestore.instance.collection("settings").get().then(
+    //   (querySnapshot) {
+    //     print(querySnapshot);
+    //     controlBloc.wsIp = "192.168.0.5:33333";
+    //     // for (var doc in querySnapshot.docs) {
+    //     //   print(doc);
+    //     // }
+    //   },
+    // );
 
     loginBloc.loginResultStream.listen((bool result) {
       controlBloc.add(LoggingEvent(result));

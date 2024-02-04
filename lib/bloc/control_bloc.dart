@@ -5,6 +5,7 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
   // todo сделать запрос к хранилищу данных чтобы спросить какая была тема
   bool isDark = true;
   bool isInstrumentsDataUpdated = false;
+  String wsIp = "";
 
   ControlBloc() : super(ControlInitialState()) {
     on<ChangeThemeEvent>(onChangeThemeEvent);

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914731140416",
+    "project_id": "autotrader-app-70a0f",
+    "storage_bucket": "autotrader-app-70a0f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914731140416:android:e45c61413321cb1ea126a5",
+        "android_client_info": {
+          "package_name": "com.example.lotosui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVTIawdKozOPsqf6zy9W6At-DgDXJvGl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

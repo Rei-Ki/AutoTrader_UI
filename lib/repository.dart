@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:get_it/get_it.dart';
+import 'package:lotosui/bloc/control_bloc.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -17,10 +18,12 @@ class WSRepository {
   // WSRepository(String url) {
   WSRepository() {
     try {
+      // String uri = GetIt.I<ControlBloc>().wsIp;
+
       channel = WebSocketChannel.connect(
-        // Uri.parse(url),
         // todo рабоатет с localhost но не с ip
-        // Uri.parse("ws://localhost:65000"),
+
+        // Uri.parse("ws://$uri"),
         Uri.parse("ws://192.168.0.5:33333"),
       );
 
