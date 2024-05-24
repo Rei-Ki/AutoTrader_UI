@@ -1,12 +1,25 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 
 class ControlBloc extends Bloc<ControlEvent, ControlState> {
-  // todo сохранить переменную в ПЗУ при изменении
-  // todo сделать запрос к хранилищу данных чтобы спросить какая была тема
-  bool isDark = true;
-  bool isInstrumentsDataUpdated = false;
-  String wsIp = "";
+  final Box settingsBox = Hive.box('settingsBox');
+  // для переключения тем запись и чтение
+  bool get isDark => settingsBox.get('isDark', defaultValue: true);
+  set isDark(bool value) => settingsBox.put('isDark', value);
 
+  // для обновления данных инструментов запись и чтение
+  bool get isInstrumentsDataUpdated =>
+      settingsBox.get('isInstrumentsDataUpdated', defaultValue: false);
+  set isInstrumentsDataUpdated(bool value) =>
+      settingsBox.put('isInstrumentsDataUpdated', value);
+
+  // для канала вебсоккетов чтение и сохранение
+  // TODO сделать сохранение ее и в хайв использовать как то
+  // для переключения тем запись и чтение
+  String get wsIp => settingsBox.get('wsIp', defaultValue: "192.168.0.5:33333");
+  set wsIp(String value) => settingsBox.put('wsIp', value);
+
+  // Инициализация класса блока
   ControlBloc() : super(ControlInitialState()) {
     on<ChangeThemeEvent>(onChangeThemeEvent);
     on<LoggingEvent>(onLoggingEvent);

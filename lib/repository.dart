@@ -18,19 +18,27 @@ class WSRepository {
   // WSRepository(String url) {
   WSRepository() {
     try {
-      // String uri = GetIt.I<ControlBloc>().wsIp;
+      String uri = GetIt.I<ControlBloc>().wsIp;
 
       channel = WebSocketChannel.connect(
         // todo рабоатет с localhost но не с ip
 
-        // Uri.parse("ws://$uri"),
-        Uri.parse("ws://192.168.0.5:33333"),
+        // Uri.parse("ws://90.151.95.228:33333"),
+        // Uri.parse("ws://192.168.0.5:33333"),
+        Uri.parse("ws://$uri"),
       );
 
-      channel.stream.listen((dynamic message) {
-        GetIt.I<Talker>().info("Получено сообщение от сервера: $message");
-        _controller.add(message);
-      });
+      channel.stream.listen(
+        (dynamic message) {
+          GetIt.I<Talker>().info("Получено сообщение от сервера: $message");
+          _controller.add(message);
+        },
+        onError: (error) {
+          GetIt.I<Talker>().info("Произошла ошибка: $error");
+        },
+      );
+
+      GetIt.I<Talker>().info("Соединение установлено на порт 33333");
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -9,6 +10,7 @@ import 'package:lotosui/pulse_page/pulse_page.dart';
 import 'package:lotosui/repository.dart';
 import 'bloc/control_bloc.dart';
 import 'bloc/main_bloc.dart';
+import 'settings_page/settings_page.dart';
 
 class NavigatePage extends StatefulWidget {
   const NavigatePage({super.key});
@@ -28,6 +30,10 @@ class _NavigatePageState extends State<NavigatePage> {
   buildMainBloc() {
     return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
       if (state is MainInitialState) {
+        if (!GetIt.I.isRegistered<ControlBloc>()) {
+          ControlBloc controlBloc = context.read<ControlBloc>();
+          GetIt.I.registerSingleton<ControlBloc>(controlBloc);
+        }
         if (!GetIt.I.isRegistered<WSRepository>()) {
           GetIt.I.registerLazySingleton<WSRepository>(() => WSRepository());
         }
@@ -50,8 +56,6 @@ class _NavigatePageState extends State<NavigatePage> {
       return Container();
     });
   }
-
-  // todo попровать может сделать вот тут выбранный инструмент как вкладку (может упростит код)
 
   Scaffold buildMainPage(BuildContext context, String appBar) {
     return Scaffold(
@@ -152,6 +156,11 @@ enum PagesEnum {
     title: 'Аналитика',
     icon: Icons.data_usage_rounded,
     page: AnalyticsPage(),
+  ),
+  settings(
+    title: 'Настройки',
+    icon: Icons.settings_suggest,
+    page: SettingsPage(),
   );
 
   final String title;

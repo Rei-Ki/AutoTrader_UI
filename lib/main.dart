@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'bloc/control_bloc.dart';
@@ -42,30 +43,40 @@ todo Добавить блок в login_page.dart
 */
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  Hive.init("hive");
-  Hive.registerAdapter(CachedInstrumentsDataAdapter());
-
-  // Регистрация толкера (для логирования)
   GetIt.I.registerSingleton(TalkerFlutter.init());
-  GetIt.I<Talker>().debug("Talker started...");
 
-  Bloc.observer = TalkerBlocObserver(
-    talker: GetIt.I<Talker>(),
-    settings: const TalkerBlocLoggerSettings(
-      printStateFullData: false,
-      printEventFullData: false,
-    ),
-  );
-
-  FlutterError.onError =
-      (details) => GetIt.I<Talker>().handle(details.exception, details.stack);
-
+  // Запуск приложения в зоне Talker
   runTalkerZonedGuarded(
     GetIt.I<Talker>(),
-    () => runApp(const AutoTraderApp()),
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      // Инициализация Firebase (если требуется)
+      // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+      // Инициализация Hive
+      final appDocumentDir = await getApplicationDocumentsDirectory();
+      Hive
+        ..init(appDocumentDir.path)
+        ..registerAdapter(CachedInstrumentsDataAdapter());
+      await Hive.openBox('settingsBox');
+
+      // Регистрация Talker
+      GetIt.I<Talker>().debug("Talker started...");
+
+      Bloc.observer = TalkerBlocObserver(
+        talker: GetIt.I<Talker>(),
+        settings: const TalkerBlocLoggerSettings(
+          printStateFullData: false,
+          printEventFullData: false,
+        ),
+      );
+
+      FlutterError.onError = (details) =>
+          GetIt.I<Talker>().handle(details.exception, details.stack);
+
+      // Запуск приложения
+      runApp(const AutoTraderApp());
+    },
     (error, stack) => GetIt.I<Talker>().handle(error, stack),
   );
 }
@@ -88,18 +99,6 @@ class _AutoTraderAppState extends State<AutoTraderApp> {
     controlBloc = ControlBloc();
     GetIt.I.registerSingleton(controlBloc);
     loginBloc = LoginBloc();
-
-    // controlBloc.wsIp = "localhost:33333";
-    // controlBloc.wsIp = "192.168.0.5:33333";
-    // FirebaseFirestore.instance.collection("settings").get().then(
-    //   (querySnapshot) {
-    //     print(querySnapshot);
-    //     controlBloc.wsIp = "192.168.0.5:33333";
-    //     // for (var doc in querySnapshot.docs) {
-    //     //   print(doc);
-    //     // }
-    //   },
-    // );
 
     loginBloc.loginResultStream.listen((bool result) {
       controlBloc.add(LoggingEvent(result));

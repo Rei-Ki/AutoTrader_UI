@@ -248,8 +248,8 @@ class _PlotState extends State<Plot> {
 
     return DateTimeAxis(
       plotOffset: 5,
-      visibleMaximum: visibleMaximum,
-      visibleMinimum: visibleMinimum,
+      initialVisibleMaximum: visibleMaximum,
+      initialVisibleMinimum: visibleMinimum,
       dateFormat: DateFormat.Hm(),
       majorGridLines: const MajorGridLines(width: 1),
       labelIntersectAction: AxisLabelIntersectAction.hide,
