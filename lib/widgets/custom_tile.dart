@@ -26,44 +26,46 @@ class CustomTile<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width * 0.6;
-    screenWidth = screenWidth < 300 ? screenWidth : 300;
-    screenWidth = screenWidth > 200 ? screenWidth : 200;
-
-    return UnconstrainedBox(
-      child: Padding(
-        padding: padding,
-        child: Slidable(
-          endActionPane: ActionPane(
-            motion: const DrawerMotion(),
-            children: [
-              SlidableAction(
-                onPressed: (context) {
-                  debugPrint("Slidable delete is clicked!");
-                },
-                backgroundColor: Colors.red,
-                borderRadius: BorderRadius.circular(10),
-                icon: Icons.delete_outline_rounded,
-                label: "Удалить",
+    return Padding(
+      padding: padding,
+      child: Align(
+        alignment: Alignment.center,
+        child: InkWell(
+          onTap: () => callback(data),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: Slidable(
+              closeOnScroll: true,
+              endActionPane: endActionPane(),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: buildTile(context),
               ),
-            ],
-          ),
-          // Child -----------------------------------------------------
-          child: InkWell(
-            onTap: () {
-              callback(data);
-            },
-            child: Container(
-              width: screenWidth,
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: buildTile(context),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  ActionPane endActionPane() {
+    return ActionPane(
+      motion: const DrawerMotion(),
+      children: [
+        SlidableAction(
+          onPressed: (context) {
+            // TODO реализовать удаление
+            debugPrint("Slidable delete is clicked!");
+          },
+          backgroundColor: Colors.red,
+          borderRadius: BorderRadius.circular(10),
+          icon: Icons.delete_outline_rounded,
+          label: "Удалить",
+        ),
+      ],
     );
   }
 
@@ -75,12 +77,8 @@ class CustomTile<T> extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [icon, buildLabels(context)],
-          ),
+          icon,
+          Expanded(child: buildLabels(context)),
           trailing,
         ],
       ),
@@ -89,7 +87,7 @@ class CustomTile<T> extends StatelessWidget {
 
   Padding buildLabels(context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 15),
+      padding: const EdgeInsets.only(left: 12),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
