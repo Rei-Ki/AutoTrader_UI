@@ -3,6 +3,11 @@ import 'package:hive/hive.dart';
 
 class ControlBloc extends Bloc<ControlEvent, ControlState> {
   final Box settingsBox = Hive.box('settingsBox');
+
+  // для переключения тем запись и чтение
+  bool get isIpUse => settingsBox.get('isIpUse', defaultValue: false);
+  set isIpUse(bool value) => settingsBox.put('isIpUse', value);
+
   // для переключения тем запись и чтение
   bool get isDark => settingsBox.get('isDark', defaultValue: true);
   set isDark(bool value) => settingsBox.put('isDark', value);
@@ -14,8 +19,6 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
       settingsBox.put('isInstrumentsDataUpdated', value);
 
   // для канала вебсоккетов чтение и сохранение
-  // TODO сделать сохранение ее и в хайв использовать как то
-  // для переключения тем запись и чтение
   String get wsIp => settingsBox.get('wsIp', defaultValue: "192.168.0.5:33333");
   set wsIp(String value) => settingsBox.put('wsIp', value);
 

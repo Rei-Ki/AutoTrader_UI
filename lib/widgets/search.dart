@@ -72,16 +72,16 @@ class _SearchState extends State<Search> {
 
   SearchBar searchBar(BuildContext context) {
     return SearchBar(
-      padding: const MaterialStatePropertyAll<EdgeInsets>(
+      padding: const WidgetStatePropertyAll<EdgeInsets>(
           EdgeInsets.symmetric(horizontal: 12.0)),
-      overlayColor: MaterialStateProperty.all(Colors.transparent),
-      backgroundColor: MaterialStateProperty.all(Colors.transparent),
-      elevation: MaterialStateProperty.all(0),
+      overlayColor: WidgetStateProperty.all(Colors.transparent),
+      backgroundColor: WidgetStateProperty.all(Colors.transparent),
+      elevation: WidgetStateProperty.all(0),
       constraints:
           const BoxConstraints(maxWidth: 300, minHeight: 49, maxHeight: 49),
       leading: const Icon(Icons.search, size: 20),
       textStyle:
-          MaterialStateProperty.all(Theme.of(context).textTheme.bodyMedium),
+          WidgetStateProperty.all(Theme.of(context).textTheme.bodyMedium),
       trailing: [
         IconButton(
           icon: const Icon(Icons.more_vert_rounded),
@@ -91,7 +91,7 @@ class _SearchState extends State<Search> {
           },
         ),
       ],
-      side: MaterialStateProperty.all(
+      side: WidgetStateProperty.all(
         BorderSide(
           color: Theme.of(context).primaryColor.withOpacity(0.4),
           width: 1.5,

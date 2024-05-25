@@ -6,6 +6,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 class PulseBloc extends Bloc<PulseEvent, PulseState> {
   List<String> allTags = ["Активные", "Фьючерсы"];
+  // TODO добавить правильную работу тегов и их автоматическое подхватывание динамически через сет подхватывать
 
   PulseBloc() : super(PulseInitialState()) {
     on<GetPulseEvent>(getPulse);

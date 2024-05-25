@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,25 +18,17 @@ import 'login_page/login_page.dart';
 import 'themes.dart';
 
 /*
-todo Сделать чтобы при нажатии на инструмент была страница его и кнопка включить и он переходил в активные
+TODO Сделать чтобы при нажатии на инструмент была страница его и кнопка включить и он переходил в активные
 
-todo Сделать при удалении инструмента в АКТИВНЫХ отключение его и убрать из активных
-todo использовать релейтив лейауты
+TODO Сделать при удалении инструмента в АКТИВНЫХ отключение его и убрать из активных
 
-todo сделать не просто WS, а WSS (с TSL сертификатами)
+TODO Поработать с тегами, например чтобы автоматически генерировались теги для поиска из всех тегов которые есть для инструмента
 
+TODO использовать релейтив лейауты
 
-todo подключить бд Firebase
-todo Интерактивность: использовать снейк бар для уведомлений
+TODO сделать не просто WS, а WSS (с TSL сертификатами)
 
-todo Используйте BlocBuilder и различные состояния для заполнения пользовательского интерфейса на основе данных, считанных из Firebase Firestore
-
-todo Интеграция с Firebase Firestore: 
-Приложение должно подключаться к Firebase Firestore и включать по крайней мере одну коллекцию. 
-Это проверит вашу способность работать с базами данных и облачными сервисами.
-
-todo Добавить блок в instrument_page.dart
-todo Добавить блок в login_page.dart
+TODO Интерактивность: использовать снейк бар для уведомлений
 */
 
 void main() async {
@@ -51,7 +40,8 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       // Инициализация Firebase (если требуется)
-      // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
 
       // Инициализация Hive
       final appDocumentDir = await getApplicationDocumentsDirectory();
@@ -77,7 +67,10 @@ void main() async {
       // Запуск приложения
       runApp(const AutoTraderApp());
     },
-    (error, stack) => GetIt.I<Talker>().handle(error, stack),
+    (error, stack) {
+      GetIt.I<Talker>().handle(error, stack);
+      // TODO сделать снейк бар для ошибки
+    },
   );
 }
 

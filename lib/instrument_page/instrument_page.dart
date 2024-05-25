@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../bloc/data_classes.dart';
 import 'instrument_bloc.dart';
-// import 'dart:async';
 
 class InstrumentPage extends StatefulWidget {
   const InstrumentPage({super.key});
@@ -17,7 +16,7 @@ class InstrumentPage extends StatefulWidget {
 
 class _InstrumentPageState extends State<InstrumentPage> {
   int selectedStrategy = 0;
-  //! todo прокинуть в таймфреймы контроллер свайпа
+  //! TODO прокинуть в таймфреймы контроллер свайпа
   SwiperController swiperController = SwiperController();
   int selectedTimeframe = 4;
 
@@ -190,9 +189,9 @@ class _InstrumentPageState extends State<InstrumentPage> {
     return IconButton(
       padding: const EdgeInsets.all(0),
       onPressed: () {
-        // todo сделать анимацию переключения состояния кнопки
-        // todo сделать сокрытие стратегий
-        // todo сделать отправку на сервер
+        // TODO сделать анимацию переключения состояния кнопки
+        // TODO сделать сокрытие стратегий
+        // TODO сделать отправку на сервер
 
         // Map<String, dynamic> data = {
         //   "cmd": "start_instrument",

@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'dart:async';
 
 class SearchBloc<T> extends Bloc<SearchEvent<T>, SearchState<T>> {
   final searchResultController = StreamController<List<T>>.broadcast();

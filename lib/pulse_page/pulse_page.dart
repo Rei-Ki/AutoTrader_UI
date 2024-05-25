@@ -147,7 +147,7 @@ class _PulsePageState extends State<PulsePage> {
   }
 }
 
-//! TimeLineTile
+// TimeLineTile
 class CustomTimeLineTile extends StatelessWidget {
   final bool isFirst;
   final bool isLast;

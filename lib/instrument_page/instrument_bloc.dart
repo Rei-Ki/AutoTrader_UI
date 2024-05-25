@@ -27,6 +27,13 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   getWSRepositoryUpdatePlot(event, emit) async {
     try {
+      if (event.json["status"] == "error" ||
+          event.json.containsKey("error_message")) {
+        print("${event.json["status"]}: ${event.json["error_message"]}");
+        throw Exception(
+            "${event.json["status"]}: ${event.json["error_message"]}");
+      }
+
       List data =
           (event.json["data"] as List<dynamic>).cast<Map<String, dynamic>>();
 
@@ -42,9 +49,9 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   onUpdatePlotData(event, emit) async {
     try {
-      //! сделать в функцию эту чтобы она срабатывала при каждом смене таймфрейма и в событие передавался таймфрейм и иные данные
-      //! потом учесть что есть возможность переключаться между таймфреймами а не только на одном сидеть
-      //! пока сделать чтобы блокировалось переключение таймфреймов при запуске инструмента
+      //!TODO сделать в функцию эту чтобы она срабатывала при каждом смене таймфрейма и в событие передавался таймфрейм и иные данные
+      //!TODO потом учесть что есть возможность переключаться между таймфреймами а не только на одном сидеть
+      //!TODO пока сделать чтобы блокировалось переключение таймфреймов при запуске инструмента
 
       //TODO Сделать выбор интервала
       getRequestPlotData(data.title, "1", 50);

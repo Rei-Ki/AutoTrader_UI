@@ -89,7 +89,7 @@ class Candle {
     required this.interval,
   });
 
-  //! Сделать перевод даты в датувремя
+  // TODO Сделать перевод даты в датувремя
   // datetime: {month: 1, week_day: 1, sec: 0, hour: 17, ms: 0, year: 2024, count: 1, min: 58, day: 15}}
 
   Candle.fromJson(Map<String, dynamic> json) {

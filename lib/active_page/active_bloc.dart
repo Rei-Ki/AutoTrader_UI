@@ -15,6 +15,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
   late WSRepository repo = GetIt.I<WSRepository>();
 
   List<String> allTags = ["Активные", "Фьючерсы"];
+  // TODO добавить правильную работу тегов и их автоматическое подхватывание динамически через сет подхватывать
 
   ActiveBloc() : super(ActiveInitialState()) {
     on<GetActiveEvent>(getActiveList);

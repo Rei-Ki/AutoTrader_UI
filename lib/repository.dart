@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lotosui/bloc/control_bloc.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -18,29 +19,62 @@ class WSRepository {
   // WSRepository(String url) {
   WSRepository() {
     try {
-      String uri = GetIt.I<ControlBloc>().wsIp;
+      getActualIp().then((actualIp) {
+        channel = WebSocketChannel.connect(
+          Uri.parse("ws://$actualIp"),
+        );
 
-      channel = WebSocketChannel.connect(
-        // todo рабоатет с localhost но не с ip
-
-        // Uri.parse("ws://90.151.95.228:33333"),
-        // Uri.parse("ws://192.168.0.5:33333"),
-        Uri.parse("ws://$uri"),
-      );
-
-      channel.stream.listen(
-        (dynamic message) {
-          GetIt.I<Talker>().info("Получено сообщение от сервера: $message");
-          _controller.add(message);
-        },
-        onError: (error) {
-          GetIt.I<Talker>().info("Произошла ошибка: $error");
-        },
-      );
-
-      GetIt.I<Talker>().info("Соединение установлено на порт 33333");
+        channel.stream.listen(
+          (dynamic message) {
+            GetIt.I<Talker>().info("Получено сообщение от сервера:\n$message");
+            _controller.add(message);
+          },
+          onError: (error) =>
+              GetIt.I<Talker>().error("Произошла ошибка: $error"),
+        );
+      });
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
+  Future<String?> getActualIp() async {
+    // смотрим использовать IP из настроек или из бд
+    bool isIpUse = GetIt.I<ControlBloc>().isIpUse;
+
+    if (isIpUse == true) {
+      // IP из введенного в настройках поля
+      String actualIp = GetIt.I<ControlBloc>().wsIp;
+      GetIt.I<Talker>().info("Подключение к каналу websockets: $actualIp");
+      return actualIp;
+    }
+
+    // Запрос к бд и обработка данных
+    return await extractIpFromDataBase();
+  }
+
+  Future<String?> extractIpFromDataBase() async {
+    try {
+      // Запрос к бд
+      FirebaseFirestore db = FirebaseFirestore.instance;
+
+      DocumentSnapshot documentSnapshot =
+          await db.doc("settings/websockets").get();
+      Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>?;
+
+      String? route = data?['route'];
+
+      // Окончательный выбор канала из бд или при его отсутствии из введенного поля
+      String actualIp = route ?? GetIt.I<ControlBloc>().wsIp;
+      GetIt.I<Talker>().info(
+          "Попытка использования канала websockets: $actualIp\nПри ошибке будет использован канал из настроек");
+      return actualIp;
+    } catch (e, st) {
+      GetIt.I<Talker>().handle(e, st,
+          "Нет данных в websockets документе.\nИспользуется канал из настроек");
+      // при ошибке возвращаем канал в настройках
+      return GetIt.I<ControlBloc>().wsIp;
     }
   }
 

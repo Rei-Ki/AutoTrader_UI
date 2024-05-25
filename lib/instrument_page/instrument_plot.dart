@@ -183,7 +183,7 @@ class _PlotState extends State<Plot> {
 
   Legend getLegend() {
     return Legend(
-      //! todo Сделать чтобы легенды хранили трендовые линии чтобы можно было отключать ненужное
+      //! TODO Сделать чтобы легенды хранили трендовые линии чтобы можно было отключать ненужное
       isVisible: isLegendVisible,
       position: LegendPosition.top,
       iconBorderColor: Colors.black,
@@ -224,11 +224,11 @@ class _PlotState extends State<Plot> {
       return timeFrame * 60 * 24;
     }
     if (timeFrameString.contains("W")) {
-      // todo не совсем уверен в том что неделя там именно 7
+      // TODO не совсем уверен в том что неделя там именно 7
       return timeFrame * 60 * 24 * 7;
     }
     if (timeFrameString.contains("M")) {
-      // todo не совсем уверен в том что месяц именно 30
+      // TODO не совсем уверен в том что месяц именно 30
       return timeFrame * 60 * 24 * 30;
     }
     return 60; // возвращение по стандарту часового интервала
@@ -259,9 +259,9 @@ class _PlotState extends State<Plot> {
   }
 
   getPrimaryYAxis() {
-    return NumericAxis(
+    return const NumericAxis(
       opposedPosition: true,
-      axisLine: const AxisLine(width: 0),
+      axisLine: AxisLine(width: 0),
       enableAutoIntervalOnZooming: true,
       title: AxisTitle(text: ''),
       decimalPlaces: 3,
