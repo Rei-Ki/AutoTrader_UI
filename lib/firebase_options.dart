@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -72,10 +69,21 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyC6Y7UbX0hmvFT7Dreb1HzzP5OG9xhr_wQ',
-    appId: '1:914731140416:ios:eac77d0ed4776032a126a5',
+    appId: '1:914731140416:ios:54e7b29b58345276a126a5',
     messagingSenderId: '914731140416',
     projectId: 'autotrader-app-70a0f',
     storageBucket: 'autotrader-app-70a0f.appspot.com',
-    iosBundleId: 'com.example.lotosui.RunnerTests',
+    iosBundleId: 'com.example.lotosui',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAuiFd1b9ozeW24O55UmHdaVP20vCApj7g',
+    appId: '1:914731140416:web:4c19e5044ca8702da126a5',
+    messagingSenderId: '914731140416',
+    projectId: 'autotrader-app-70a0f',
+    authDomain: 'autotrader-app-70a0f.firebaseapp.com',
+    storageBucket: 'autotrader-app-70a0f.appspot.com',
+    measurementId: 'G-N0PNGQKJRH',
+  );
+
 }
