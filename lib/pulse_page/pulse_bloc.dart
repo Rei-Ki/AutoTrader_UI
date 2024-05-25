@@ -5,8 +5,7 @@ import 'package:lotosui/bloc/data_classes.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class PulseBloc extends Bloc<PulseEvent, PulseState> {
-  List<String> allTags = ["Активные", "Фьючерсы"];
-  // TODO добавить правильную работу тегов и их автоматическое подхватывание динамически через сет подхватывать
+  Set<String> allTags = {};
 
   PulseBloc() : super(PulseInitialState()) {
     on<GetPulseEvent>(getPulse);
@@ -37,7 +36,7 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
   getServerPulse() async {
     await Future.delayed(const Duration(microseconds: 1));
 
-    // todo сделать async запрос к серверу за пульсом
+    // TODO сделать async запрос к серверу за пульсом
 
     var p1 = Pulse(
         title: 'CRU3',
@@ -76,6 +75,10 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
         tags: ["Активные", "Фьючерсы"]);
 
     List<Pulse> pulses = [p1, p2, p3, p4, p5];
+
+    for (var pulse in pulses) {
+      allTags = allTags.union(pulse.tags.toSet());
+    }
     return pulses;
   }
 }

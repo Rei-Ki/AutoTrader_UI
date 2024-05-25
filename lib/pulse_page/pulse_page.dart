@@ -79,7 +79,7 @@ class _PulsePageState extends State<PulsePage> {
       children: [
         Search(
           onChange: searchOnChange,
-          tags: pulseBloc.allTags,
+          tags: pulseBloc.allTags.toList(),
           callback: onSelectedTags,
         ),
         buildList(pulse),

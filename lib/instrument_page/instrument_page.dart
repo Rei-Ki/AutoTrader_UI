@@ -189,6 +189,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
     return IconButton(
       padding: const EdgeInsets.all(0),
       onPressed: () {
+        // TODO сделать тут блок и в нем все это обрабатывать
         // TODO сделать анимацию переключения состояния кнопки
         // TODO сделать сокрытие стратегий
         // TODO сделать отправку на сервер

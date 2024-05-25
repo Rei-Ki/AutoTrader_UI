@@ -37,6 +37,11 @@ class _NavigatePageState extends State<NavigatePage> {
         if (!GetIt.I.isRegistered<WSRepository>()) {
           GetIt.I.registerLazySingleton<WSRepository>(() => WSRepository());
           // TODO сделать обновление вебсоккетов через протягивание снизу вверх
+
+          // Если нужно перерегистрировать
+          // GetIt.I.resetLazySingleton<WSRepository>(instance: WSRepository());
+          // Перерегистрация
+          // GetIt.I.registerLazySingleton<WSRepository>(() => WSRepository());
         }
 
         return buildMainPage(context, PagesEnum.values[selectedIndex].title);

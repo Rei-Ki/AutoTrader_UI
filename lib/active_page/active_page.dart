@@ -78,7 +78,7 @@ class _ActivePageState extends State<ActivePage> {
       children: [
         Search(
           onChange: searchOnChange,
-          tags: activeBloc.allTags,
+          tags: activeBloc.allTags.toList(),
           callback: onSelectedTags,
         ),
         buildList(instruments),
