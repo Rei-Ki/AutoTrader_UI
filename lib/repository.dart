@@ -9,22 +9,24 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WSRepository {
   late WebSocketChannel channel;
-
-  // Добавляем контроллер для управления потоками событий
   final _controller = StreamController<dynamic>.broadcast();
+  StreamSubscription? _channelSubscription;
 
-  // Публичный поток для подписки на события
   Stream<dynamic> get stream => _controller.stream;
 
-  // WSRepository(String url) {
   WSRepository() {
+    _initializeChannel();
+  }
+
+  Future<void> _initializeChannel() async {
     try {
-      getActualIp().then((actualIp) {
+      String? actualIp = await getActualIp();
+      if (actualIp != null) {
         channel = WebSocketChannel.connect(
           Uri.parse("ws://$actualIp"),
         );
 
-        channel.stream.listen(
+        _channelSubscription = channel.stream.listen(
           (dynamic message) {
             GetIt.I<Talker>().info("Получено сообщение от сервера:\n$message");
             _controller.add(message);
@@ -32,7 +34,10 @@ class WSRepository {
           onError: (error) =>
               GetIt.I<Talker>().error("Произошла ошибка: $error"),
         );
-      });
+      } else {
+        GetIt.I<Talker>()
+            .error("Не удалось получить actualIp для подключения к WebSocket.");
+      }
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }
@@ -88,10 +93,28 @@ class WSRepository {
     _controller.stream.listen(onData);
   }
 
+  void pause() {
+    GetIt.I<Talker>().info("Приостановка канала вебсоккетов");
+    _channelSubscription?.pause();
+  }
+
+  void resume() {
+    GetIt.I<Talker>().info("Возобновление канала вебсоккетов");
+    _channelSubscription?.resume();
+  }
+
+  Future<void> reconnect() async {
+    GetIt.I<Talker>().info("Переподключение к каналу вебсоккетов");
+    _channelSubscription?.cancel();
+    await channel.sink.close();
+    await _initializeChannel();
+  }
+
   // Метод для закрытия канала вебсоккетов
   void close() {
     GetIt.I<Talker>().info("Закрытие канала вебсоккетов");
-    _controller.close();
     channel.sink.close();
+    _channelSubscription?.cancel();
+    _controller.close();
   }
 }

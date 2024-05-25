@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:lotosui/active_page/active_page.dart';
 import 'package:lotosui/analytics_page/analytics_page.dart';
 import 'package:lotosui/pulse_page/pulse_page.dart';
@@ -36,12 +37,6 @@ class _NavigatePageState extends State<NavigatePage> {
         }
         if (!GetIt.I.isRegistered<WSRepository>()) {
           GetIt.I.registerLazySingleton<WSRepository>(() => WSRepository());
-          // TODO сделать обновление вебсоккетов через протягивание снизу вверх
-
-          // Если нужно перерегистрировать
-          // GetIt.I.resetLazySingleton<WSRepository>(instance: WSRepository());
-          // Перерегистрация
-          // GetIt.I.registerLazySingleton<WSRepository>(() => WSRepository());
         }
 
         return buildMainPage(context, PagesEnum.values[selectedIndex].title);
@@ -65,26 +60,35 @@ class _NavigatePageState extends State<NavigatePage> {
 
   Scaffold buildMainPage(BuildContext context, String appBar) {
     return Scaffold(
-      body: PagesEnum.values[selectedIndex].page,
-      // ----------------------------------------------------
       appBar: buildAppBar(PagesEnum.values[selectedIndex].title),
+      // ----------------------------------------------------
+      body: LiquidPullToRefresh(
+        color: Colors.transparent,
+        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.8),
+        onRefresh: () => reRegistrateWebsockets(),
+        showChildOpacityTransition: false,
+        animSpeedFactor: 2.5,
+        springAnimationDurationInMilliseconds: 350,
+        child: PagesEnum.values[selectedIndex].page,
+      ),
       // ----------------------------------------------------
       bottomNavigationBar: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 4),
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-            boxShadow: [BoxShadow(blurRadius: 20, color: Colors.transparent)],
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              navigateBar(context),
-            ],
+            children: [navigateBar(context)],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> reRegistrateWebsockets() async {
+    await GetIt.I<WSRepository>().reconnect();
   }
 
   Widget navigateBar(BuildContext context) {
@@ -138,7 +142,7 @@ class _NavigatePageState extends State<NavigatePage> {
   }
 }
 
-// todo сделать как то вкладку\отображение активных (запущенных) чтобы слайдом их убирать
+// TODO сделать как то вкладку\отображение активных (запущенных) чтобы слайдом их убирать
 
 enum PagesEnum {
   active(
@@ -146,12 +150,6 @@ enum PagesEnum {
     icon: Icons.search,
     page: ActivePage(),
   ),
-
-  // instrument(
-  //   title: 'Активы',
-  //   icon: Icons.analytics_outlined,
-  //   page: InstrumentPage(),
-  // ),
 
   pulse(
     title: 'Пульс',
