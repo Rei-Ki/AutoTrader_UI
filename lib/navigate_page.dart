@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -142,7 +141,7 @@ class _NavigatePageState extends State<NavigatePage> {
   }
 }
 
-// TODO сделать как то вкладку\отображение активных (запущенных) чтобы слайдом их убирать
+// TODO 4 сделать как то вкладку(или по тегу)\отображение активных (запущенных) чтобы слайдом их убирать
 
 enum PagesEnum {
   active(

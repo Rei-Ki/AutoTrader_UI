@@ -12,7 +12,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  // TODO добавить поиск по настройкам
+  // TODO 4 добавить поиск по настройкам
   late TextEditingController controllerIP;
 
   @override

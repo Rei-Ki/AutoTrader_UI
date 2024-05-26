@@ -16,6 +16,9 @@ dependencies:
   firebase_core: ^2.24.2
   cloud_firestore: ^4.13.3
   # firebase_auth: ^4.16.0
+  
+  # flash: ^3.1.0
+  fluttertoast: ^8.2.5
 
   liquid_pull_to_refresh: ^3.0.1
 
@@ -38,6 +41,7 @@ dependencies:
 
   hive: ^2.2.3
   syncfusion_flutter_charts: ^25.2.5
+  collection: ^1.18.0
 
 
 dev_dependencies:

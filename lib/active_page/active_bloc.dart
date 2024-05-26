@@ -60,10 +60,10 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
         List<Instrument> instruments = [];
 
         for (var item in cachedData) {
-          // TODO сделать чтобы приходило словарями с тегами типом и названием, учесть теги и типы
+          // TODO 3 сделать чтобы приходило словарями с тегами типом и названием, учесть теги и типы
           instruments.add(
               Instrument(title: item.toString(), tags: [], type: "Фьючерс"));
-          // TODO добаить теги к поиску
+          // TODO 3 добаить теги к поиску
           List<String> testTags = ["Активные", "Фьючерсы"];
           // создание списка всех тегов на основе имеющихся тегов
           allTags = allTags.union(testTags.toSet());

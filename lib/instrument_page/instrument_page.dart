@@ -189,10 +189,12 @@ class _InstrumentPageState extends State<InstrumentPage> {
     return IconButton(
       padding: const EdgeInsets.all(0),
       onPressed: () {
-        // TODO сделать тут блок и в нем все это обрабатывать
-        // TODO сделать анимацию переключения состояния кнопки
-        // TODO сделать сокрытие стратегий
-        // TODO сделать отправку на сервер
+        // TODO 1 сделать тут блок и в нем все это обрабатывать
+        // TODO 1 сделать анимацию переключения состояния кнопки
+        // TODO 1 сделать сокрытие стратегий
+        // TODO 1 сделать отправку на сервер
+
+        // TODO 1 сделать это в блоке
 
         // Map<String, dynamic> data = {
         //   "cmd": "start_instrument",

@@ -36,7 +36,7 @@ class PulseBloc extends Bloc<PulseEvent, PulseState> {
   getServerPulse() async {
     await Future.delayed(const Duration(microseconds: 1));
 
-    // TODO сделать async запрос к серверу за пульсом
+    // TODO 4 сделать async запрос к серверу за пульсом
 
     var p1 = Pulse(
         title: 'CRU3',

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lotosui/widgets/snackbar_tile.dart';
 
 // ignore: must_be_immutable
 class CustomTile<T> extends StatelessWidget {
@@ -23,9 +25,12 @@ class CustomTile<T> extends StatelessWidget {
   final Function(T) callback;
 
   late double screenWidth;
+  final FToast ftoast = FToast();
 
   @override
   Widget build(BuildContext context) {
+    ftoast.init(context);
+
     return Padding(
       padding: padding,
       child: Align(
@@ -57,8 +62,12 @@ class CustomTile<T> extends StatelessWidget {
       children: [
         SlidableAction(
           onPressed: (context) {
-            // TODO реализовать удаление
-            debugPrint("Slidable delete is clicked!");
+            // TODO 4 реализовать удаление
+            showToast(
+              context,
+              ftoast: ftoast,
+              text: "Функция в разработке\nSlidable delete is clicked!",
+            );
           },
           backgroundColor: Colors.red,
           borderRadius: BorderRadius.circular(10),

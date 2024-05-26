@@ -69,7 +69,6 @@ void main() async {
     },
     (error, stack) {
       GetIt.I<Talker>().handle(error, stack);
-      // TODO сделать снейк бар для ошибки
     },
   );
 }
