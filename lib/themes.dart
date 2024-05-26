@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 
 ThemeData lighMode = ThemeData(
   primaryColor: Colors.pink,
+  iconButtonTheme: const IconButtonThemeData(
+    // Основаная тема для кнопок
+    style: ButtonStyle(
+      iconColor: WidgetStatePropertyAll(Colors.black),
+    ),
+  ),
   colorScheme: const ColorScheme.light(
     primary: Colors.pink,
   ),
@@ -36,6 +42,12 @@ ThemeData lighMode = ThemeData(
 
 ThemeData darkMode = ThemeData(
   primaryColor: Colors.pink,
+  iconButtonTheme: const IconButtonThemeData(
+    // Основаная тема для кнопок
+    style: ButtonStyle(
+      iconColor: WidgetStatePropertyAll(Colors.white),
+    ),
+  ),
   colorScheme: const ColorScheme.dark(
     primary: Colors.pink,
   ),

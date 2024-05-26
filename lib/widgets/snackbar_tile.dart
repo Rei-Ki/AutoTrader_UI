@@ -54,21 +54,14 @@ Widget createToast(BuildContext context, FToast ftoast, String text) {
   );
 }
 
-// BoxDecoration getBoxDecoration(BuildContext context) {
-//   return BoxDecoration(
-//     color: Colors.white.withOpacity(0.5), // Adjust the color and opacity
-//     borderRadius: BorderRadius.circular(10),
-//   );
-// }
-
 BoxDecoration getBoxDecoration(BuildContext context) {
   return BoxDecoration(
     borderRadius: BorderRadius.circular(20),
+    color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.35),
     border: Border.all(
       color: Theme.of(context).primaryColor.withOpacity(0.6),
       width: 1.5,
     ),
-    color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.35),
   );
 }
 

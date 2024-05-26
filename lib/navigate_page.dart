@@ -62,6 +62,7 @@ class _NavigatePageState extends State<NavigatePage> {
       appBar: buildAppBar(PagesEnum.values[selectedIndex].title),
       // ----------------------------------------------------
       body: LiquidPullToRefresh(
+        height: 80,
         color: Colors.transparent,
         backgroundColor: Theme.of(context).primaryColor.withOpacity(0.8),
         onRefresh: () => reRegistrateWebsockets(),
@@ -84,10 +85,6 @@ class _NavigatePageState extends State<NavigatePage> {
         ),
       ),
     );
-  }
-
-  Future<void> reRegistrateWebsockets() async {
-    await GetIt.I<WSRepository>().reconnect();
   }
 
   Widget navigateBar(BuildContext context) {

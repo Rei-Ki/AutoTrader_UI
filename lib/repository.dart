@@ -118,3 +118,7 @@ class WSRepository {
     _controller.close();
   }
 }
+
+Future<void> reRegistrateWebsockets() async {
+  await GetIt.I<WSRepository>().reconnect();
+}
