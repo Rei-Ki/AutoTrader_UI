@@ -108,8 +108,6 @@ class _PlotState extends State<Plot> {
   }
 
   SfCartesianChart buildChart(BuildContext context, List<Candle> candles) {
-    // TODO 3 сделать чтобы Подгружало предыдущие данные как то
-
     return SfCartesianChart(
       enableAxisAnimation: false,
       zoomPanBehavior: zoomPanBehavior,
@@ -188,7 +186,7 @@ class _PlotState extends State<Plot> {
 
   Legend getLegend() {
     return Legend(
-      // TODO 3 Сделать чтобы легенды хранили трендовые линии чтобы можно было отключать ненужное
+      // NOTE Сделать чтобы легенды хранили трендовые линии чтобы можно было отключать ненужное
       isVisible: isLegendVisible,
       position: LegendPosition.top,
       iconBorderColor: Colors.black,

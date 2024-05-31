@@ -7,7 +7,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final loginResultController = StreamController<bool>.broadcast();
 
-  // TODO 2 Доделать блок логина
+  // NOTE 2 Доделать блок логина
 
   // bool isLogged = false;
   bool isLogged = true;

@@ -25,6 +25,10 @@ class _InstrumentPageState extends State<InstrumentPage> {
   TextEditingController risk = TextEditingController();
   TextEditingController planLimit = TextEditingController();
   late InstrumentBloc instrumentBloc;
+  // сначала запрос, потом отстройка интерфейса, потом уже в руки пользователя действия
+  // TODO подумать что будет с инструментом когда закроется страница с этим инструментом
+  // то есть надо подтягивать данные из сервера, какие запущенные и подобное
+
   // TODO 1 сделать отображение какой таймфрейм запущен
   // FIXME 1 Посмотреть какая то ошибка при запуске "Error: 'SiM4'"
 
@@ -104,6 +108,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
           bloc: instrumentBloc,
         ),
         const SizedBox(height: 100),
+        // TODO сделать список с запущенными инструментами
       ],
     );
   }
@@ -124,14 +129,16 @@ class _InstrumentPageState extends State<InstrumentPage> {
           actions: [
             ElevatedButton(
               onPressed: () {
-                // NOTE отправка сообщения серверу о старте инструмента
+                // отправка сообщения серверу о старте инструмента
                 instrumentBloc.add(
+                  // TODO сделать проверку есть ли уже в активных такая заявка (название инструмента и таймфрейм)
                   StartInstrument(
-                      secCode: instrumentBloc.data.title,
-                      interval: instrumentBloc.currentTimeframe,
-                      strategy: strategies[selectedStrategy],
-                      risk: risk.text,
-                      planLimit: planLimit.text),
+                    secCode: instrumentBloc.data.title,
+                    interval: instrumentBloc.currentTimeframe,
+                    strategy: strategies[selectedStrategy],
+                    risk: risk.text,
+                    planLimit: planLimit.text,
+                  ),
                 );
               },
               child: const Text('Старт'),
@@ -202,34 +209,5 @@ class _InstrumentPageState extends State<InstrumentPage> {
     //     print(strategies[index]);
     //   },
     // );
-  }
-
-  IconButton startButton(BuildContext context) {
-    return IconButton(
-      padding: const EdgeInsets.all(0),
-      onPressed: () {
-        // TODO 1 сделать тут блок и в нем все это обрабатывать
-        // TODO 1 сделать анимацию переключения состояния кнопки
-        // TODO 1 сделать сокрытие стратегий
-        // TODO 1 сделать отправку на сервер
-
-        // Map<String, dynamic> data = {
-        //   "cmd": "start_instrument",
-        //   "data": {
-        //     "sec_code": title,
-        //     "interval": selectedTimeframe,
-        //     "strategy": strategies[selectedStrategy],
-        //     "risk": risk.text,
-        //     "plan_limit": planLimit.text,
-        //   },
-        // };
-        // print("23123123");
-      },
-      icon: Icon(
-        Icons.play_arrow_outlined,
-        size: 70,
-        color: Theme.of(context).primaryColor.withOpacity(0.8),
-      ),
-    );
   }
 }
