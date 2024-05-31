@@ -197,6 +197,13 @@ class _PlotState extends State<Plot> {
     );
   }
 
+  getVisibleMinimum(List<Candle> data, int visibleData) {
+    if (data.length - visibleData >= 0) {
+      return data[data.length - visibleData].datetime;
+    }
+    return null;
+  }
+
   MarkerSettings markerSettings(BuildContext context) {
     return MarkerSettings(
       isVisible: true,
@@ -209,7 +216,7 @@ class _PlotState extends State<Plot> {
     return DateTimeAxis(
       plotOffset: 5,
       initialVisibleMaximum: data.lastOrNull?.datetime,
-      initialVisibleMinimum: data[data.length - visibleData].datetime,
+      initialVisibleMinimum: getVisibleMinimum(data, visibleData),
       dateFormat: DateFormat.Hm(),
       majorGridLines: const MajorGridLines(width: 1),
       labelIntersectAction: AxisLabelIntersectAction.hide,

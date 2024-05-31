@@ -26,6 +26,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
   TextEditingController planLimit = TextEditingController();
   late InstrumentBloc instrumentBloc;
   // TODO 1 сделать отображение какой таймфрейм запущен
+  // FIXME 1 Посмотреть какая то ошибка при запуске "Error: 'SiM4'"
 
   @override
   void didChangeDependencies() {
