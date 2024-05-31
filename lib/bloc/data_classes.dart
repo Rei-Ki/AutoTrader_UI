@@ -45,14 +45,12 @@ class Pulse {
 class Instrument {
   late String title;
   late String type;
-  late List<String> tags;
-  // late List<Candle> candles;
+  late Set<String> tags;
 
   Instrument({
     required this.title,
     required this.type,
     required this.tags,
-    // this.candles = const [],
   });
 
   Instrument.fromJson(Map<String, dynamic> json) {
@@ -61,7 +59,7 @@ class Instrument {
     // candles = List<Candle>.empty();
     tags = (json['tags'] as List<dynamic>? ?? [])
         .map((tag) => tag.toString())
-        .toList();
+        .toSet();
   }
 }
 

@@ -37,7 +37,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
       for (var item in data) {
         instruments
-            .add(Instrument(title: item.toString(), tags: [], type: "Фьючерс"));
+            .add(Instrument(title: item.toString(), tags: {}, type: "Фьючерс"));
       }
 
       emit(ActiveLoadedState(instruments));
@@ -62,7 +62,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
         for (var item in cachedData) {
           // TODO 3 сделать чтобы приходило словарями с тегами типом и названием, учесть теги и типы
           instruments.add(
-              Instrument(title: item.toString(), tags: [], type: "Фьючерс"));
+              Instrument(title: item.toString(), tags: {}, type: "Фьючерс"));
           // TODO 3 добаить теги к поиску
           List<String> testTags = ["Активные", "Фьючерсы"];
           // создание списка всех тегов на основе имеющихся тегов

@@ -32,7 +32,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
     if (args != null) {
       instrumentBloc = args as InstrumentBloc;
     } else {
-      Instrument data = Instrument(title: "None", tags: [], type: "None");
+      Instrument data = Instrument(title: "None", tags: {}, type: "None");
       instrumentBloc = InstrumentBloc(data: data);
     }
 
