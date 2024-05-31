@@ -8,11 +8,13 @@ import '../repository.dart';
 
 class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   late WSRepository repo = GetIt.I<WSRepository>();
+  late String currentTimeframe;
 
   Instrument data;
   List<Candle> candles = [];
 
   InstrumentBloc({required this.data}) : super(InstrumentInitialState()) {
+    on<StartInstrument>(onStartInstrument);
     on<UpdatePlotDataEvent>(onUpdatePlotData);
     on<GetWSRepositoryUpdatePlotEvent>(getWSRepositoryUpdatePlot);
 
@@ -23,6 +25,26 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
         add(GetWSRepositoryUpdatePlotEvent(json: decoded));
       }
     });
+  }
+
+  onStartInstrument(event, emit) {
+    try {
+      Map<String, dynamic> data = {
+        "cmd": "start_instrument",
+        "data": {
+          "sec_code": event.secCode,
+          "interval": event.interval,
+          "strategy": event.strategy,
+          "risk": event.risk,
+          "plan_limit": event.planLimit,
+        },
+      };
+
+      GetIt.I<Talker>().info("Старт инструмента");
+      repo.send(data);
+    } catch (e, st) {
+      GetIt.I<Talker>().handle(e, st);
+    }
   }
 
   getWSRepositoryUpdatePlot(event, emit) async {
@@ -61,6 +83,8 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   // other functions
   getRequestPlotData(String secCode, String interval, count) {
+    currentTimeframe = getInterval(interval);
+
     Map<String, dynamic> requestJson = {
       "data": {
         "class_code": "SPBFUT",
@@ -129,4 +153,19 @@ class UpdatePlotDataEvent extends InstrumentEvent {
 class GetWSRepositoryUpdatePlotEvent extends InstrumentEvent {
   Map<String, dynamic>? json;
   GetWSRepositoryUpdatePlotEvent({required this.json});
+}
+
+class StartInstrument extends InstrumentEvent {
+  String secCode, interval, strategy, risk, planLimit;
+  StartInstrument({
+    required this.secCode,
+    required this.interval,
+    required this.strategy,
+    required this.risk,
+    required this.planLimit,
+  });
+}
+
+class EndInstrument extends InstrumentEvent {
+  // TODO сделать старт и стоп
 }

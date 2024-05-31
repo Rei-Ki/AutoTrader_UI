@@ -108,13 +108,12 @@ class _PlotState extends State<Plot> {
   }
 
   SfCartesianChart buildChart(BuildContext context, List<Candle> candles) {
-    // TODO 2 сделать чтобы Подгружало предыдущие данные как то
+    // TODO 3 сделать чтобы Подгружало предыдущие данные как то
 
     return SfCartesianChart(
       enableAxisAnimation: false,
       zoomPanBehavior: zoomPanBehavior,
       tooltipBehavior: tooltipBehavior,
-      // primaryXAxis: getPrimaryXAxis(candles, 20),
       primaryXAxis: getPrimaryXAxis(candles, 20),
       primaryYAxis: getPrimaryYAxis(),
       legend: getLegend(),

@@ -18,10 +18,14 @@ class _InstrumentPageState extends State<InstrumentPage> {
   int selectedStrategy = 0;
   SwiperController swiperController = SwiperController();
 
-  List<String> strategies = ["fractal strategy", "corridor strategy"];
+  List<String> strategies = [
+    "fractal",
+    // "corridor",
+  ];
   TextEditingController risk = TextEditingController();
   TextEditingController planLimit = TextEditingController();
   late InstrumentBloc instrumentBloc;
+  // TODO 1 сделать отображение какой таймфрейм запущен
 
   @override
   void didChangeDependencies() {
@@ -119,6 +123,20 @@ class _InstrumentPageState extends State<InstrumentPage> {
           actions: [
             ElevatedButton(
               onPressed: () {
+                // NOTE отправка сообщения серверу о старте инструмента
+                instrumentBloc.add(
+                  StartInstrument(
+                      secCode: instrumentBloc.data.title,
+                      interval: instrumentBloc.currentTimeframe,
+                      strategy: strategies[selectedStrategy],
+                      risk: risk.text,
+                      planLimit: planLimit.text),
+                );
+              },
+              child: const Text('Старт'),
+            ),
+            ElevatedButton(
+              onPressed: () {
                 Navigator.of(context).pop(); // Закрыть диалоговое окно
               },
               child: const Text('Закрыть'),
@@ -164,25 +182,25 @@ class _InstrumentPageState extends State<InstrumentPage> {
   }
 
   Widget strategyTabs(BuildContext context) {
-    return FlutterToggleTab(
-      width: 60, // width in percent
-      borderRadius: 50,
-      height: 35,
-      selectedIndex: selectedStrategy,
-      unSelectedBackgroundColors: [Theme.of(context).scaffoldBackgroundColor],
-      selectedBackgroundColors: [
-        Theme.of(context).primaryColor.withOpacity(0.7)
-      ],
-      selectedTextStyle: const TextStyle(color: Colors.black, fontSize: 14),
-      unSelectedTextStyle: const TextStyle(fontSize: 14),
-      labels: strategies,
-      selectedLabelIndex: (index) {
-        setState(() {
-          selectedStrategy = index;
-          print(strategies[index]);
-        });
-      },
-    );
+    return Text("${strategies[0]} strategy");
+    // return FlutterToggleTab(
+    //   width: 60, // width in percent
+    //   borderRadius: 50,
+    //   height: 35,
+    //   selectedIndex: selectedStrategy,
+    //   unSelectedBackgroundColors: [Theme.of(context).scaffoldBackgroundColor],
+    //   selectedBackgroundColors: [
+    //     Theme.of(context).primaryColor.withOpacity(0.7),
+    //   ],
+    //   selectedTextStyle: const TextStyle(color: Colors.black, fontSize: 14),
+    //   unSelectedTextStyle: const TextStyle(fontSize: 14),
+    //   labels: strategies,
+    //   selectedLabelIndex: (index) {
+    //     selectedStrategy = index;
+    //     setState(() {});
+    //     print(strategies[index]);
+    //   },
+    // );
   }
 
   IconButton startButton(BuildContext context) {
@@ -194,8 +212,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
         // TODO 1 сделать сокрытие стратегий
         // TODO 1 сделать отправку на сервер
 
-        // TODO 1 сделать это в блоке
-
         // Map<String, dynamic> data = {
         //   "cmd": "start_instrument",
         //   "data": {
@@ -206,7 +222,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
         //     "plan_limit": planLimit.text,
         //   },
         // };
-        // print(data);
+        // print("23123123");
       },
       icon: Icon(
         Icons.play_arrow_outlined,
