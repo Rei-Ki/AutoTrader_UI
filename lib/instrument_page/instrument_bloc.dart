@@ -37,6 +37,8 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
       List data =
           (event.json["data"] as List<dynamic>).cast<Map<String, dynamic>>();
 
+      // Очистка перед принятием новых свечей
+      candles = [];
       for (var item in data) {
         candles.add(Candle.fromJson(item));
       }
@@ -49,12 +51,7 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   onUpdatePlotData(event, emit) async {
     try {
-      //TODO 1 сделать в функцию эту чтобы она срабатывала при каждом смене таймфрейма и в событие передавался таймфрейм и иные данные
-      //TODO 1 потом учесть что есть возможность переключаться между таймфреймами а не только на одном сидеть
-      //TODO 1 пока сделать чтобы блокировалось переключение таймфреймов при запуске инструмента
-
-      //TODO 1 Сделать выбор интервала
-      getRequestPlotData(data.title, "1", 50);
+      getRequestPlotData(data.title, event.timeframe, 100);
 
       emit(UpdatePlotDataState(candles: candles));
     } catch (e, st) {
@@ -68,7 +65,7 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
       "data": {
         "class_code": "SPBFUT",
         "sec_code": secCode,
-        "interval": interval,
+        "interval": getInterval(interval),
         "count": count,
       },
       "cmd": "get_chart_data",
@@ -76,11 +73,37 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
     repo.send(requestJson); // отправка на сервер
   }
+
+  String getInterval(String timeFrameString) {
+    int timeFrame = getDigitsFromString(timeFrameString);
+
+    if (timeFrameString.contains("m")) {
+      return timeFrame.toString();
+    }
+    if (timeFrameString.contains("h")) {
+      return (timeFrame * 60).toString();
+    }
+    if (timeFrameString.contains("D")) {
+      return (timeFrame * 60 * 24).toString();
+    }
+    if (timeFrameString.contains("W")) {
+      return (timeFrame * 60 * 24 * 7).toString();
+    }
+    if (timeFrameString.contains("M")) {
+      // NOTE 2 не совсем уверен в том что месяц именно 30
+      return (timeFrame * 60 * 24 * 30).toString();
+    }
+    return timeFrameString; // возвращение того что поступил
+  }
+
+  int getDigitsFromString(String input) {
+    RegExp regex = RegExp(r'\d+');
+    Iterable<RegExpMatch> matches = regex.allMatches(input);
+    return int.parse(matches.map((match) => match.group(0)!).join());
+  }
 }
 
 abstract class InstrumentState {}
-
-abstract class InstrumentEvent {}
 
 class InstrumentInitialState extends InstrumentState {}
 
@@ -96,7 +119,12 @@ class UpdatePlotDataState extends InstrumentState {
   UpdatePlotDataState({required this.candles});
 }
 
-class UpdatePlotDataEvent extends InstrumentEvent {}
+abstract class InstrumentEvent {}
+
+class UpdatePlotDataEvent extends InstrumentEvent {
+  String timeframe;
+  UpdatePlotDataEvent(this.timeframe);
+}
 
 class GetWSRepositoryUpdatePlotEvent extends InstrumentEvent {
   Map<String, dynamic>? json;

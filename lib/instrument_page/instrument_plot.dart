@@ -6,19 +6,21 @@ import 'package:intl/intl.dart';
 import 'package:lotosui/instrument_page/instrument_bloc.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import 'dart:math' as math;
-
 import '../bloc/data_classes.dart';
+
+import 'dart:math' as math;
 
 // ignore: must_be_immutable
 class Plot extends StatefulWidget {
   const Plot({
     super.key,
     required this.bloc,
+    required this.candles,
     required this.swiperController,
   });
 
   final InstrumentBloc bloc;
+  final List<Candle> candles;
   final SwiperController swiperController;
 
   @override
@@ -35,12 +37,12 @@ class _PlotState extends State<Plot> {
     '5m',
     '15m',
     '30m',
-    '60m',
+    '1h',
     '2h',
     '4h',
     '1D',
     '1W',
-    '1M'
+    // '1M' Не работает, видимо косяк в блоке где преобразование в минуты
   ];
 
   @override
@@ -63,8 +65,8 @@ class _PlotState extends State<Plot> {
       child: Column(
         children: [
           buildTopPanel(),
-          // График --------------------------------
-          buildChart(context),
+          // График -------------------------------------------------------------------
+          buildChart(context, widget.candles),
           // timeframes ---------------------------------------------------------------
           buildTimeframes(timeFrames)
         ],
@@ -105,19 +107,19 @@ class _PlotState extends State<Plot> {
     );
   }
 
-  SfCartesianChart buildChart(BuildContext context) {
-    var candles = context.watch<InstrumentBloc>().candles;
+  SfCartesianChart buildChart(BuildContext context, List<Candle> candles) {
+    // TODO 2 сделать чтобы Подгружало предыдущие данные как то
 
     return SfCartesianChart(
       enableAxisAnimation: false,
       zoomPanBehavior: zoomPanBehavior,
       tooltipBehavior: tooltipBehavior,
+      // primaryXAxis: getPrimaryXAxis(candles, 20),
       primaryXAxis: getPrimaryXAxis(candles, 20),
       primaryYAxis: getPrimaryYAxis(),
       legend: getLegend(),
       margin: const EdgeInsets.only(left: 8, right: 4),
       series: [
-        // AreaSeries<Candle, dynamic>(
         AreaSeries<Candle, dynamic>(
           name: widget.bloc.data.title,
           enableTooltip: true,
@@ -156,6 +158,10 @@ class _PlotState extends State<Plot> {
                 widget.swiperController.index = value;
                 GetIt.I<Talker>().info(
                     "Выбранный таймфрейм: ${timeFrames[value]}, index: $value");
+                // Вызов ивента по смене интервала
+                context
+                    .read<InstrumentBloc>()
+                    .add(UpdatePlotDataEvent(timeFrames[value]));
               },
               viewportFraction: 0.15,
               itemBuilder: (context, i) {
@@ -200,56 +206,11 @@ class _PlotState extends State<Plot> {
     );
   }
 
-  LinearGradient linearGradient(BuildContext context) {
-    return LinearGradient(
-      transform: const GradientRotation(math.pi / 2),
-      colors: [
-        Theme.of(context).primaryColor.withOpacity(0.5),
-        Theme.of(context).primaryColor.withOpacity(0.2),
-        Colors.transparent,
-      ],
-    );
-  }
-
-  int getTime(String timeFrameString) {
-    int timeFrame = getDigitsFromString(timeFrameString);
-
-    if (timeFrameString.contains("m")) {
-      return timeFrame;
-    }
-    if (timeFrameString.contains("h")) {
-      return timeFrame * 60;
-    }
-    if (timeFrameString.contains("D")) {
-      return timeFrame * 60 * 24;
-    }
-    if (timeFrameString.contains("W")) {
-      // TODO 2 не совсем уверен в том что неделя там именно 7
-      return timeFrame * 60 * 24 * 7;
-    }
-    if (timeFrameString.contains("M")) {
-      // TODO 2 не совсем уверен в том что месяц именно 30
-      return timeFrame * 60 * 24 * 30;
-    }
-    return 60; // возвращение по стандарту часового интервала
-  }
-
-  int getDigitsFromString(String input) {
-    RegExp regex = RegExp(r'\d+');
-    Iterable<RegExpMatch> matches = regex.allMatches(input);
-    return int.parse(matches.map((match) => match.group(0)!).join());
-  }
-
   getPrimaryXAxis(List<Candle> data, int visibleData) {
-    DateTime? visibleMaximum = data.lastOrNull?.datetime;
-    DateTime? visibleMinimum = data.length > visibleData
-        ? data[data.length - visibleData].datetime
-        : null;
-
     return DateTimeAxis(
       plotOffset: 5,
-      initialVisibleMaximum: visibleMaximum,
-      initialVisibleMinimum: visibleMinimum,
+      initialVisibleMaximum: data.lastOrNull?.datetime,
+      initialVisibleMinimum: data[data.length - visibleData].datetime,
       dateFormat: DateFormat.Hm(),
       majorGridLines: const MajorGridLines(width: 1),
       labelIntersectAction: AxisLabelIntersectAction.hide,
@@ -280,5 +241,16 @@ class _PlotState extends State<Plot> {
     opacity = opacity < 0 ? 0 : opacity;
     opacity = opacity > 1 ? 1 : opacity;
     return Theme.of(context).primaryColor.withOpacity(opacity / 1.35);
+  }
+
+  LinearGradient linearGradient(BuildContext context) {
+    return LinearGradient(
+      transform: const GradientRotation(math.pi / 2),
+      colors: [
+        Theme.of(context).primaryColor.withOpacity(0.5),
+        Theme.of(context).primaryColor.withOpacity(0.2),
+        Colors.transparent,
+      ],
+    );
   }
 }

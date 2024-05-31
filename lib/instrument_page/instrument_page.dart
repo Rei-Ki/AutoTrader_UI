@@ -16,9 +16,7 @@ class InstrumentPage extends StatefulWidget {
 
 class _InstrumentPageState extends State<InstrumentPage> {
   int selectedStrategy = 0;
-  //! TODO прокинуть в таймфреймы контроллер свайпа
   SwiperController swiperController = SwiperController();
-  int selectedTimeframe = 4;
 
   List<String> strategies = ["fractal strategy", "corridor strategy"];
   TextEditingController risk = TextEditingController();
@@ -71,13 +69,14 @@ class _InstrumentPageState extends State<InstrumentPage> {
     return BlocBuilder<InstrumentBloc, InstrumentState>(
       builder: (context, state) {
         if (state is InstrumentInitialState) {
-          instrumentBloc.add(UpdatePlotDataEvent());
+          // TODO сделать как то интервал по-умолчанию
+          instrumentBloc.add(UpdatePlotDataEvent("1m"));
 
-          return buildInstrumentColumn(context);
+          return buildInstrumentColumn(context, []);
         }
 
         if (state is UpdatePlotDataState) {
-          return buildInstrumentColumn(context);
+          return buildInstrumentColumn(context, state.candles);
         }
 
         return Center(
@@ -90,12 +89,13 @@ class _InstrumentPageState extends State<InstrumentPage> {
     );
   }
 
-  buildInstrumentColumn(BuildContext context) {
+  buildInstrumentColumn(BuildContext context, List<Candle> candles) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Plot(
           swiperController: swiperController,
+          candles: candles,
           bloc: instrumentBloc,
         ),
         const SizedBox(height: 100),

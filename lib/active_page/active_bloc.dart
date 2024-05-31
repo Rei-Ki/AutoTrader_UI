@@ -63,7 +63,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
           // TODO 3 сделать чтобы приходило словарями с тегами типом и названием, учесть теги и типы
           instruments.add(
               Instrument(title: item.toString(), tags: {}, type: "Фьючерс"));
-          // TODO 3 добаить теги к поиску
+          // NOTE 3 добаить теги к поиску
           List<String> testTags = ["Активные", "Фьючерсы"];
           // создание списка всех тегов на основе имеющихся тегов
           allTags = allTags.union(testTags.toSet());

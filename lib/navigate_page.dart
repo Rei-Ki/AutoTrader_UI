@@ -138,8 +138,6 @@ class _NavigatePageState extends State<NavigatePage> {
   }
 }
 
-// TODO 4 сделать как то вкладку(или по тегу)\отображение активных (запущенных) чтобы слайдом их убирать
-
 enum PagesEnum {
   active(
     title: 'Активы',
