@@ -13,12 +13,11 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
 import 'login_page/login_page.dart';
 import 'themes.dart';
 
 /*
-TODO Сделать чтобы при нажатии на инструмент он переходил в активные
+TODO Сделать чтобы при запуске инструмента он переходил в активные
 TODO Сделать при удалении инструмента в АКТИВНЫХ отключение его и убрать из активных
 
 TODO сделать не просто WS, а WSS (с TSL сертификатами)

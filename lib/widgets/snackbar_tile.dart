@@ -1,10 +1,6 @@
-import 'dart:ui';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
-
-// TODO 1 Сделать ее как то меньше по нормальному
+import 'dart:ui';
 
 void showToast(
   BuildContext context, {
