@@ -1,10 +1,13 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lotosui/instrument_page/instrument_plot.dart';
 // import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter/material.dart';
 
 import '../bloc/data_classes.dart';
+import '../widgets/custom_tile.dart';
+import '../widgets/snackbar_tile.dart';
 import 'instrument_bloc.dart';
 
 class InstrumentPage extends StatefulWidget {
@@ -15,6 +18,7 @@ class InstrumentPage extends StatefulWidget {
 }
 
 class _InstrumentPageState extends State<InstrumentPage> {
+  final FToast ftoast = FToast();
   int selectedStrategy = 0;
   SwiperController swiperController = SwiperController();
 
@@ -25,11 +29,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
   TextEditingController risk = TextEditingController();
   TextEditingController planLimit = TextEditingController();
   late InstrumentBloc instrumentBloc;
-  // сначала запрос, потом отстройка интерфейса, потом уже в руки пользователя действия
-  // TODO подумать что будет с инструментом когда закроется страница с этим инструментом
-  // то есть надо подтягивать данные из сервера, какие запущенные и подобное
 
-  // TODO 1 сделать отображение какой таймфрейм запущен
   // FIXME 1 Посмотреть какая то ошибка при запуске "Error: 'SiM4'"
 
   @override
@@ -54,9 +54,10 @@ class _InstrumentPageState extends State<InstrumentPage> {
       value: instrumentBloc,
       child: Scaffold(
         appBar: AppBar(title: Text(instrumentBloc.data.title)),
-        floatingActionButton: createFAB(context),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        // floatingActionButton: createFAB(context),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: buildInstrumentBloc(),
+        bottomNavigationBar: createFAB(context),
       ),
     );
   }
@@ -68,7 +69,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
           // TODO сделать как то интервал по-умолчанию
           instrumentBloc.add(UpdatePlotDataEvent("1m"));
 
-          // List<String> arr = ["123", "2123", "345"];
           return buildInstrumentColumn(context, []);
         }
 
@@ -107,28 +107,51 @@ class _InstrumentPageState extends State<InstrumentPage> {
   }
 
   Widget activeList(BuildContext context) {
-    String title = context.read<InstrumentBloc>().data.title;
     var activeInterval = context.watch<InstrumentBloc>().data.activeInterval;
+    var instrument = context.watch<InstrumentBloc>().data;
+    var title = context.watch<InstrumentBloc>().data.title;
     return Column(
-      children: activeInterval
-          .map<Widget>(
-            (interval) => Text("$title | $interval"),
-          )
-          .toList(),
+      children: [
+        ...activeInterval.map<Widget>(
+          (interval) {
+            return CustomTile<Instrument>(
+              data: instrument,
+              icon: const Icon(Icons.data_usage_rounded, size: 27),
+              label: title,
+              text: "Интервал: $interval",
+              toastText: "Удаление $title, интервал: $interval",
+              trailing: IconButton(
+                onPressed: () {
+                  instrumentBloc.add(StopInstrumentEvent(title, interval));
+                  showToast(
+                    context,
+                    ftoast: ftoast,
+                    text: "Удаление $title, интервал: $interval",
+                  );
+                },
+                icon: const Icon(Icons.delete_outline_rounded, size: 27),
+              ),
+            );
+          },
+        )
+      ],
     );
   }
 
-  FloatingActionButton createFAB(BuildContext context) {
-    return FloatingActionButton.extended(
-      backgroundColor: Colors.transparent,
-      onPressed: () => showModalDialog(context),
-      elevation: 0,
-      hoverElevation: 0,
-      label: Icon(
-        Icons.play_arrow_outlined,
-        size: 80, // Размер иконки
-        color: Theme.of(context).primaryColor.withOpacity(0.8),
-      ),
+  Widget createFAB(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          padding: const EdgeInsets.all(0),
+          onPressed: () => showModalDialog(context),
+          icon: Icon(
+            Icons.play_arrow_outlined,
+            size: 80, // Размер иконки
+            color: Theme.of(context).primaryColor.withOpacity(0.8),
+          ),
+        ),
+      ],
     );
   }
 
@@ -150,7 +173,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
               onPressed: () {
                 // отправка сообщения серверу о старте инструмента
                 instrumentBloc.add(
-                  StartInstrument(
+                  StartInstrumentEvent(
                     secCode: instrumentBloc.data.title,
                     interval: instrumentBloc.currentInterval,
                     strategy: strategies[selectedStrategy],

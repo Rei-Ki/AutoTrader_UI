@@ -14,15 +14,24 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   List<Candle> candles = [];
 
   InstrumentBloc({required this.data}) : super(InstrumentInitialState()) {
-    on<StartInstrument>(onStartInstrument);
+    on<StartInstrumentEvent>(onStartInstrument);
+    on<StopInstrumentEvent>(onStopInstrument);
+
     on<UpdatePlotDataEvent>(onUpdatePlotData);
+
+    // события для репозитория
     on<GetWSRepositoryUpdatePlotEvent>(getWSRepositoryUpdatePlot);
+    on<GetWSRepositoryUpdateActiveEvent>(getWSRepositoryUpdateActive);
 
     // Подписываемся на события из репозитория и преобразуем их в состояние
     repo.subscribe((dynamic data) {
       Map<String, dynamic> decoded = jsonDecode(data);
       if (decoded["cmd"] == "get_chart_data") {
         add(GetWSRepositoryUpdatePlotEvent(json: decoded));
+      }
+      if (decoded["cmd"] == "get_all_active_instruments") {
+        // TODO сделать для команды обновления активной
+        add(GetWSRepositoryUpdateActiveEvent(json: decoded));
       }
     });
   }
@@ -47,6 +56,41 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   TODO подумать будет ли это работать для всех клиентов одинаково
   один отменил и у всех отменилось
   */
+  onStopInstrument(event, emit) {
+    try {
+      Map<String, dynamic> data = {
+        "cmd": "stop_instrument",
+        "data": {"sec_code": event.secCode, "interval": event.interval},
+      };
+
+      GetIt.I<Talker>()
+          .info("Остановка инструмента ${event.secCode} ${event.interval}");
+
+      repo.send(data);
+    } catch (e, st) {
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
+  getWSRepositoryUpdateActive(event, emit) {
+    try {
+      // TODO вытащить данные с сервера которые приходят
+      if (event.json["status"] == "error" ||
+          event.json.containsKey("error_message")) {
+        throw Exception(
+            "${event.json["status"]}: ${event.json["error_message"]}");
+      }
+
+      List data =
+          (event.json["data"] as List<dynamic>).cast<Map<String, dynamic>>();
+
+      GetIt.I<Talker>().info("Data: $data");
+      // data.activeInterval = event.
+    } catch (e, st) {
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
   onStartInstrument(event, emit) {
     try {
       Map<String, dynamic> data = {
@@ -60,7 +104,8 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
         },
       };
 
-      GetIt.I<Talker>().info("Старт инструмента");
+      GetIt.I<Talker>()
+          .info("Старт инструмента ${event.secCode} ${event.interval}");
       repo.send(data);
 
       // TODO не добавлять в активные самому, а сделать чтобы сервер присылал что он успешно стал активным
@@ -73,7 +118,6 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
     try {
       if (event.json["status"] == "error" ||
           event.json.containsKey("error_message")) {
-        print("${event.json["status"]}: ${event.json["error_message"]}");
         throw Exception(
             "${event.json["status"]}: ${event.json["error_message"]}");
       }
@@ -96,6 +140,16 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   onUpdatePlotData(event, emit) async {
     try {
       getRequestPlotData(data.title, event.timeframe, 100);
+
+      // TODO тестовая проверка!!!!!
+      data.activeInterval = [
+        "1",
+        "5",
+        "10",
+        "15",
+        "20",
+        "25",
+      ];
 
       emit(UpdatePlotDataState(candles: candles));
     } catch (e, st) {
@@ -177,9 +231,14 @@ class GetWSRepositoryUpdatePlotEvent extends InstrumentEvent {
   GetWSRepositoryUpdatePlotEvent({required this.json});
 }
 
-class StartInstrument extends InstrumentEvent {
+class GetWSRepositoryUpdateActiveEvent extends InstrumentEvent {
+  Map<String, dynamic>? json;
+  GetWSRepositoryUpdateActiveEvent({required this.json});
+}
+
+class StartInstrumentEvent extends InstrumentEvent {
   String secCode, interval, strategy, risk, planLimit;
-  StartInstrument({
+  StartInstrumentEvent({
     required this.secCode,
     required this.interval,
     required this.strategy,
@@ -188,6 +247,8 @@ class StartInstrument extends InstrumentEvent {
   });
 }
 
-class EndInstrument extends InstrumentEvent {
+class StopInstrumentEvent extends InstrumentEvent {
   // TODO сделать стоп и на сервере и тут
+  String secCode, interval;
+  StopInstrumentEvent(this.secCode, this.interval);
 }

@@ -6,26 +6,31 @@ import 'package:lotosui/widgets/snackbar_tile.dart';
 // ignore: must_be_immutable
 class CustomTile<T> extends StatelessWidget {
   CustomTile({
-    Key? key,
+    super.key,
     required this.data,
     required this.icon,
     required this.label,
     required this.text,
     required this.trailing,
-    required this.callback,
+    this.isSlidable = false,
+    this.callback = defaultCallback,
+    this.toastText = "В разработке",
     this.padding = const EdgeInsets.only(left: 0, right: 0, top: 5),
-  }) : super(key: key);
+  });
 
   final T data;
   final Icon icon;
   final String label;
   final String text;
+  final String toastText;
   final Widget trailing;
   final EdgeInsetsGeometry padding;
   final Function(T) callback;
 
-  late double screenWidth;
+  final bool isSlidable;
   final FToast ftoast = FToast();
+
+  static defaultCallback<T>(dynamic data) {}
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,7 @@ class CustomTile<T> extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 300),
             child: Slidable(
               closeOnScroll: true,
-              endActionPane: endActionPane(),
+              endActionPane: isSlidable ? endActionPane() : null,
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor.withOpacity(0.1),
@@ -65,7 +70,7 @@ class CustomTile<T> extends StatelessWidget {
             showToast(
               context,
               ftoast: ftoast,
-              text: "Функция в разработке\nSlidable delete is clicked!",
+              text: toastText,
             );
           },
           backgroundColor: Colors.red,
