@@ -17,12 +17,14 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
   set isDark(bool value) => settingsBox.put('isDark', value);
 
   // для обновления данных инструментов запись и чтение
-  bool get isInstrumentsDataUpdated =>
-      settingsBox.get('isInstrumentsDataUpdated', defaultValue: false);
+  bool _isInstrumentsDataUpdated = false;
+  bool get isInstrumentsDataUpdated => _isInstrumentsDataUpdated;
   set isInstrumentsDataUpdated(bool value) {
+    _isInstrumentsDataUpdated = value;
+
+    // Логируем значение
     GetIt.I<Talker>()
-        .info("Значение isInstrumentsDataUpdated: $isInstrumentsDataUpdated");
-    settingsBox.put('isInstrumentsDataUpdated', value);
+        .info("Значение isInstrumentsDataUpdated: $_isInstrumentsDataUpdated");
 
     if (value) {
       // отмена существующего таймера
@@ -30,7 +32,7 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
 
       // Создание нового таймера на 5 минут
       actualCacheUpdateTimer = Timer(const Duration(minutes: 5), () {
-        isInstrumentsDataUpdated = false;
+        GetIt.I<ControlBloc>().isInstrumentsDataUpdated = false;
       });
     } else {
       // If the value is set to false manually, cancel any existing timer

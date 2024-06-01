@@ -40,7 +40,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
       instrumentBloc = args as InstrumentBloc;
     } else {
       Instrument data =
-          Instrument(title: "None", tags: {}, type: "None", activeInterval: {});
+          Instrument(title: "None", tags: {}, type: "None", activeInterval: []);
       instrumentBloc = InstrumentBloc(data: data);
     }
 
@@ -75,7 +75,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
         if (state is UpdatePlotDataState) {
           return buildInstrumentColumn(context, state.candles);
         }
-        // TODO создать запрос к серверу для предоставления активных инструментов и их таймфреймов
 
         return Center(
           child: Text(
@@ -151,7 +150,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
               onPressed: () {
                 // отправка сообщения серверу о старте инструмента
                 instrumentBloc.add(
-                  // TODO сделать проверку есть ли уже в активных такая заявка (название инструмента и таймфрейм)
                   StartInstrument(
                     secCode: instrumentBloc.data.title,
                     interval: instrumentBloc.currentInterval,

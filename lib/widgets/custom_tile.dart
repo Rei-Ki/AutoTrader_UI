@@ -62,7 +62,6 @@ class CustomTile<T> extends StatelessWidget {
       children: [
         SlidableAction(
           onPressed: (context) {
-            // TODO 4 реализовать удаление (не тут, а внутри инструмента)
             showToast(
               context,
               ftoast: ftoast,

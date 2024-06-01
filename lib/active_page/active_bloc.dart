@@ -43,7 +43,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
               title: item.toString(),
               tags: {},
               type: "Фьючерс",
-              activeInterval: {}),
+              activeInterval: []),
         );
       }
 
@@ -74,11 +74,11 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
             title: item.toString(),
             tags: {},
             type: "Фьючерс",
-            activeInterval: {},
+            activeInterval: [],
           );
           // TODO ПРОВЕРКА убрать потом эту проверку на интервалы
           if (current.title == "USDRUBF") {
-            current.activeInterval = {"1", "5"};
+            current.activeInterval = ["1", "5"];
           }
           instruments.add(current);
           // NOTE 3 добаить теги к поиску
