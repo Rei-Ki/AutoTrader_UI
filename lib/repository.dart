@@ -120,5 +120,10 @@ class WSRepository {
 }
 
 Future<void> reRegistrateWebsockets() async {
+  // При обновлении канала сброс кеша инструментов
+  GetIt.I<ControlBloc>().isInstrumentsDataUpdated = false;
+  GetIt.I<Talker>().info(
+      "Кеш инструментов сброшен\nЗначение isInstrumentsDataUpdated: ${GetIt.I<ControlBloc>().isInstrumentsDataUpdated}");
+
   await GetIt.I<WSRepository>().reconnect();
 }

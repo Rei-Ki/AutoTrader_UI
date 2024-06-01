@@ -8,7 +8,7 @@ import '../repository.dart';
 
 class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   late WSRepository repo = GetIt.I<WSRepository>();
-  late String currentTimeframe;
+  late String currentInterval;
 
   Instrument data;
   List<Candle> candles = [];
@@ -27,6 +27,26 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
     });
   }
 
+  // TODO на стороне сервера делать словарь с запущенными уже инструментами и тд. при запросе всех инструментов
+  /*
+  при старте. запрос всех инструментов.
+  Запрос всех инструментов,
+  приходит словарь с инструментом как ключем и его внутри будет интервалы запущенные
+  обработка его и отображение
+  
+  при старте 
+  кидаем запрос о старте, 
+  позже приходит что он запущен, и так же данные о его интервалах, 
+  потом их заменять у исходного 
+
+  при остановке
+  запрос отправляем
+  приходит ответ, что остановлен и активные интервалы для данного инструмента
+  заменяем у исходного
+
+  TODO подумать будет ли это работать для всех клиентов одинаково
+  один отменил и у всех отменилось
+  */
   onStartInstrument(event, emit) {
     try {
       Map<String, dynamic> data = {
@@ -42,6 +62,8 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
       GetIt.I<Talker>().info("Старт инструмента");
       repo.send(data);
+
+      // TODO не добавлять в активные самому, а сделать чтобы сервер присылал что он успешно стал активным
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }
@@ -83,7 +105,7 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   // other functions
   getRequestPlotData(String secCode, String interval, count) {
-    currentTimeframe = getInterval(interval);
+    currentInterval = getInterval(interval);
 
     Map<String, dynamic> requestJson = {
       "data": {
@@ -167,5 +189,5 @@ class StartInstrument extends InstrumentEvent {
 }
 
 class EndInstrument extends InstrumentEvent {
-  // TODO сделать старт и стоп
+  // TODO сделать стоп и на сервере и тут
 }

@@ -1,8 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'dart:async';
 
 class ControlBloc extends Bloc<ControlEvent, ControlState> {
   final Box settingsBox = Hive.box('settingsBox');
+  Timer? actualCacheUpdateTimer;
 
   // для переключения тем запись и чтение
   bool get isIpUse => settingsBox.get('isIpUse', defaultValue: false);
@@ -15,8 +19,24 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
   // для обновления данных инструментов запись и чтение
   bool get isInstrumentsDataUpdated =>
       settingsBox.get('isInstrumentsDataUpdated', defaultValue: false);
-  set isInstrumentsDataUpdated(bool value) =>
-      settingsBox.put('isInstrumentsDataUpdated', value);
+  set isInstrumentsDataUpdated(bool value) {
+    GetIt.I<Talker>()
+        .info("Значение isInstrumentsDataUpdated: $isInstrumentsDataUpdated");
+    settingsBox.put('isInstrumentsDataUpdated', value);
+
+    if (value) {
+      // отмена существующего таймера
+      actualCacheUpdateTimer?.cancel();
+
+      // Создание нового таймера на 5 минут
+      actualCacheUpdateTimer = Timer(const Duration(minutes: 5), () {
+        isInstrumentsDataUpdated = false;
+      });
+    } else {
+      // If the value is set to false manually, cancel any existing timer
+      actualCacheUpdateTimer?.cancel();
+    }
+  }
 
   // для канала вебсоккетов чтение и сохранение
   String get wsIp => settingsBox.get('wsIp', defaultValue: "192.168.0.5:33333");

@@ -46,17 +46,20 @@ class Instrument {
   late String title;
   late String type;
   late Set<String> tags;
+  late Set<String> activeInterval;
 
   Instrument({
     required this.title,
     required this.type,
     required this.tags,
+    required this.activeInterval,
   });
 
   Instrument.fromJson(Map<String, dynamic> json) {
     title = json['title'] ?? '';
     type = json['type'] ?? '';
-    // candles = List<Candle>.empty();
+    // TODO придумать как хранить интервалы запущенные
+    activeInterval = json['active_intervals'] ?? {};
     tags = (json['tags'] as List<dynamic>? ?? [])
         .map((tag) => tag.toString())
         .toSet();

@@ -1,7 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lotosui/instrument_page/instrument_plot.dart';
-import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+// import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter/material.dart';
 
 import '../bloc/data_classes.dart';
@@ -39,7 +39,8 @@ class _InstrumentPageState extends State<InstrumentPage> {
     if (args != null) {
       instrumentBloc = args as InstrumentBloc;
     } else {
-      Instrument data = Instrument(title: "None", tags: {}, type: "None");
+      Instrument data =
+          Instrument(title: "None", tags: {}, type: "None", activeInterval: {});
       instrumentBloc = InstrumentBloc(data: data);
     }
 
@@ -60,20 +61,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
     );
   }
 
-  FloatingActionButton createFAB(BuildContext context) {
-    return FloatingActionButton.extended(
-      backgroundColor: Colors.transparent,
-      onPressed: () => showModalDialog(context),
-      elevation: 0,
-      hoverElevation: 0,
-      label: Icon(
-        Icons.play_arrow_outlined,
-        size: 80, // Размер иконки
-        color: Theme.of(context).primaryColor.withOpacity(0.8),
-      ),
-    );
-  }
-
   buildInstrumentBloc() {
     return BlocBuilder<InstrumentBloc, InstrumentState>(
       builder: (context, state) {
@@ -81,12 +68,14 @@ class _InstrumentPageState extends State<InstrumentPage> {
           // TODO сделать как то интервал по-умолчанию
           instrumentBloc.add(UpdatePlotDataEvent("1m"));
 
+          // List<String> arr = ["123", "2123", "345"];
           return buildInstrumentColumn(context, []);
         }
 
         if (state is UpdatePlotDataState) {
           return buildInstrumentColumn(context, state.candles);
         }
+        // TODO создать запрос к серверу для предоставления активных инструментов и их таймфреймов
 
         return Center(
           child: Text(
@@ -98,18 +87,49 @@ class _InstrumentPageState extends State<InstrumentPage> {
     );
   }
 
-  buildInstrumentColumn(BuildContext context, List<Candle> candles) {
+  buildInstrumentColumn(BuildContext context, List<Candle> candles,
+      [List<String>? activeData]) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Plot(
+            swiperController: swiperController,
+            candles: candles,
+            bloc: instrumentBloc,
+          ),
+          const SizedBox(height: 10),
+          // Cписок с запущенными инструментами
+          activeList(context),
+        ],
+      ),
+    );
+  }
+
+  Widget activeList(BuildContext context) {
+    String title = context.read<InstrumentBloc>().data.title;
+    var activeInterval = context.watch<InstrumentBloc>().data.activeInterval;
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Plot(
-          swiperController: swiperController,
-          candles: candles,
-          bloc: instrumentBloc,
-        ),
-        const SizedBox(height: 100),
-        // TODO сделать список с запущенными инструментами
-      ],
+      children: activeInterval
+          .map<Widget>(
+            (interval) => Text("$title | $interval"),
+          )
+          .toList(),
+    );
+  }
+
+  FloatingActionButton createFAB(BuildContext context) {
+    return FloatingActionButton.extended(
+      backgroundColor: Colors.transparent,
+      onPressed: () => showModalDialog(context),
+      elevation: 0,
+      hoverElevation: 0,
+      label: Icon(
+        Icons.play_arrow_outlined,
+        size: 80, // Размер иконки
+        color: Theme.of(context).primaryColor.withOpacity(0.8),
+      ),
     );
   }
 
@@ -134,7 +154,7 @@ class _InstrumentPageState extends State<InstrumentPage> {
                   // TODO сделать проверку есть ли уже в активных такая заявка (название инструмента и таймфрейм)
                   StartInstrument(
                     secCode: instrumentBloc.data.title,
-                    interval: instrumentBloc.currentTimeframe,
+                    interval: instrumentBloc.currentInterval,
                     strategy: strategies[selectedStrategy],
                     risk: risk.text,
                     planLimit: planLimit.text,

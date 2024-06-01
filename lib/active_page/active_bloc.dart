@@ -32,18 +32,27 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
   getWSRepositoryActive(event, emit) async {
     try {
+      // Запрос с сервера, если кеш пуст или давно не обновлялось
       List<Instrument> instruments = [];
+      // TODO ИЗМЕНИТЬ ТУТ ПОЛУЧЕНИЕ сделать как JSON
       List<String> data = (event.json["data"] as List<dynamic>).cast<String>();
 
       for (var item in data) {
-        instruments
-            .add(Instrument(title: item.toString(), tags: {}, type: "Фьючерс"));
+        instruments.add(
+          Instrument(
+              title: item.toString(),
+              tags: {},
+              type: "Фьючерс",
+              activeInterval: {}),
+        );
       }
 
       emit(ActiveLoadedState(instruments));
 
       await saveToCache(data, "instruments");
       GetIt.I<ControlBloc>().isInstrumentsDataUpdated = true;
+      GetIt.I<Talker>().info(
+          "Кеш инструментов сброшен | значение: ${GetIt.I<ControlBloc>().isInstrumentsDataUpdated}");
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }
@@ -61,8 +70,17 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
         for (var item in cachedData) {
           // TODO 3 сделать чтобы приходило словарями с тегами типом и названием, учесть теги и типы
-          instruments.add(
-              Instrument(title: item.toString(), tags: {}, type: "Фьючерс"));
+          var current = Instrument(
+            title: item.toString(),
+            tags: {},
+            type: "Фьючерс",
+            activeInterval: {},
+          );
+          // TODO ПРОВЕРКА убрать потом эту проверку на интервалы
+          if (current.title == "USDRUBF") {
+            current.activeInterval = {"1", "5"};
+          }
+          instruments.add(current);
           // NOTE 3 добаить теги к поиску
           List<String> testTags = ["Активные", "Фьючерсы"];
           // создание списка всех тегов на основе имеющихся тегов

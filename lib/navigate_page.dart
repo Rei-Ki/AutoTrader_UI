@@ -120,6 +120,11 @@ class _NavigatePageState extends State<NavigatePage> {
       actions: [
         IconButton(
           isSelected: isDark,
+          onPressed: () => reRegistrateWebsockets(),
+          icon: const Icon(Icons.refresh_rounded),
+        ),
+        IconButton(
+          isSelected: isDark,
           onPressed: () {
             context.read<ControlBloc>().add(ChangeThemeEvent());
           },
