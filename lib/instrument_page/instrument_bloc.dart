@@ -29,8 +29,9 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
       if (decoded["cmd"] == "get_chart_data") {
         add(GetWSRepositoryUpdatePlotEvent(json: decoded));
       }
-      if (decoded["cmd"] == "get_all_active_instruments") {
-        // TODO сделать для команды обновления активной
+
+      // TODO сделать для команды обновления активной
+      if (decoded["cmd"] == "get_active_instrument") {
         add(GetWSRepositoryUpdateActiveEvent(json: decoded));
       }
     });
@@ -53,12 +54,32 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   приходит ответ, что остановлен и активные интервалы для данного инструмента
   заменяем у исходного
 
-  TODO подумать будет ли это работать для всех клиентов одинаково
-  один отменил и у всех отменилось
+  TODO подумать будет ли это работать для всех клиентов одинаково (один отменил и у всех отменилось)
   */
+  onStartInstrument(event, emit) {
+    try {
+      Map<String, dynamic> serverData = {
+        "cmd": "start_instrument",
+        "data": {
+          "sec_code": event.secCode,
+          "interval": event.interval,
+          "strategy": event.strategy,
+          "risk": event.risk,
+          "plan_limit": event.planLimit,
+        },
+      };
+
+      GetIt.I<Talker>()
+          .info("Старт инструмента ${event.secCode} ${event.interval}");
+      repo.send(serverData);
+    } catch (e, st) {
+      GetIt.I<Talker>().handle(e, st);
+    }
+  }
+
   onStopInstrument(event, emit) {
     try {
-      Map<String, dynamic> data = {
+      Map<String, dynamic> serverData = {
         "cmd": "stop_instrument",
         "data": {"sec_code": event.secCode, "interval": event.interval},
       };
@@ -66,7 +87,7 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
       GetIt.I<Talker>()
           .info("Остановка инструмента ${event.secCode} ${event.interval}");
 
-      repo.send(data);
+      repo.send(serverData);
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }
@@ -81,34 +102,11 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
             "${event.json["status"]}: ${event.json["error_message"]}");
       }
 
-      List data =
-          (event.json["data"] as List<dynamic>).cast<Map<String, dynamic>>();
+      List<Map<String, dynamic>> serverData =
+          List<Map<String, dynamic>>.from(event.json["data"]);
 
-      GetIt.I<Talker>().info("Data: $data");
-      // data.activeInterval = event.
-    } catch (e, st) {
-      GetIt.I<Talker>().handle(e, st);
-    }
-  }
-
-  onStartInstrument(event, emit) {
-    try {
-      Map<String, dynamic> data = {
-        "cmd": "start_instrument",
-        "data": {
-          "sec_code": event.secCode,
-          "interval": event.interval,
-          "strategy": event.strategy,
-          "risk": event.risk,
-          "plan_limit": event.planLimit,
-        },
-      };
-
-      GetIt.I<Talker>()
-          .info("Старт инструмента ${event.secCode} ${event.interval}");
-      repo.send(data);
-
-      // TODO не добавлять в активные самому, а сделать чтобы сервер присылал что он успешно стал активным
+      GetIt.I<Talker>().info("getWSRepositoryUpdateActive: $serverData");
+      // data.activeInterval = serverData[""]
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }
@@ -122,12 +120,12 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
             "${event.json["status"]}: ${event.json["error_message"]}");
       }
 
-      List data =
-          (event.json["data"] as List<dynamic>).cast<Map<String, dynamic>>();
+      List<Map<String, dynamic>> serverData =
+          List<Map<String, dynamic>>.from(event.json["data"]);
 
       // Очистка перед принятием новых свечей
       candles = [];
-      for (var item in data) {
+      for (var item in serverData) {
         candles.add(Candle.fromJson(item));
       }
 
@@ -140,16 +138,6 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   onUpdatePlotData(event, emit) async {
     try {
       getRequestPlotData(data.title, event.timeframe, 100);
-
-      // TODO тестовая проверка!!!!!
-      data.activeInterval = [
-        "1",
-        "5",
-        "10",
-        "15",
-        "20",
-        "25",
-      ];
 
       emit(UpdatePlotDataState(candles: candles));
     } catch (e, st) {
@@ -248,7 +236,6 @@ class StartInstrumentEvent extends InstrumentEvent {
 }
 
 class StopInstrumentEvent extends InstrumentEvent {
-  // TODO сделать стоп и на сервере и тут
   String secCode, interval;
   StopInstrumentEvent(this.secCode, this.interval);
 }

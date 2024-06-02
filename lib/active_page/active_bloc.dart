@@ -33,26 +33,17 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
   getWSRepositoryActive(event, emit) async {
     try {
       // Запрос с сервера, если кеш пуст или давно не обновлялось
-      List<Instrument> instruments = [];
-      // TODO ИЗМЕНИТЬ ТУТ ПОЛУЧЕНИЕ сделать как JSON
-      List<String> data = (event.json["data"] as List<dynamic>).cast<String>();
+      List<Map<String, dynamic>> data =
+          List<Map<String, dynamic>>.from(event.json["data"]);
 
-      for (var item in data) {
-        instruments.add(
-          Instrument(
-              title: item.toString(),
-              tags: {},
-              type: "Фьючерс",
-              activeInterval: []),
-        );
-      }
+      List<Instrument> instruments = await fillInstrument(data);
 
       emit(ActiveLoadedState(instruments));
 
       await saveToCache(data, "instruments");
       GetIt.I<ControlBloc>().isInstrumentsDataUpdated = true;
-      GetIt.I<Talker>().info(
-          "Кеш инструментов сброшен | значение: ${GetIt.I<ControlBloc>().isInstrumentsDataUpdated}");
+      GetIt.I<Talker>()
+          .info("Кеш не актуален. Инструменты загружены с сервера");
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }
@@ -60,31 +51,23 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
 
   getActiveList(event, emit) async {
     try {
+      // Первичное обновление, поиск из кеша если он актуальный
       emit(ActiveLoadingState());
 
-      List<String> cachedData = await getFromCache("instruments");
+      List<Map<String, dynamic>> cachedData = await getFromCache("instruments");
 
       bool isDataUpdated = GetIt.I<ControlBloc>().isInstrumentsDataUpdated;
+      print("isDataUpdated $isDataUpdated");
       if (cachedData.isNotEmpty && isDataUpdated) {
-        List<Instrument> instruments = [];
+        GetIt.I<Talker>()
+            .info("Обнаружен актуальный кеш, загружаем инструменты из кеша");
+
+        List<Instrument> instruments = await fillInstrument(cachedData);
 
         for (var item in cachedData) {
-          // TODO 3 сделать чтобы приходило словарями с тегами типом и названием, учесть теги и типы
-          var current = Instrument(
-            title: item.toString(),
-            tags: {},
-            type: "Фьючерс",
-            activeInterval: [],
-          );
-          // TODO ПРОВЕРКА убрать потом эту проверку на интервалы
-          if (current.title == "USDRUBF") {
-            current.activeInterval = ["1", "5"];
-          }
-          instruments.add(current);
-          // NOTE 3 добаить теги к поиску
-          List<String> testTags = ["Активные", "Фьючерсы"];
           // создание списка всех тегов на основе имеющихся тегов
-          allTags = allTags.union(testTags.toSet());
+          Set<String> tmpTags = Set<String>.from(item["tags"]);
+          allTags = allTags.union(tmpTags.toSet());
         }
 
         emit(ActiveLoadedState(instruments));
@@ -97,6 +80,26 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
       emit(ActiveErrorState());
       GetIt.I<Talker>().handle(e, st);
     }
+  }
+
+  Future<List<Instrument>> fillInstrument(data) async {
+    List<Instrument> instruments = [];
+
+    for (var item in data) {
+      Set<String> tagsSet = Set<String>.from(item["tags"]);
+      List<String> intervals = List<String>.from(item["active_intervals"]);
+
+      // TODO Подумать над type нужен ли он вообще
+      instruments.add(
+        Instrument(
+          title: item["title"],
+          tags: tagsSet,
+          type: "Фьючерс",
+          activeInterval: intervals,
+        ),
+      );
+    }
+    return instruments;
   }
 
   onUpdateActive(event, emit) {
