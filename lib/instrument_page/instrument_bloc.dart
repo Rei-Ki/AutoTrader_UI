@@ -30,7 +30,6 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
         add(GetWSRepositoryUpdatePlotEvent(json: decoded));
       }
 
-      // TODO сделать для команды обновления активной
       if (decoded["cmd"] == "get_active_instrument") {
         add(GetWSRepositoryUpdateActiveEvent(json: decoded));
       }
@@ -39,11 +38,6 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   // TODO на стороне сервера делать словарь с запущенными уже инструментами и тд. при запросе всех инструментов
   /*
-  при старте. запрос всех инструментов.
-  Запрос всех инструментов,
-  приходит словарь с инструментом как ключем и его внутри будет интервалы запущенные
-  обработка его и отображение
-  
   при старте 
   кидаем запрос о старте, 
   позже приходит что он запущен, и так же данные о его интервалах, 
@@ -53,9 +47,8 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
   запрос отправляем
   приходит ответ, что остановлен и активные интервалы для данного инструмента
   заменяем у исходного
-
-  TODO подумать будет ли это работать для всех клиентов одинаково (один отменил и у всех отменилось)
   */
+
   onStartInstrument(event, emit) {
     try {
       Map<String, dynamic> serverData = {
@@ -95,13 +88,6 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   getWSRepositoryUpdateActive(event, emit) {
     try {
-      // TODO вытащить данные с сервера которые приходят
-      if (event.json["status"] == "error" ||
-          event.json.containsKey("error_message")) {
-        throw Exception(
-            "${event.json["status"]}: ${event.json["error_message"]}");
-      }
-
       List<Map<String, dynamic>> serverData =
           List<Map<String, dynamic>>.from(event.json["data"]);
 
@@ -115,12 +101,6 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
 
   getWSRepositoryUpdatePlot(event, emit) async {
     try {
-      if (event.json["status"] == "error" ||
-          event.json.containsKey("error_message")) {
-        throw Exception(
-            "${event.json["status"]}: ${event.json["error_message"]}");
-      }
-
       List<Map<String, dynamic>> serverData =
           List<Map<String, dynamic>>.from(event.json["data"]);
 
