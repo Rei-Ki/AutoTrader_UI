@@ -105,6 +105,7 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
       List<Map<String, dynamic>> serverData =
           List<Map<String, dynamic>>.from(event.json["data"]);
 
+      // TODO сделать обновление данных для инструмента
       GetIt.I<Talker>().info("getWSRepositoryUpdateActive: $serverData");
       // data.activeInterval = serverData[""]
     } catch (e, st) {
