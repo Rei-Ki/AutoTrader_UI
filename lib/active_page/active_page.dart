@@ -68,7 +68,7 @@ class _ActivePageState extends State<ActivePage> {
       if (state is ActiveErrorState) {
         String errorMessage = "Упс, что-то пошло не так (Активы)";
         showToast(context, ftoast: ftoast, text: errorMessage);
-        return buildActiveList(allInstruments);
+        return buildActiveList([]);
       }
 
       return Container();

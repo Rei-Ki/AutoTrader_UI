@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:lotosui/repository.dart';
 import 'bloc/control_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'settings_page/settings_page.dart';
+import 'widgets/snackbar_tile.dart';
 
 class NavigatePage extends StatefulWidget {
   const NavigatePage({super.key});
@@ -20,7 +22,15 @@ class NavigatePage extends StatefulWidget {
 }
 
 class _NavigatePageState extends State<NavigatePage> {
+  final FToast ftoast = FToast();
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    ftoast.init(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,59 +66,6 @@ class _NavigatePageState extends State<NavigatePage> {
       return Container();
     });
   }
-
-  // showModalDialog(context) {
-  //   return showModalBottomSheet(
-  //     useSafeArea: true,
-  //     context: context,
-  //     builder: (context) {
-  //       return SingleChildScrollView(
-  //         child: Padding(
-  //           padding: const EdgeInsets.all(25),
-  //           child: Column(
-  //             children: [
-  //               const Text("Создание объединения"),
-  //               const SizedBox(height: 20),
-  //               textFormField(controllerTitle, "Название объединения"),
-  //               textFormField(controllerAbout, "В чем прикол Вашей тусовки???"),
-  //               textFormField(controllerLeader, "Кто главарь всея банды?"),
-  //               // ссылка https...
-  //               textFormField(
-  //                   controllerLinks, "А где вас искать? (https://...)"),
-  //               textFormField(
-  //                   controllerTags, "Укажите теги, к примеру Творчество )"),
-  //               textFormField(
-  //                   controllerImage, "Обложка Вашей тусовки, (https://...)"),
-  //               const SizedBox(height: 15),
-  //               Text(
-  //                 "Если Ваше объединение противоречит моим видениям этой жизни, то оно будет удалено, сори ~(>_<。)＼",
-  //                 style: Theme.of(context).textTheme.labelLarge,
-  //               ),
-  //               const SizedBox(height: 15),
-  //               ElevatedButton(
-  //                 onPressed: () {
-  //                   activityBloc.add(
-  //                     CreateNewActivityEvent(
-  //                       title: controllerTitle.text,
-  //                       about: controllerAbout.text,
-  //                       leader: controllerLeader.text,
-  //                       image: controllerImage.text,
-  //                       links: controllerLinks.text,
-  //                       tags: controllerTags.text,
-  //                       context: context,
-  //                       ftoast: ftoast,
-  //                     ),
-  //                   );
-  //                 },
-  //                 child: const Text("Создать свою тусовку! o(≧∀≦)o"),
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   Scaffold buildMainPage(BuildContext context, String appBar) {
     return Scaffold(
@@ -172,23 +129,17 @@ class _NavigatePageState extends State<NavigatePage> {
       title: Text(appBar),
       actions: [
         IconButton(
-          isSelected: isDark,
-          onPressed: () => reRegistrateWebsockets(),
+          onPressed: () {
+            reRegistrateWebsockets();
+            showToast(context, ftoast: ftoast, text: "Обновление соединения");
+          },
           icon: const Icon(Icons.refresh_rounded),
         ),
         IconButton(
           isSelected: isDark,
-          onPressed: () {
-            context.read<ControlBloc>().add(ChangeThemeEvent());
-          },
+          onPressed: () => context.read<ControlBloc>().add(ChangeThemeEvent()),
           icon: const Icon(Icons.wb_sunny_outlined),
           selectedIcon: const Icon(Icons.dark_mode_outlined),
-        ),
-        IconButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed("/talkerScreen");
-          },
-          icon: const Icon(Icons.bookmark_border_rounded),
         ),
         const SizedBox(width: 5),
       ],

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 class Search extends StatefulWidget {
-  const Search({
+  Search({
     super.key,
     required this.onChange,
     required this.tags,
     required this.callback,
+    this.trailing,
   });
 
   final void Function(String) onChange;
   final void Function(List<String>) callback;
-  final List<String> tags;
+  // final List<String> tags;
+  List<String> tags;
+  final Widget? trailing;
 
   @override
   State<Search> createState() => _SearchState();
@@ -34,10 +37,39 @@ class _SearchState extends State<Search> {
   }
 
   searchFilters(BuildContext context) {
+    // widget.tags = [
+    //   "12345",
+    //   "22345",
+    //   "32345",
+    //   "42345",
+    //   "52345",
+    //   "62345",
+    //   "72345",
+    //   "82345",
+    //   "92345",
+    //   "02345",
+    //   "q2345",
+    //   "w2345",
+    //   "e2345",
+    //   "r2345",
+    //   "t2345",
+    //   "y2345",
+    //   "u2345",
+    //   "u2345",
+    //   "u2345",
+    //   "u2345",
+    //   "u2345",
+    //   "u2345",
+    //   "u2345",
+    //   "u2345",
+    //   "u2345",
+    //   "u2345",
+    // ];
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Wrap(
-        spacing: 5.0,
+        // TODO сделать максимальный размер у окна тегов и скрол сделать
+        // spacing: 5.0,
         children: List.generate(
           widget.tags.length,
           (index) {
@@ -50,7 +82,10 @@ class _SearchState extends State<Search> {
                 showCheckmark: false,
                 label: Text(
                   widget.tags[index],
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontSize: 13),
                 ),
                 selected: selectedTags.contains(widget.tags[index]),
                 onSelected: (selected) {
@@ -70,26 +105,31 @@ class _SearchState extends State<Search> {
     );
   }
 
-  SearchBar searchBar(BuildContext context) {
+  SearchBar searchBar(
+    BuildContext context, {
+    double iconSize = 20,
+  }) {
     return SearchBar(
       padding: const WidgetStatePropertyAll<EdgeInsets>(
-          EdgeInsets.symmetric(horizontal: 12.0)),
+          EdgeInsets.only(left: 12, right: 6)),
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       backgroundColor: WidgetStateProperty.all(Colors.transparent),
       elevation: WidgetStateProperty.all(0),
       constraints:
-          const BoxConstraints(maxWidth: 300, minHeight: 49, maxHeight: 49),
-      leading: const Icon(Icons.search, size: 20),
+          const BoxConstraints(maxWidth: 300, minHeight: 44, maxHeight: 44),
+      leading: Icon(Icons.search, size: iconSize),
       textStyle:
           WidgetStateProperty.all(Theme.of(context).textTheme.bodyMedium),
       trailing: [
         IconButton(
-          icon: const Icon(Icons.more_vert_rounded),
+          icon: Icon(Icons.more_vert_rounded, size: iconSize),
           onPressed: () {
             isExpanded = !isExpanded;
             setState(() {});
           },
         ),
+        // Дополнительные трейлинги
+        widget.trailing ?? const SizedBox(),
       ],
       side: WidgetStateProperty.all(
         BorderSide(

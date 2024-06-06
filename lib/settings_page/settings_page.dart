@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
@@ -7,6 +8,8 @@ import 'package:lotosui/repository.dart';
 import 'package:lotosui/widgets/custom_switch.dart';
 import 'package:lotosui/widgets/snackbar_tile.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
+import '../widgets/settings_tile.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -35,52 +38,55 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         children: [
           const SizedBox(height: 8),
-          settingsTileWebsockets(context),
+          fastSettings(context),
+          const SizedBox(height: 8),
+          settingsInputTile(
+            context,
+            hint: "Доп. канал соккетов",
+            controller: controllerIP,
+            callback: onWebSocketSubmitted,
+            suffix: customSwitchWidget(context, reRegistration),
+            icon: const Icon(Icons.edit_rounded),
+          ),
         ],
       ),
     );
   }
 
-  Widget settingsTileWebsockets(BuildContext context) {
-    // NOTE Отличное поле, нужно его вынести в отдельный виджет
+  onWebSocketSubmitted(message) {
+    GetIt.I<ControlBloc>().wsIp = message;
+    GetIt.I<Talker>()
+        .info("Текущий канал соккетов: ${GetIt.I<ControlBloc>().wsIp}");
+  }
+
+  fastSettings(BuildContext context) {
+    var isDark = context.watch<ControlBloc>().isDark;
+
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-      decoration: settingsBoxDecoration(context),
-      child: textFormField(),
-    );
-  }
-
-  Widget textFormField() {
-    // TODO вынести поле в виджеты
-    return TextFormField(
-      inputFormatters: [],
-      textAlignVertical: TextAlignVertical.center,
-      style: const TextStyle(fontSize: 16),
-      decoration: InputDecoration(
-        alignLabelWithHint: true,
-        border: InputBorder.none,
-        hintText: "Доп. канал соккетов",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        isCollapsed: true,
-        icon: const Icon(Icons.edit_rounded),
-        suffixIcon: customSwitchWidget(context, reRegistration),
-        floatingLabelAlignment: FloatingLabelAlignment.center,
-      ),
-      controller: controllerIP,
-      onFieldSubmitted: (message) {
-        GetIt.I<ControlBloc>().wsIp = message;
-        GetIt.I<Talker>()
-            .info("Текущий канал соккетов: ${GetIt.I<ControlBloc>().wsIp}");
-      },
-    );
-  }
-
-  BoxDecoration settingsBoxDecoration(BuildContext context) {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(15),
-      border: Border.all(
-        color: Theme.of(context).colorScheme.primary,
-        width: 1.5,
+      // decoration: myBoxDecoration(context),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            onPressed: () {
+              reRegistrateWebsockets();
+              showToast(context, ftoast: ftoast, text: "Обновление соединения");
+            },
+            icon: const Icon(Icons.refresh_rounded),
+          ),
+          IconButton(
+            isSelected: isDark,
+            onPressed: () =>
+                context.read<ControlBloc>().add(ChangeThemeEvent()),
+            icon: const Icon(Icons.wb_sunny_outlined),
+            selectedIcon: const Icon(Icons.dark_mode_outlined),
+          ),
+          IconButton(
+            onPressed: () => Navigator.of(context).pushNamed("/talkerScreen"),
+            icon: const Icon(Icons.bookmark_border_rounded),
+          ),
+        ],
       ),
     );
   }
@@ -93,10 +99,6 @@ class _SettingsPageState extends State<SettingsPage> {
     GetIt.I<Talker>().info(message);
 
     reRegistrateWebsockets();
-    showToast(
-      context,
-      ftoast: ftoast,
-      text: message,
-    );
+    showToast(context, ftoast: ftoast, text: message);
   }
 }
