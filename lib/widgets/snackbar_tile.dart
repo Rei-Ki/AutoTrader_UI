@@ -2,17 +2,24 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+
 void showToast(
   BuildContext context, {
   required FToast ftoast,
   required String text,
 }) {
-  ftoast.showToast(
-    gravity: ToastGravity.BOTTOM,
-    toastDuration: const Duration(seconds: 2),
-    isDismissable: true,
-    child: createToast(context, ftoast, text),
-  );
+  try {
+    ftoast.showToast(
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: const Duration(seconds: 2),
+      isDismissable: true,
+      child: createToast(context, ftoast, text),
+    );
+  } catch (e, st) {
+    GetIt.I<Talker>().handle(e, st);
+  }
 }
 
 Widget createToast(BuildContext context, FToast ftoast, String text) {

@@ -69,7 +69,7 @@ class _NavigatePageState extends State<NavigatePage> {
 
   Scaffold buildMainPage(BuildContext context, String appBar) {
     return Scaffold(
-      appBar: buildAppBar(PagesEnum.values[selectedIndex].title),
+      appBar: buildAppBar(context, PagesEnum.values[selectedIndex].title),
       // ----------------------------------------------------
       body: LiquidPullToRefresh(
         height: 80,
@@ -122,7 +122,7 @@ class _NavigatePageState extends State<NavigatePage> {
     );
   }
 
-  buildAppBar(String appBar) {
+  buildAppBar(BuildContext context, String appBar) {
     var isDark = context.watch<ControlBloc>().isDark;
 
     return AppBar(

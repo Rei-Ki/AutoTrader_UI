@@ -19,7 +19,7 @@ class ActivePage extends StatefulWidget {
 }
 
 class _ActivePageState extends State<ActivePage> {
-  // final FToast ftoast = FToast();
+  final FToast ftoast = FToast();
   late List<Instrument> allInstruments;
   late ActiveBloc activeBloc;
   late SearchBloc<Instrument> searchBloc;
@@ -28,7 +28,7 @@ class _ActivePageState extends State<ActivePage> {
   @override
   void initState() {
     super.initState();
-    // ftoast.init(context);
+    ftoast.init(context);
     searchBloc = SearchBloc<Instrument>();
 
     searchBloc.searchResultStream.listen((List<Instrument> result) {
