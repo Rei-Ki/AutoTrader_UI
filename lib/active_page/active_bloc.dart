@@ -57,7 +57,6 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
       List<Map<String, dynamic>> cachedData = await getFromCache("instruments");
 
       bool isDataUpdated = GetIt.I<ControlBloc>().isInstrumentsDataUpdated;
-      print("isDataUpdated $isDataUpdated");
       if (cachedData.isNotEmpty && isDataUpdated) {
         GetIt.I<Talker>()
             .info("Обнаружен актуальный кеш, загружаем инструменты из кеша");

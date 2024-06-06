@@ -57,6 +57,59 @@ class _NavigatePageState extends State<NavigatePage> {
     });
   }
 
+  // showModalDialog(context) {
+  //   return showModalBottomSheet(
+  //     useSafeArea: true,
+  //     context: context,
+  //     builder: (context) {
+  //       return SingleChildScrollView(
+  //         child: Padding(
+  //           padding: const EdgeInsets.all(25),
+  //           child: Column(
+  //             children: [
+  //               const Text("Создание объединения"),
+  //               const SizedBox(height: 20),
+  //               textFormField(controllerTitle, "Название объединения"),
+  //               textFormField(controllerAbout, "В чем прикол Вашей тусовки???"),
+  //               textFormField(controllerLeader, "Кто главарь всея банды?"),
+  //               // ссылка https...
+  //               textFormField(
+  //                   controllerLinks, "А где вас искать? (https://...)"),
+  //               textFormField(
+  //                   controllerTags, "Укажите теги, к примеру Творчество )"),
+  //               textFormField(
+  //                   controllerImage, "Обложка Вашей тусовки, (https://...)"),
+  //               const SizedBox(height: 15),
+  //               Text(
+  //                 "Если Ваше объединение противоречит моим видениям этой жизни, то оно будет удалено, сори ~(>_<。)＼",
+  //                 style: Theme.of(context).textTheme.labelLarge,
+  //               ),
+  //               const SizedBox(height: 15),
+  //               ElevatedButton(
+  //                 onPressed: () {
+  //                   activityBloc.add(
+  //                     CreateNewActivityEvent(
+  //                       title: controllerTitle.text,
+  //                       about: controllerAbout.text,
+  //                       leader: controllerLeader.text,
+  //                       image: controllerImage.text,
+  //                       links: controllerLinks.text,
+  //                       tags: controllerTags.text,
+  //                       context: context,
+  //                       ftoast: ftoast,
+  //                     ),
+  //                   );
+  //                 },
+  //                 child: const Text("Создать свою тусовку! o(≧∀≦)o"),
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
   Scaffold buildMainPage(BuildContext context, String appBar) {
     return Scaffold(
       appBar: buildAppBar(PagesEnum.values[selectedIndex].title),

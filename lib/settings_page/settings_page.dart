@@ -51,6 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget textFormField() {
+    // TODO вынести поле в виджеты
     return TextFormField(
       inputFormatters: [],
       textAlignVertical: TextAlignVertical.center,

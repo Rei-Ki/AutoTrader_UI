@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lotosui/active_page/active_bloc.dart';
 import 'package:lotosui/bloc/data_classes.dart';
 import 'package:lotosui/instrument_page/instrument_bloc.dart';
 import 'package:lotosui/widgets/search.dart';
 import '../bloc/search_bloc.dart';
 import '../widgets/custom_tile.dart';
+import '../widgets/snackbar_tile.dart';
 
 class ActivePage extends StatefulWidget {
   const ActivePage({super.key});
@@ -15,6 +17,7 @@ class ActivePage extends StatefulWidget {
 }
 
 class _ActivePageState extends State<ActivePage> {
+  final FToast ftoast = FToast();
   late List<Instrument> allInstruments;
   late ActiveBloc activeBloc;
   late SearchBloc<Instrument> searchBloc;
@@ -23,6 +26,7 @@ class _ActivePageState extends State<ActivePage> {
   @override
   void initState() {
     super.initState();
+    ftoast.init(context);
     searchBloc = SearchBloc<Instrument>();
 
     searchBloc.searchResultStream.listen((List<Instrument> result) {
@@ -62,11 +66,9 @@ class _ActivePageState extends State<ActivePage> {
       }
 
       if (state is ActiveErrorState) {
-        return Center(
-            child: Text(
-          "Oops, Something went wrong (Active)",
-          style: Theme.of(context).textTheme.bodySmall,
-        ));
+        String errorMessage = "Упс, что-то пошло не так (Активы)";
+        showToast(context, ftoast: ftoast, text: errorMessage);
+        return buildActiveList(allInstruments);
       }
 
       return Container();
