@@ -26,7 +26,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30, top: 8),
+      padding: const EdgeInsets.only(left: 0, right: 0, top: 8),
       child: Column(
         children: [
           searchBar(context),
@@ -37,69 +37,48 @@ class _SearchState extends State<Search> {
   }
 
   searchFilters(BuildContext context) {
-    // widget.tags = [
-    //   "12345",
-    //   "22345",
-    //   "32345",
-    //   "42345",
-    //   "52345",
-    //   "62345",
-    //   "72345",
-    //   "82345",
-    //   "92345",
-    //   "02345",
-    //   "q2345",
-    //   "w2345",
-    //   "e2345",
-    //   "r2345",
-    //   "t2345",
-    //   "y2345",
-    //   "u2345",
-    //   "u2345",
-    //   "u2345",
-    //   "u2345",
-    //   "u2345",
-    //   "u2345",
-    //   "u2345",
-    //   "u2345",
-    //   "u2345",
-    //   "u2345",
-    // ];
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Wrap(
-        // TODO сделать максимальный размер у окна тегов и скрол сделать
-        // spacing: 5.0,
-        children: List.generate(
-          widget.tags.length,
-          (index) {
-            return Container(
-              padding: const EdgeInsets.all(2),
-              child: ChoiceChip(
-                labelPadding: const EdgeInsets.symmetric(horizontal: 5),
-                selectedColor: Theme.of(context).primaryColor.withOpacity(0.25),
-                visualDensity: VisualDensity.compact,
-                showCheckmark: false,
-                label: Text(
-                  widget.tags[index],
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(fontSize: 13),
-                ),
-                selected: selectedTags.contains(widget.tags[index]),
-                onSelected: (selected) {
-                  toggleTag(widget.tags[index]);
-                  widget.callback(selectedTags);
-                  setState(() {});
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                  side: const BorderSide(color: Colors.transparent),
-                ),
-              ),
-            );
-          },
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 125.0, // Ограничение высоты до 120
+        ),
+        child: SingleChildScrollView(
+          child: Wrap(
+            // spacing: 5.0,
+            children: List.generate(
+              widget.tags.length,
+              (index) {
+                return Container(
+                  padding: const EdgeInsets.all(2),
+                  child: ChoiceChip(
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 5),
+                    selectedColor:
+                        Theme.of(context).primaryColor.withOpacity(0.25),
+                    visualDensity: VisualDensity.compact,
+                    showCheckmark: false,
+                    label: Text(
+                      widget.tags[index],
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(fontSize: 13),
+                    ),
+                    selected: selectedTags.contains(widget.tags[index]),
+                    onSelected: (selected) {
+                      toggleTag(widget.tags[index]);
+                      widget.callback(selectedTags);
+                      setState(() {});
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      side: const BorderSide(color: Colors.transparent),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -111,7 +90,7 @@ class _SearchState extends State<Search> {
   }) {
     return SearchBar(
       padding: const WidgetStatePropertyAll<EdgeInsets>(
-          EdgeInsets.only(left: 12, right: 6)),
+          EdgeInsets.only(left: 12, right: 2)),
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       backgroundColor: WidgetStateProperty.all(Colors.transparent),
       elevation: WidgetStateProperty.all(0),
