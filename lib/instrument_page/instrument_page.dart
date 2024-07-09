@@ -66,7 +66,6 @@ class _InstrumentPageState extends State<InstrumentPage> {
     return BlocBuilder<InstrumentBloc, InstrumentState>(
       builder: (context, state) {
         if (state is InstrumentInitialState) {
-          // TODO сделать как то интервал по-умолчанию
           instrumentBloc.add(UpdatePlotDataEvent("1m"));
 
           return buildInstrumentColumn(context, []);

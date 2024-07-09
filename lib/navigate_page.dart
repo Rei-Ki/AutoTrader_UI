@@ -9,7 +9,6 @@ import 'package:lotosui/active_page/active_page.dart';
 import 'package:lotosui/analytics_page/analytics_page.dart';
 import 'package:lotosui/pulse_page/pulse_page.dart';
 import 'package:lotosui/repository.dart';
-// import 'package:marquee/marquee.dart';
 import 'bloc/control_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'settings_page/settings_page.dart';
@@ -109,21 +108,6 @@ class _NavigatePageState extends State<NavigatePage> {
         children: [
           drawerHeader(context),
           fastSettings(context),
-          // примеры
-          // Marquee(
-          //   text: 'Some sample text that takes some space.',
-          //   style: TextStyle(fontWeight: FontWeight.bold),
-          //   scrollAxis: Axis.horizontal,
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   blankSpace: 20.0,
-          //   velocity: 100.0,
-          //   pauseAfterRound: Duration(seconds: 1),
-          //   startPadding: 10.0,
-          //   accelerationDuration: Duration(seconds: 1),
-          //   accelerationCurve: Curves.linear,
-          //   decelerationDuration: Duration(milliseconds: 500),
-          //   decelerationCurve: Curves.easeOut,
-          // ),
         ],
       ),
     );
@@ -163,13 +147,12 @@ class _NavigatePageState extends State<NavigatePage> {
 
   Padding drawerHeader(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 50),
+      padding: const EdgeInsets.symmetric(vertical: 25),
       child: Center(
         child: Text(
           "Auto Traider",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        // child: Image.asset("assets/traider_app_logo.png", height: 100),
       ),
     );
   }

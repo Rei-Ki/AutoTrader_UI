@@ -36,19 +36,6 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
     });
   }
 
-  // TODO на стороне сервера делать словарь с запущенными уже инструментами и тд. при запросе всех инструментов
-  /*
-  при старте 
-  кидаем запрос о старте, 
-  позже приходит что он запущен, и так же данные о его интервалах, 
-  потом их заменять у исходного 
-
-  при остановке
-  запрос отправляем
-  приходит ответ, что остановлен и активные интервалы для данного инструмента
-  заменяем у исходного
-  */
-
   onStartInstrument(event, emit) {
     try {
       Map<String, dynamic> serverData = {
@@ -91,7 +78,7 @@ class InstrumentBloc extends Bloc<InstrumentEvent, InstrumentState> {
       List<Map<String, dynamic>> serverData =
           List<Map<String, dynamic>>.from(event.json["data"]);
 
-      // TODO сделать обновление данных для инструмента
+      // TODO сделать обновление данных для инструмента (вроде отображение что он стал активным и иное)
       GetIt.I<Talker>().info("getWSRepositoryUpdateActive: $serverData");
       // data.activeInterval = serverData[""]
     } catch (e, st) {
