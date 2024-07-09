@@ -29,14 +29,15 @@ dependencies:
   talker_flutter: ^4.2.2
   talker_bloc_logger: ^4.2.2
 
-  web_socket_channel: ^3.0.0
-  card_swiper: ^3.0.1
+  web_socket_channel: ^3.0.0 # канал соккетов
+  card_swiper: ^3.0.1 # карточки
 
-  flutter_toggle_tab: ^1.4.1
+  flutter_toggle_tab: ^1.4.1 # красивые вкладки
 
-  hive: ^2.2.3
-  syncfusion_flutter_charts: ^25.2.5
+  hive: ^2.2.3 # бд
+  syncfusion_flutter_charts: ^25.2.5 # графики
   collection: ^1.18.0
+  marquee: ^2.2.3 # для прокручиваемого текста
 
   # Обязательно попробовать
   toggle_switch: ^2.1.0

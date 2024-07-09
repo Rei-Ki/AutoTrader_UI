@@ -15,10 +15,10 @@ class WSRepository {
   Stream<dynamic> get stream => _controller.stream;
 
   WSRepository() {
-    _initializeChannel();
+    initializeChannel();
   }
 
-  Future<void> _initializeChannel() async {
+  Future<void> initializeChannel() async {
     try {
       String? actualIp = await getActualIp();
       if (actualIp != null) {
@@ -83,7 +83,13 @@ class WSRepository {
     }
   }
 
+  // Метод для отправки данных на сервер
   void send(Map<String, dynamic> message) {
+    // if (_channelSubscription == null || channel.closeCode != null) {
+    //   GetIt.I<Talker>().error("WebSocket канал не инициализирован или закрыт.");
+    //   return;
+    // }
+
     GetIt.I<Talker>().info("Отправка сообщения на сервер: $message");
     channel.sink.add(jsonEncode(message));
   }
@@ -107,7 +113,7 @@ class WSRepository {
     GetIt.I<Talker>().info("Переподключение к каналу вебсоккетов");
     _channelSubscription?.cancel();
     await channel.sink.close();
-    await _initializeChannel();
+    await initializeChannel();
   }
 
   // Метод для закрытия канала вебсоккетов

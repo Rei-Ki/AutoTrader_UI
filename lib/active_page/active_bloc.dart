@@ -12,7 +12,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     "data": {"class_code": "SPBFUT"},
     "cmd": "get_all_instruments",
   };
-  late WSRepository repo = GetIt.I<WSRepository>();
+  WSRepository repo = GetIt.I<WSRepository>();
 
   Set<String> allTags = {};
 

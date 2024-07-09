@@ -9,6 +9,7 @@ import 'package:lotosui/active_page/active_page.dart';
 import 'package:lotosui/analytics_page/analytics_page.dart';
 import 'package:lotosui/pulse_page/pulse_page.dart';
 import 'package:lotosui/repository.dart';
+// import 'package:marquee/marquee.dart';
 import 'bloc/control_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'settings_page/settings_page.dart';
@@ -44,8 +45,11 @@ class _NavigatePageState extends State<NavigatePage> {
           ControlBloc controlBloc = context.read<ControlBloc>();
           GetIt.I.registerSingleton<ControlBloc>(controlBloc);
         }
+
+        // Инициализация канала вебсоккетов
         if (!GetIt.I.isRegistered<WSRepository>()) {
-          GetIt.I.registerLazySingleton<WSRepository>(() => WSRepository());
+          final wsRepository = WSRepository();
+          GetIt.I.registerSingleton<WSRepository>(wsRepository);
         }
 
         return buildMainPage(context, PagesEnum.values[selectedIndex].title);
@@ -71,6 +75,8 @@ class _NavigatePageState extends State<NavigatePage> {
     return Scaffold(
       appBar: buildAppBar(context, PagesEnum.values[selectedIndex].title),
       // ----------------------------------------------------
+      drawer: drawerMenu(context),
+      // ----------------------------------------------------
       body: LiquidPullToRefresh(
         height: 80,
         color: Colors.transparent,
@@ -93,6 +99,32 @@ class _NavigatePageState extends State<NavigatePage> {
             children: [navigateBar(context)],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget drawerMenu(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: [
+          drawerHeader(context),
+          fastSettings(context),
+          // примеры
+          // Marquee(
+          //   text: 'Some sample text that takes some space.',
+          //   style: TextStyle(fontWeight: FontWeight.bold),
+          //   scrollAxis: Axis.horizontal,
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   blankSpace: 20.0,
+          //   velocity: 100.0,
+          //   pauseAfterRound: Duration(seconds: 1),
+          //   startPadding: 10.0,
+          //   accelerationDuration: Duration(seconds: 1),
+          //   accelerationCurve: Curves.linear,
+          //   decelerationDuration: Duration(milliseconds: 500),
+          //   decelerationCurve: Curves.easeOut,
+          // ),
+        ],
       ),
     );
   }
@@ -123,11 +155,32 @@ class _NavigatePageState extends State<NavigatePage> {
   }
 
   buildAppBar(BuildContext context, String appBar) {
-    var isDark = context.watch<ControlBloc>().isDark;
-
     return AppBar(
       title: Text(appBar),
-      actions: [
+      actions: [],
+    );
+  }
+
+  Padding drawerHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 50),
+      child: Center(
+        child: Text(
+          "Auto Traider",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        // child: Image.asset("assets/traider_app_logo.png", height: 100),
+      ),
+    );
+  }
+
+  fastSettings(BuildContext context) {
+    var isDark = context.watch<ControlBloc>().isDark;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
         IconButton(
           onPressed: () {
             reRegistrateWebsockets();
@@ -141,7 +194,10 @@ class _NavigatePageState extends State<NavigatePage> {
           icon: const Icon(Icons.wb_sunny_outlined),
           selectedIcon: const Icon(Icons.dark_mode_outlined),
         ),
-        const SizedBox(width: 5),
+        IconButton(
+          onPressed: () => Navigator.of(context).pushNamed("/talkerScreen"),
+          icon: const Icon(Icons.bookmark_border_rounded),
+        ),
       ],
     );
   }

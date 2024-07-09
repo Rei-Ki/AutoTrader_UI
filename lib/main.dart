@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lotosui/repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -22,6 +23,10 @@ TODO Сделать чтобы при запуске инструмента он
 TODO Сделать при удалении инструмента в АКТИВНЫХ отключение его и убрать из активных
 
 TODO сделать не просто WS, а WSS (с TSL сертификатами)
+
+TODO добавить дровер и в него обновление и смену темы
+
+TODO 
 */
 
 void main() async {
