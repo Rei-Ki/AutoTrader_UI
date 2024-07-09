@@ -29,6 +29,7 @@ class _ActivePageState extends State<ActivePage> {
   void initState() {
     super.initState();
     ftoast.init(context);
+    activeBloc = ActiveBloc();
     searchBloc = SearchBloc<Instrument>();
 
     searchBloc.searchResultStream.listen((List<Instrument> result) {
@@ -40,7 +41,7 @@ class _ActivePageState extends State<ActivePage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => ActiveBloc()),
+        BlocProvider.value(value: activeBloc),
         BlocProvider.value(value: searchBloc),
       ],
       child: buildActiveBloc(),
@@ -50,7 +51,7 @@ class _ActivePageState extends State<ActivePage> {
   buildActiveBloc() {
     return BlocBuilder<ActiveBloc, ActiveState>(builder: (context, state) {
       if (state is ActiveInitialState) {
-        activeBloc = context.read<ActiveBloc>();
+        // activeBloc = context.read<ActiveBloc>();
         activeBloc.add(GetActiveEvent());
       }
 

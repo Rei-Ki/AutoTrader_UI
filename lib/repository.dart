@@ -11,6 +11,7 @@ class WSRepository {
   late WebSocketChannel channel;
   final _controller = StreamController<dynamic>.broadcast();
   StreamSubscription? _channelSubscription;
+  final _initializationCompleter = Completer<void>();
 
   Stream<dynamic> get stream => _controller.stream;
 
@@ -20,24 +21,29 @@ class WSRepository {
 
   Future<void> initializeChannel() async {
     try {
-      String? actualIp = await getActualIp();
-      if (actualIp != null) {
-        channel = WebSocketChannel.connect(
-          Uri.parse("ws://$actualIp"),
-        );
+      await getActualIp().then((value) {
+        if (value != null) {
+          channel = WebSocketChannel.connect(
+            Uri.parse("ws://$value"),
+          );
 
-        _channelSubscription = channel.stream.listen(
-          (dynamic message) {
-            GetIt.I<Talker>().info("Получено сообщение от сервера:\n$message");
-            _controller.add(message);
-          },
-          onError: (error) =>
-              GetIt.I<Talker>().error("Произошла ошибка: $error"),
-        );
-      } else {
-        GetIt.I<Talker>()
-            .error("Не удалось получить actualIp для подключения к WebSocket.");
-      }
+          _channelSubscription = channel.stream.listen(
+            (dynamic message) {
+              GetIt.I<Talker>()
+                  .info("Получено сообщение от сервера:\n$message");
+              _controller.add(message);
+            },
+            onError: (error) =>
+                GetIt.I<Talker>().error("Произошла ошибка: $error"),
+          );
+
+          // Уведомляем о завершении инициализации
+          _initializationCompleter.complete();
+        } else {
+          GetIt.I<Talker>().error(
+              "Не удалось получить actualIp для подключения к WebSocket.");
+        }
+      });
     } catch (e, st) {
       GetIt.I<Talker>().handle(e, st);
     }
@@ -65,10 +71,11 @@ class WSRepository {
 
       DocumentSnapshot documentSnapshot =
           await db.doc("settings/websockets").get();
+
       Map<String, dynamic>? data =
           documentSnapshot.data() as Map<String, dynamic>?;
 
-      String? route = data?['route'];
+      String? route = data!['route'];
 
       // Окончательный выбор канала из бд или при его отсутствии из введенного поля
       String actualIp = route ?? GetIt.I<ControlBloc>().wsIp;
@@ -83,33 +90,40 @@ class WSRepository {
     }
   }
 
-  // Метод для отправки данных на сервер
-  void send(Map<String, dynamic> message) {
-    // if (_channelSubscription == null || channel.closeCode != null) {
-    //   GetIt.I<Talker>().error("WebSocket канал не инициализирован или закрыт.");
-    //   return;
-    // }
+  Future<void> ensureInitialized() async {
+    if (!_initializationCompleter.isCompleted) {
+      await _initializationCompleter.future;
+    }
+  }
 
+  // Метод для отправки данных на сервер
+  void send(Map<String, dynamic> message) async {
+    await ensureInitialized();
     GetIt.I<Talker>().info("Отправка сообщения на сервер: $message");
-    channel.sink.add(jsonEncode(message));
+    var encodedMessage = jsonEncode(message);
+    channel.sink.add(encodedMessage);
   }
 
   // Метод для добавления подписчика на события
-  void subscribe(Function(dynamic) onData) {
+  void subscribe(Function(dynamic) onData) async {
+    await ensureInitialized();
     _controller.stream.listen(onData);
   }
 
-  void pause() {
+  void pause() async {
+    await ensureInitialized();
     GetIt.I<Talker>().info("Приостановка канала вебсоккетов");
     _channelSubscription?.pause();
   }
 
-  void resume() {
+  void resume() async {
+    await ensureInitialized();
     GetIt.I<Talker>().info("Возобновление канала вебсоккетов");
     _channelSubscription?.resume();
   }
 
   Future<void> reconnect() async {
+    await ensureInitialized();
     GetIt.I<Talker>().info("Переподключение к каналу вебсоккетов");
     _channelSubscription?.cancel();
     await channel.sink.close();
@@ -117,7 +131,8 @@ class WSRepository {
   }
 
   // Метод для закрытия канала вебсоккетов
-  void close() {
+  void close() async {
+    await ensureInitialized();
     GetIt.I<Talker>().info("Закрытие канала вебсоккетов");
     channel.sink.close();
     _channelSubscription?.cancel();

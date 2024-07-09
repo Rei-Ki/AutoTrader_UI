@@ -12,7 +12,7 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
     "data": {"class_code": "SPBFUT"},
     "cmd": "get_all_instruments",
   };
-  WSRepository repo = GetIt.I<WSRepository>();
+  late WSRepository repo = GetIt.I<WSRepository>();
 
   Set<String> allTags = {};
 
@@ -55,9 +55,9 @@ class ActiveBloc extends Bloc<ActiveEvent, ActiveState> {
       emit(ActiveLoadingState());
 
       List<Map<String, dynamic>> cachedData = await getFromCache("instruments");
-
       bool isDataUpdated = GetIt.I<ControlBloc>().isInstrumentsDataUpdated;
-      if (cachedData.isNotEmpty && isDataUpdated) {
+
+      if (cachedData.isNotEmpty == true && isDataUpdated == true) {
         GetIt.I<Talker>()
             .info("Обнаружен актуальный кеш, загружаем инструменты из кеша");
 
